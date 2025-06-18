@@ -169,7 +169,7 @@ export async function DELETE(
     
     // Eliminar imagen si existe
     const imageToDelete = testimonials[index].image;
-    if (imageToDelete && imageToDelete.startsWith('/uploads/')) {
+    if (imageToDelete?.startsWith('/uploads/')) {
       try {
         const imagePath = path.join(process.cwd(), 'public', imageToDelete);
         await unlinkAsync(imagePath);

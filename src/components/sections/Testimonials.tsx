@@ -66,21 +66,38 @@ export default function Testimonials() {
       type: 'video'
     }
   ]
-
   useEffect(() => {
+    // No usar rotación automática si el testimonio actual es un video
+    if (testimonials[currentTestimonial].type === 'video') {
+      return; // No configuramos ningún intervalo para los videos
+    }
+
+    // Solo configurar la rotación automática para testimonios de tipo texto
     const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)
-    }, 5000)
+      setCurrentTestimonial((prev) => {
+        // Encontrar el siguiente índice que no sea un video
+        let nextIndex = (prev + 1) % testimonials.length;
+        
+        // Si el siguiente es un video, avanzar al siguiente texto
+        // Si todos son videos, deja el comportamiento original
+        let count = 0;  // Prevenir bucle infinito
+        while (testimonials[nextIndex].type === 'video' && count < testimonials.length) {
+          nextIndex = (nextIndex + 1) % testimonials.length;
+          count++;
+        }
+        
+        return nextIndex;
+      });
+    }, 8000); // Tiempo más largo (8s) para los testimonios de texto
 
-    return () => clearInterval(interval)
-  }, [testimonials.length])
-
+    return () => clearInterval(interval);
+  }, [currentTestimonial, testimonials])
   const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
   }
 
   const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   }
 
   return (
@@ -111,11 +128,16 @@ export default function Testimonials() {
                   &ldquo;{testimonials[currentTestimonial].testimonial}&rdquo;
                 </blockquote>
               ) : (                <div className="mb-8">
-                  <YouTubeEmbed 
-                    videoId={testimonials[currentTestimonial].videoId ?? ''} 
-                    title={`Testimonio de ${testimonials[currentTestimonial].name}`} 
-                    className="max-w-3xl mx-auto rounded-lg shadow-lg"
-                  />
+                  <div className="relative">
+                    <YouTubeEmbed 
+                      videoId={testimonials[currentTestimonial].videoId ?? ''} 
+                      title={`Testimonio de ${testimonials[currentTestimonial].name}`} 
+                      className="max-w-3xl mx-auto rounded-lg shadow-lg"
+                    />
+                    <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs px-2 py-1 rounded-bl-lg">
+                      Testimonio en video
+                    </div>
+                  </div>
                 </div>
               )}
               {/* Stars Rating */}
@@ -155,17 +177,35 @@ export default function Testimonials() {
                 <path d="M9 5l7 7-7 7"/>
               </svg>            </button>
           </div>
-          
-          {/* Dots Indicator */}
-          <div className="flex justify-center mt-8 space-x-2">
+            {/* Dots Indicator */}
+          <div className="flex justify-center mt-8 space-x-3">
             {testimonials.map((testimonial, dotIndex) => (
               <button
                 key={`dot-${testimonial.id}`}
                 onClick={() => setCurrentTestimonial(dotIndex)}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  dotIndex === currentTestimonial ? 'bg-blue-600' : 'bg-gray-300'
+                className={`flex items-center justify-center ${
+                  testimonial.type === 'video' ? 'w-5 h-5' : 'w-4 h-4'
+                } transition-all duration-300 ${
+                  dotIndex === currentTestimonial 
+                    ? 'transform scale-110' 
+                    : ''
                 }`}
-              />
+                title={testimonial.type === 'video' ? 'Testimonio en video' : 'Testimonio escrito'}
+              >
+                {testimonial.type === 'video' ? (
+                  <span className={`w-full h-full rounded-sm flex items-center justify-center ${
+                    dotIndex === currentTestimonial ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-500'
+                  }`}>
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/>
+                    </svg>
+                  </span>
+                ) : (
+                  <span className={`w-full h-full rounded-full ${
+                    dotIndex === currentTestimonial ? 'bg-blue-600' : 'bg-gray-300'
+                  }`}></span>
+                )}
+              </button>
             ))}
           </div>
         </div>

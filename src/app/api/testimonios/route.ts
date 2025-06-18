@@ -56,12 +56,12 @@ export async function POST(request: Request) {
       id: Math.max(0, ...testimonios.map(t => t.id)) + 1,
       ...body
     }
-    
-    // En una app real, aquí guardarías en la base de datos
+      // En una app real, aquí guardarías en la base de datos
     testimonios.push(nuevoTestimonio)
     
     return NextResponse.json(nuevoTestimonio, { status: 201 })
-  } catch (error) {
+  } catch (_error) {
+    console.error("Error al crear testimonio:", _error);
     return NextResponse.json(
       { error: "Error al procesar la solicitud" },
       { status: 500 }

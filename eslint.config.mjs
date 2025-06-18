@@ -13,7 +13,12 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
-      "react/no-unescaped-entities": "off" // Deshabilitar la advertencia de entidades sin escapar
+      "react/no-unescaped-entities": "off", // Deshabilitar la advertencia de entidades sin escapar
+      "@typescript-eslint/no-unused-vars": ["error", { 
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_" 
+      }], // Permite variables no usadas si empiezan con _
+      "@typescript-eslint/no-empty-function": "off" // Permite funciones vacías
     }
   }
 ];

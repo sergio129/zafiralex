@@ -76,15 +76,15 @@ export async function PUT(
         { status: 400 }
       )
     }
-    
-    // Actualizar testimonio
+      // Actualizar testimonio
     const testimonioActualizado = { ...testimonio, ...body, id }
     testimonios = testimonios.map(t => 
       t.id === id ? testimonioActualizado : t
     )
     
     return NextResponse.json(testimonioActualizado)
-  } catch (error) {
+  } catch (_error) {
+    console.error("Error al procesar actualización de testimonio:", _error);
     return NextResponse.json(
       { error: "Error al procesar la solicitud" },
       { status: 500 }
@@ -107,12 +107,12 @@ export async function DELETE(
         { status: 404 }
       )
     }
-    
-    // Eliminar testimonio
+      // Eliminar testimonio
     testimonios = testimonios.filter(t => t.id !== id)
     
     return NextResponse.json({ message: "Testimonio eliminado correctamente" })
-  } catch (error) {
+  } catch (_error) {
+    console.error("Error al eliminar testimonio:", _error);
     return NextResponse.json(
       { error: "Error al procesar la solicitud" },
       { status: 500 }

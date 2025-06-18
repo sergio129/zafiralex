@@ -38,7 +38,7 @@ export default function Testimonials() {
     },
     {
       id: 3,
-      name: "Ana Martínez",
+      name: "Sergio Anaya",
       position: "Gerente de Proyectos",
       company: "Global Enterprises",
       testimonial: "Trabajar con Zafira ha sido una experiencia increíble. Su atención al detalle y compromiso con la calidad superó todas nuestras expectativas.",

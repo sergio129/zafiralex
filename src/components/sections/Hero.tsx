@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <section id="inicio" className="bg-gradient-zafira text-white pt-20">
+    <section className="bg-gradient-zafira text-white pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">          {/* Content */}
           <div className="space-y-8">
@@ -18,7 +18,7 @@ export default function Hero() {
             </p>
               <div className="flex flex-col sm:flex-row gap-4 fade-in" style={{ animationDelay: '0.6s' }}>
               <a
-                href="#servicios"
+                href="/servicios"
                 className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-50 transition-colors text-center hover-grow"
               >
                 VER MÁS

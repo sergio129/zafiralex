@@ -220,8 +220,7 @@ export default function TestimoniosAdmin() {
             {editingId !== null ? 'Editar Testimonio' : 'Agregar Nuevo Testimonio'}
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">            <div>              <label htmlFor="name" className="block text-sm font-medium text-gray-800 mb-1">Nombre</label>
               <input 
                 id="name"
                 type="text" 
@@ -231,12 +230,11 @@ export default function TestimoniosAdmin() {
                   : newTestimonio.name
                 }
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
               />
             </div>
-            
-            <div>
-              <label htmlFor="position" className="block text-sm font-medium text-gray-700 mb-1">Cargo</label>
+              <div>
+              <label htmlFor="position" className="block text-sm font-medium text-gray-800 mb-1">Cargo</label>
               <input 
                 id="position"
                 type="text" 
@@ -246,12 +244,12 @@ export default function TestimoniosAdmin() {
                   : newTestimonio.position ?? ""
                 }
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
               />
             </div>
             
             <div>
-              <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Empresa</label>
+              <label htmlFor="company" className="block text-sm font-medium text-gray-800 mb-1">Empresa</label>
               <input 
                 id="company"
                 type="text" 
@@ -261,12 +259,12 @@ export default function TestimoniosAdmin() {
                   : newTestimonio.company ?? ""
                 }
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
               />
             </div>
             
             <div>
-              <label htmlFor="rating" className="block text-sm font-medium text-gray-700 mb-1">Calificación (1-5)</label>
+              <label htmlFor="rating" className="block text-sm font-medium text-gray-800 mb-1">Calificación (1-5)</label>
               <input 
                 id="rating"
                 type="number" 
@@ -278,12 +276,12 @@ export default function TestimoniosAdmin() {
                   : newTestimonio.rating ?? 5
                 }
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
               />
             </div>
 
             <div>
-              <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1">Tipo de testimonio</label>
+              <label htmlFor="type" className="block text-sm font-medium text-gray-800 mb-1">Tipo de testimonio</label>
               <select 
                 id="type"
                 name="type"
@@ -292,9 +290,8 @@ export default function TestimoniosAdmin() {
                   : newTestimonio.type
                 }
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="text">Texto</option>
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+              >                <option value="text">Texto</option>
                 <option value="video">Video de YouTube</option>
               </select>
             </div>
@@ -303,7 +300,7 @@ export default function TestimoniosAdmin() {
               ? testimonios.find(t => t.id === editingId)?.type === 'video'
               : newTestimonio.type === 'video') && (
               <div>
-                <label htmlFor="videoUrl" className="block text-sm font-medium text-gray-700 mb-1">URL del video de YouTube</label>
+                <label htmlFor="videoUrl" className="block text-sm font-medium text-gray-800 mb-1">URL del video de YouTube</label>
                 <input 
                   id="videoUrl"
                   type="text" 
@@ -314,15 +311,15 @@ export default function TestimoniosAdmin() {
                     : newTestimonio.videoUrl ?? ""
                   }
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                 />
-                <p className="text-xs text-gray-500 mt-1">URL completa del video (debe ser formato embed)</p>
+                <p className="text-xs text-gray-600 mt-1">URL completa del video (debe ser formato embed)</p>
               </div>
             )}
           </div>
           
           <div className="mb-4">
-            <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">Testimonio</label>
+            <label htmlFor="content" className="block text-sm font-medium text-gray-800 mb-1">Testimonio</label>
             <textarea 
               id="content"
               name="content"
@@ -332,7 +329,7 @@ export default function TestimoniosAdmin() {
                 : newTestimonio.content
               }
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
             />
           </div>
           
@@ -376,27 +373,26 @@ export default function TestimoniosAdmin() {
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
+            <div className="overflow-x-auto">              <table className="w-full">
+                <thead className="bg-gray-100">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Calificación</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Nombre</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Empresa</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Tipo</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Calificación</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-700 uppercase tracking-wider">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200 bg-white">
                   {testimonios.map(testimonio => (
                     <tr key={testimonio.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {testimonio.name}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                         {testimonio.company}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                         {testimonio.type === 'text' ? 'Texto' : (
                           <div className="flex items-center">
                             <span>Video</span>
@@ -407,7 +403,8 @@ export default function TestimoniosAdmin() {
                             )}
                           </div>
                         )}
-                      </td>                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      </td>                      
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                         <div className="flex">
                           {[1, 2, 3, 4, 5].map((starValue) => (
                             <svg 
@@ -421,17 +418,17 @@ export default function TestimoniosAdmin() {
                           ))}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">
                         <button 
                           onClick={() => startEditing(testimonio)}
-                          className="text-blue-600 hover:text-blue-900 mr-3"
+                          className="text-blue-600 hover:text-blue-900 mr-3 font-medium"
                           disabled={isSubmitting}
                         >
                           Editar
                         </button>
                         <button 
                           onClick={() => handleDeleteTestimonio(testimonio.id)}
-                          className="text-red-600 hover:text-red-900"
+                          className="text-red-600 hover:text-red-900 font-medium"
                           disabled={isSubmitting}
                         >
                           Eliminar

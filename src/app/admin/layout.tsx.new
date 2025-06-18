@@ -14,11 +14,20 @@ const getHeaderTitle = (path: string): string => {
   }
 };
 
+// Elementos del menú para la navegación del sitio
+const siteMenuItems = [
+  { href: '/', label: 'Inicio' },
+  { href: '/servicios', label: 'Nuestros Servicios' },
+  { href: '/noticias', label: 'Noticias' },
+  { href: '/testimonios', label: 'Testimonios' },
+  { href: '/contacto', label: 'Contáctenos' },
+];
+
 export default function AdminLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -36,40 +45,61 @@ export default function AdminLayout({
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
-  };  // Skip layout for login page
+  };
+
+  // Skip layout for login page
   if (pathname === '/admin/login') {
     return <>{children}</>;
   }
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Top Navigation Bar - always visible */}
       <div className="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg">
         <div className="container mx-auto px-4 flex justify-between items-center h-14">
           <div className="flex items-center">
-            <Link href="/admin/dashboard" className="text-xl font-bold">Zafira Admin</Link>
+            <span className="text-lg font-bold">Zafira Admin</span>
           </div>
           
+          <div className="hidden md:flex space-x-1">
+            {siteMenuItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                target="_blank"
+                className="px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 rounded transition-colors"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
           
-    
           <Link 
             href="/" 
             target="_blank" 
-            className="flex items-center px-3 py-1.5 text-sm font-medium text-blue-700 bg-white rounded-md hover:bg-blue-50 transition-colors shadow-sm"
+            className="flex items-center px-4 py-1.5 text-sm font-medium text-blue-600 bg-white rounded-md hover:bg-blue-50 transition-colors shadow-sm"
           >
-            <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
-            Ver sitio
+            Ver sitio web
           </Link>
         </div>
       </div>
-      
-      {/* Mobile sidebar overlay */}      {isSidebarOpen && (
-        <button
-          className="fixed inset-0 z-20 bg-black bg-opacity-50 lg:hidden cursor-default"
+
+      {/* Mobile sidebar overlay */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black bg-opacity-50 lg:hidden"
           onClick={() => setSidebarOpen(false)}
-          aria-label="Cerrar menú lateral"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              setSidebarOpen(false);
+            }
+          }}
         />
       )}
 
@@ -78,7 +108,8 @@ export default function AdminLayout({
         className={`fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform mt-14 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 transition-transform duration-300 ease-in-out`}
-      ><div className="p-4">
+      >
+        <div className="p-4">
           <nav className="space-y-2">
             <Link 
               href="/admin/dashboard" 
@@ -119,7 +150,8 @@ export default function AdminLayout({
               </svg>
               <span className="truncate">Testimonios</span>
             </Link>
-          </nav>        </div>
+          </nav>
+        </div>
         
         <div className="absolute bottom-0 w-full p-4 border-t border-gray-200 bg-gray-50">
           <button
@@ -131,16 +163,16 @@ export default function AdminLayout({
             </svg>
             Cerrar sesión
           </button>
-        </div>      </aside>
-      
+        </div>
+      </aside>
+
       {/* Content area */}
       <div className="lg:pl-64 pt-14">
         {/* Header */}
-        <header className="flex items-center justify-between h-16 px-4 bg-white shadow-sm lg:px-6 border-b border-gray-200">
+        <header className="flex items-center justify-between h-16 px-4 bg-white shadow-md lg:px-6 border-b border-gray-200">
           <button
             onClick={() => setSidebarOpen(true)}
             className="text-gray-700 lg:hidden focus:outline-none hover:text-blue-600 transition-colors"
-            aria-label="Abrir menú lateral"
           >
             <svg
               className="w-6 h-6"
@@ -162,17 +194,10 @@ export default function AdminLayout({
               {getHeaderTitle(pathname)}
             </h1>
           </div>
-        </header>{/* Main content */}
-        <main className="p-4 lg:p-6 bg-gray-50 min-h-[calc(100vh-8rem)]">
-          <div className="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
-            {children}
-          </div>
-        </main>
-        
-        {/* Footer */}
-        <footer className="py-4 px-6 text-center text-sm text-gray-500 border-t border-gray-200">
-          <p>© 2025 Zafira Admin - Todos los derechos reservados</p>
-        </footer>
+        </header>
+
+        {/* Main content */}
+        <main className="p-4 lg:p-6">{children}</main>
       </div>
     </div>
   );

@@ -1,18 +1,31 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import YouTubeEmbed from '../ui/YouTubeEmbed'
 
 export default function Testimonials() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0)
-
-  const testimonials = [
+  // Tipo para los testimonios
+  type TestimonialType = {
+    id: number;
+    name: string;
+    position: string;
+    company: string;
+    testimonial: string;
+    rating: number;
+    videoId?: string; // ID del video de YouTube (opcional)
+    type: 'text' | 'video'; // Tipo de testimonio: texto o video
+  };
+  
+  const testimonials: TestimonialType[] = [
     {
       id: 1,
       name: "María González",
       position: "Directora General",
       company: "TechCorp Solutions",
       testimonial: "Zafira transformó completamente nuestra operación. Su equipo profesional y sus soluciones innovadoras nos ayudaron a alcanzar nuestros objetivos de manera eficiente.",
-      rating: 5
+      rating: 5,
+      type: 'text'
     },
     {
       id: 2,
@@ -20,7 +33,8 @@ export default function Testimonials() {
       position: "CEO",
       company: "Innovate Plus",
       testimonial: "El servicio al cliente de Zafira es excepcional. Siempre están disponibles cuando los necesitamos y sus respuestas son rápidas y efectivas.",
-      rating: 5
+      rating: 5,
+      type: 'text'
     },
     {
       id: 3,
@@ -28,7 +42,9 @@ export default function Testimonials() {
       position: "Gerente de Proyectos",
       company: "Global Enterprises",
       testimonial: "Trabajar con Zafira ha sido una experiencia increíble. Su atención al detalle y compromiso con la calidad superó todas nuestras expectativas.",
-      rating: 5
+      rating: 5,
+      videoId: "xLY31EDQJjo", // Ejemplo: reemplaza con un ID de video real
+      type: 'video'
     },
     {
       id: 4,
@@ -36,7 +52,8 @@ export default function Testimonials() {
       position: "Fundador",
       company: "StartUp Vision",
       testimonial: "Como startup, necesitábamos un socio confiable que entendiera nuestras necesidades. Zafira no solo las entendió, sino que nos ayudó a crecer de manera sostenible.",
-      rating: 5
+      rating: 5,
+      type: 'text'
     },
     {
       id: 5,
@@ -44,7 +61,9 @@ export default function Testimonials() {
       position: "Directora de Operaciones",
       company: "Future Corp",
       testimonial: "La profesionalidad y expertise de Zafira es incomparable. Han sido clave en el éxito de nuestros proyectos más importantes.",
-      rating: 5
+      rating: 5,
+      videoId: "nv4TQShwdSo", // Ejemplo: reemplaza con un ID de video real
+      type: 'video'
     }
   ]
 
@@ -85,11 +104,21 @@ export default function Testimonials() {
             <div className="text-center">
               {/* Quote Icon */}
               <svg className="h-12 w-12 text-blue-600 mx-auto mb-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>
-              </svg>              {/* Testimonial Text */}
-              <blockquote className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-8 italic">
-                &ldquo;{testimonials[currentTestimonial].testimonial}&rdquo;
-              </blockquote>{/* Stars Rating */}
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>              </svg>
+              {/* Testimonial Content (Text o Video) */}
+              {testimonials[currentTestimonial].type === 'text' ? (
+                <blockquote className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-8 italic">
+                  &ldquo;{testimonials[currentTestimonial].testimonial}&rdquo;
+                </blockquote>
+              ) : (
+                <div className="mb-8">                  <YouTubeEmbed 
+                    videoId={testimonials[currentTestimonial].videoId ?? ''} 
+                    title={`Testimonio de ${testimonials[currentTestimonial].name}`} 
+                    className="max-w-3xl mx-auto rounded-lg shadow-lg"
+                  />
+                </div>
+              )}
+              {/* Stars Rating */}
               <div className="flex justify-center mb-6">
                 {[...Array(testimonials[currentTestimonial].rating)].map((_, starIndex) => (
                   <svg key={`${testimonials[currentTestimonial].id}-star-${starIndex}`} className="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">

@@ -89,7 +89,7 @@ export async function PUT(
     // Procesar nueva imagen si se proporcionó
     if (imageFile && imageFile instanceof File) {
       // Eliminar imagen anterior si existe
-      if (updatedNews.image && updatedNews.image.startsWith('/uploads/')) {
+      if (updatedNews.image?.startsWith('/uploads/')) {
         try {
           const oldImagePath = path.join(process.cwd(), 'public', updatedNews.image);
           await unlinkAsync(oldImagePath);
@@ -147,7 +147,7 @@ export async function DELETE(
     
     // Eliminar imagen si existe
     const imageToDelete = news[index].image;
-    if (imageToDelete && imageToDelete.startsWith('/uploads/')) {
+    if (imageToDelete?.startsWith('/uploads/')) {
       try {
         const imagePath = path.join(process.cwd(), 'public', imageToDelete);
         await unlinkAsync(imagePath);

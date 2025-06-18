@@ -44,10 +44,10 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const formData = await req.formData();
     
     // Extraer datos del formulario
@@ -102,7 +102,7 @@ export async function PUT(
     
     // Actualizar URL de video si es testimonio de tipo video
     if (type === 'video') {
-      updatedTestimonial.videoUrl = videoUrl || '';
+      updatedTestimonial.videoUrl = videoUrl ?? '';
     } else {
       // Si cambia de video a texto, eliminar URL de video
       delete updatedTestimonial.videoUrl;
@@ -111,7 +111,7 @@ export async function PUT(
     // Procesar nueva imagen si se proporcionó
     if (imageFile && imageFile instanceof File) {
       // Eliminar imagen anterior si existe
-      if (updatedTestimonial.image && updatedTestimonial.image.startsWith('/uploads/')) {
+      if (updatedTestimonial.image?.startsWith('/uploads/')) {
         try {
           const oldImagePath = path.join(process.cwd(), 'public', updatedTestimonial.image);
           await unlinkAsync(oldImagePath);
@@ -149,10 +149,10 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     
     // Leer testimonios
     const testimonials = await readJsonFile<Testimonial[]>(TESTIMONIALS_FILE, []);

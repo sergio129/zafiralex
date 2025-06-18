@@ -13,10 +13,9 @@ const NEWS_FILE = path.join(DATA_DIR, 'news.json');
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const { id } = params;
+  context: { params: { id: string } }
+) {  try {
+    const { id } = context.params;
     const news = await readJsonFile<NewsItem[]>(NEWS_FILE, []);
     const newsItem = news.find(item => item.id === id);
 
@@ -33,10 +32,10 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const formData = await req.formData();
 
     const title = formData.get('title') as string;
@@ -96,10 +95,9 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const { id } = params;
+  context: { params: { id: string } }
+) {  try {
+    const { id } = context.params;
     const news = await readJsonFile<NewsItem[]>(NEWS_FILE, []);
     const index = news.findIndex(item => item.id === id);
 

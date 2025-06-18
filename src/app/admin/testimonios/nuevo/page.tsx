@@ -207,10 +207,16 @@ export default function CrearTestimonio() {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-          />
-          {imagePreview && (
+          />          {imagePreview && (
             <div className="mt-2">
-              <img src={imagePreview} alt="Vista previa" className="h-40 object-cover" />
+              <div className="h-40 w-40 relative">
+                {/* Usando una div con background-image para la vista previa ya que es un blob URL */}
+                <div 
+                  style={{ backgroundImage: `url(${imagePreview})` }}
+                  className="absolute inset-0 bg-cover bg-center"
+                  aria-label="Vista previa"
+                />
+              </div>
             </div>
           )}
         </div>

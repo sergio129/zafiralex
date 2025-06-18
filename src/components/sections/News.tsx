@@ -1,54 +1,42 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+
+interface NewsItem {
+  id: string;
+  title: string;
+  summary: string;
+  content: string;
+  date: string;
+  image?: string;
+  category: string;
+  slug: string;
+}
+
 export default function News() {
-  const news = [
-    {
-      id: 1,
-      title: "Nuevos Servicios de Consultoría Digital",
-      date: "15 de Junio, 2025",
-      excerpt: "Lanzamos nuestra nueva línea de servicios de consultoría digital para ayudar a las empresas en su transformación tecnológica.",
-      image: "/api/placeholder/400/250",
-      category: "Servicios"
-    },
-    {
-      id: 2,
-      title: "Certificación ISO 9001 Obtenida",
-      date: "10 de Junio, 2025",
-      excerpt: "Orgullosamente anunciamos que hemos obtenido la certificación ISO 9001, reafirmando nuestro compromiso con la calidad.",
-      image: "/api/placeholder/400/250",
-      category: "Certificaciones"
-    },
-    {
-      id: 3,
-      title: "Expansión a Nuevas Ciudades",
-      date: "5 de Junio, 2025",
-      excerpt: "Continuamos creciendo y ahora ofrecemos nuestros servicios en 5 nuevas ciudades del país.",
-      image: "/api/placeholder/400/250",
-      category: "Expansión"
-    },
-    {
-      id: 4,
-      title: "Programa de Responsabilidad Social",
-      date: "1 de Junio, 2025",
-      excerpt: "Lanzamos nuestro programa de responsabilidad social corporativa para contribuir al desarrollo de nuestras comunidades.",
-      image: "/api/placeholder/400/250",
-      category: "RSC"
-    },
-    {
-      id: 5,
-      title: "Nueva Alianza Estratégica",
-      date: "28 de Mayo, 2025",
-      excerpt: "Formamos una alianza estratégica con líderes de la industria para ofrecer soluciones más completas a nuestros clientes.",
-      image: "/api/placeholder/400/250",
-      category: "Alianzas"
-    },
-    {
-      id: 6,
-      title: "Reconocimiento a la Excelencia",
-      date: "25 de Mayo, 2025",
-      excerpt: "Recibimos el premio a la excelencia empresarial por nuestro compromiso con la calidad y la innovación.",
-      image: "/api/placeholder/400/250",
-      category: "Premios"
+  const [news, setNews] = useState<NewsItem[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch('/api/news')
+        if (!response.ok) {
+          throw new Error('Error al cargar las noticias')
+        }
+        const data = await response.json()
+        setNews(data)
+      } catch (err) {
+        console.error('Error al cargar noticias:', err)
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+
+    fetchNews()
+  }, [])
 
   return (
     <section className="py-20 bg-white">
@@ -63,54 +51,98 @@ export default function News() {
             Mantente informado sobre las últimas novedades, logros y desarrollos 
             de nuestra empresa.
           </p>
-        </div>
-
-        {/* News Grid */}
+        </div>        {/* News Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {news.map((article) => (
-            <article
-              key={article.id}
-              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
-            >
-              {/* Image */}              <div className="h-48 bg-gradient-zafira flex items-center justify-center">
-                <div className="text-white text-center">
-                  <svg className="h-16 w-16 mx-auto mb-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                    <path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
-                  </svg>
-                  <p className="text-sm opacity-90">{article.category}</p>
+          {loading ? (
+            // Mostrar placeholders si está cargando
+            Array(3).fill(0).map((_, index) => (
+              <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse">
+                <div className="h-48 bg-gray-200"></div>
+                <div className="p-6">
+                  <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+                  <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
                 </div>
               </div>
+            ))
+          ) : news.length === 0 ? (
+            <div className="col-span-3 text-center py-12">
+              <p className="text-gray-500">No hay noticias disponibles actualmente.</p>
+            </div>
+          ) : (
+            news.map((article) => (
+              <article
+                key={article.id}
+                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+              >
+                {/* Image */}
+                {article.image ? (
+                  <div className="h-48 relative">
+                    <Image
+                      src={article.image}
+                      alt={article.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
+                      onError={(e) => {
+                        // Mostrar un placeholder si la imagen falla
+                        e.currentTarget.src = '/placeholder-image.jpg';
+                      }}
+                    />
+                    <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs px-2 py-1">
+                      {article.category}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-48 bg-gradient-to-r from-blue-500 to-blue-700 flex items-center justify-center">
+                    <div className="text-white text-center">
+                      <svg className="h-16 w-16 mx-auto mb-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                      </svg>
+                      <p className="text-sm opacity-90">{article.category}</p>
+                    </div>
+                  </div>
+                )}
 
-              {/* Content */}
-              <div className="p-6">
-                <div className="flex items-center mb-3">
-                  <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                    {article.category}
-                  </span>
-                  <span className="text-gray-500 text-sm ml-auto">{article.date}</span>
+                {/* Content */}
+                <div className="p-6">
+                  <div className="flex items-center mb-3">
+                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                      {article.category}
+                    </span>
+                    <span className="text-gray-500 text-sm ml-auto">
+                      {new Date(article.date).toLocaleDateString('es-ES', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                  
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
+                    {article.title}
+                  </h3>
+                  
+                  <p className="text-gray-600 mb-4 line-clamp-3">
+                    {article.summary}
+                  </p>
+                  
+                  <Link href={`/noticias/${article.slug}`} className="text-blue-600 font-medium hover:text-blue-800 transition-colors flex items-center group">
+                    Leer más
+                    <svg className="h-4 w-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                      <path d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </Link>
                 </div>
-                
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
-                  {article.title}
-                </h3>
-                
-                <p className="text-gray-600 mb-4 line-clamp-3">
-                  {article.excerpt}
-                </p>
-                  <button className="text-blue-600 font-medium hover:text-blue-800 transition-colors flex items-center group">
-                  Leer más
-                  <svg className="h-4 w-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                    <path d="M9 5l7 7-7 7"/>
-                  </svg>
-                </button>
-              </div>
-            </article>
-          ))}
+              </article>
+            ))
+          )}
         </div>        {/* CTA */}
         <div className="text-center mt-16">
-          <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg hover-grow">
+          <Link href="/noticias" className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg inline-block">
             Ver Todas las Noticias
-          </button>
+          </Link>
         </div>
       </div>
     </section>

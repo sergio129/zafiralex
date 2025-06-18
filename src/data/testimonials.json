@@ -1,0 +1,21 @@
+[
+  {
+    "id": "2",
+    "name": "Juan López",
+    "company": "Constructora XYZ",
+    "position": "CEO",
+    "content": "La asesoría recibida en temas fiscales ha sido fundamental para optimizar nuestra estructura corporativa.",
+    "type": "text",
+    "rating": 5
+  },
+  {
+    "id": "3",
+    "name": "Ana Martínez",
+    "company": "Startup Tech",
+    "position": "Fundadora",
+    "content": "Su experiencia en propiedad intelectual nos ayudó a proteger nuestras innovaciones de manera eficaz.",
+    "type": "video",
+    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "rating": 5
+  }
+]

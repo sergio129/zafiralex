@@ -2,73 +2,63 @@
 
 import { useState, useEffect } from 'react'
 import YouTubeEmbed from '../ui/YouTubeEmbed'
+import { Testimonial } from '@/data/testimonials'
 
-export default function Testimonials() {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0)
-  // Tipo para los testimonios
-  type TestimonialType = {
-    id: number;
-    name: string;
-    position: string;
-    company: string;
-    testimonial: string;
-    rating: number;
-    videoId?: string; // ID del video de YouTube (opcional)
-    type: 'text' | 'video'; // Tipo de testimonio: texto o video
-  };
+// Función para extraer el ID de YouTube de una URL
+const getVideoId = (url: string = ''): string => {
+  // Verifica si ya es un ID solo
+  if (url && url.length === 11 && !url.includes('/')) {
+    return url;
+  }
   
-  const testimonials: TestimonialType[] = [
-    {
-      id: 1,
-      name: "María González",
-      position: "Directora General",
-      company: "TechCorp Solutions",
-      testimonial: "Zafira transformó completamente nuestra operación. Su equipo profesional y sus soluciones innovadoras nos ayudaron a alcanzar nuestros objetivos de manera eficiente.",
-      rating: 5,
-      type: 'text'
-    },
-    {
-      id: 2,
-      name: "Carlos Rodríguez",
-      position: "CEO",
-      company: "Innovate Plus",
-      testimonial: "El servicio al cliente de Zafira es excepcional. Siempre están disponibles cuando los necesitamos y sus respuestas son rápidas y efectivas.",
-      rating: 5,
-      type: 'text'
-    },
-    {
-      id: 3,
-      name: "Sergio Anaya",
-      position: "Gerente de Proyectos",
-      company: "Global Enterprises",
-      testimonial: "Trabajar con Zafira ha sido una experiencia increíble. Su atención al detalle y compromiso con la calidad superó todas nuestras expectativas.",
-      rating: 5,
-      videoId: "xLY31EDQJjo", // Ejemplo: reemplaza con un ID de video real
-      type: 'video'
-    },
-    {
-      id: 4,
-      name: "Roberto Silva",
-      position: "Fundador",
-      company: "StartUp Vision",
-      testimonial: "Como startup, necesitábamos un socio confiable que entendiera nuestras necesidades. Zafira no solo las entendió, sino que nos ayudó a crecer de manera sostenible.",
-      rating: 5,
-      type: 'text'
-    },
-    {
-      id: 5,
-      name: "Laura Jiménez",
-      position: "Directora de Operaciones",
-      company: "Future Corp",
-      testimonial: "La profesionalidad y expertise de Zafira es incomparable. Han sido clave en el éxito de nuestros proyectos más importantes.",
-      rating: 5,
-      videoId: "nv4TQShwdSo", // Ejemplo: reemplaza con un ID de video real
-      type: 'video'
+  if (!url) return '';
+  
+  // Patrones comunes de URLs de YouTube
+  const patterns = [
+    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/,
+    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([^/?]+)/,
+    /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([^/?]+)/
+  ];
+  
+  for (const pattern of patterns) {
+    const result = pattern.exec(url);
+    if (result?.[1]) {
+      return result[1];
     }
-  ]
+  }
+  
+  return '';
+};
+
+export default function Testimonials() {  const [currentTestimonial, setCurrentTestimonial] = useState(0)
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+    // Obtener testimonios del backend
   useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        // Usar la API pública
+        const response = await fetch('/api/testimonios')
+        if (!response.ok) {
+          console.error('Error al cargar los testimonios: respuesta no OK')
+          return
+        }
+        const data = await response.json()
+        setTestimonials(data)
+      } catch (err) {
+        console.error('Error al cargar testimonios:', err)
+      }
+    }
+    
+    fetchTestimonials()
+  }, [])
+  
+  useEffect(() => {
+    if (testimonials.length === 0) {
+      return;
+    }
+    
     // No usar rotación automática si el testimonio actual es un video
-    if (testimonials[currentTestimonial].type === 'video') {
+    if (testimonials[currentTestimonial]?.type === 'video') {
       return; // No configuramos ningún intervalo para los videos
     }
 
@@ -81,7 +71,7 @@ export default function Testimonials() {
         // Si el siguiente es un video, avanzar al siguiente texto
         // Si todos son videos, deja el comportamiento original
         let count = 0;  // Prevenir bucle infinito
-        while (testimonials[nextIndex].type === 'video' && count < testimonials.length) {
+        while (testimonials[nextIndex]?.type === 'video' && count < testimonials.length) {
           nextIndex = (nextIndex + 1) % testimonials.length;
           count++;
         }
@@ -121,43 +111,52 @@ export default function Testimonials() {
             <div className="text-center">
               {/* Quote Icon */}
               <svg className="h-12 w-12 text-blue-600 mx-auto mb-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>              </svg>
-              {/* Testimonial Content (Text o Video) */}
-              {testimonials[currentTestimonial].type === 'text' ? (
-                <blockquote className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-8 italic">
-                  &ldquo;{testimonials[currentTestimonial].testimonial}&rdquo;
-                </blockquote>
-              ) : (                <div className="mb-8">
-                  <div className="relative">
-                    <YouTubeEmbed 
-                      videoId={testimonials[currentTestimonial].videoId ?? ''} 
-                      title={`Testimonio de ${testimonials[currentTestimonial].name}`} 
-                      className="max-w-3xl mx-auto rounded-lg shadow-lg"
-                    />
-                    <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs px-2 py-1 rounded-bl-lg">
-                      Testimonio en video
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>              </svg>              {/* Testimonial Content (Text o Video) */}
+              {testimonials.length > 0 && (
+                <>
+                  {testimonials[currentTestimonial]?.type === 'text' ? (
+                    <blockquote className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-8 italic">
+                      &ldquo;{testimonials[currentTestimonial].content}&rdquo;
+                    </blockquote>
+                  ) : (
+                    <div className="mb-8">
+                      <div className="relative">
+                        <YouTubeEmbed 
+                          videoId={getVideoId(testimonials[currentTestimonial]?.videoUrl)} 
+                          title={`Testimonio de ${testimonials[currentTestimonial].name}`} 
+                          className="max-w-3xl mx-auto rounded-lg shadow-lg"
+                        />
+                        <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs px-2 py-1 rounded-bl-lg">
+                          Testimonio en video
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                </>
+              )}              {/* Stars Rating */}
+              {testimonials.length > 0 && (
+                <div className="flex justify-center mb-6">
+                  {[...Array(testimonials[currentTestimonial]?.rating || 5)].map((_, starIndex) => (
+                    <svg key={`${testimonials[currentTestimonial].id}-star-${starIndex}`} className="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  ))}
                 </div>
               )}
-              {/* Stars Rating */}
-              <div className="flex justify-center mb-6">
-                {[...Array(testimonials[currentTestimonial].rating)].map((_, starIndex) => (
-                  <svg key={`${testimonials[currentTestimonial].id}-star-${starIndex}`} className="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
-                ))}
-              </div>
 
               {/* Author Info */}
-              <div>
-                <p className="text-lg font-semibold text-gray-900">
-                  {testimonials[currentTestimonial].name}
-                </p>
-                <p className="text-gray-600">
-                  {testimonials[currentTestimonial].position} en {testimonials[currentTestimonial].company}
-                </p>
-              </div>
+              {testimonials.length > 0 && (
+                <div>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {testimonials[currentTestimonial].name}
+                  </p>
+                  <p className="text-gray-600">
+                    {testimonials[currentTestimonial].position && testimonials[currentTestimonial].company 
+                      ? `${testimonials[currentTestimonial].position} en ${testimonials[currentTestimonial].company}`
+                      : testimonials[currentTestimonial].position || testimonials[currentTestimonial].company || ''}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Navigation Arrows */}
@@ -176,57 +175,65 @@ export default function Testimonials() {
               <svg className="h-6 w-6 text-gray-600" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                 <path d="M9 5l7 7-7 7"/>
               </svg>            </button>
-          </div>
-            {/* Dots Indicator */}
-          <div className="flex justify-center mt-8 space-x-3">
-            {testimonials.map((testimonial, dotIndex) => (
-              <button
-                key={`dot-${testimonial.id}`}
-                onClick={() => setCurrentTestimonial(dotIndex)}
-                className={`flex items-center justify-center ${
-                  testimonial.type === 'video' ? 'w-5 h-5' : 'w-4 h-4'
-                } transition-all duration-300 ${
-                  dotIndex === currentTestimonial 
-                    ? 'transform scale-110' 
-                    : ''
-                }`}
-                title={testimonial.type === 'video' ? 'Testimonio en video' : 'Testimonio escrito'}
-              >
-                {testimonial.type === 'video' ? (
-                  <span className={`w-full h-full rounded-sm flex items-center justify-center ${
-                    dotIndex === currentTestimonial ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-500'
-                  }`}>
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/>
-                    </svg>
-                  </span>
-                ) : (
-                  <span className={`w-full h-full rounded-full ${
-                    dotIndex === currentTestimonial ? 'bg-blue-600' : 'bg-gray-300'
-                  }`}></span>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Stats */}
+          </div>          {/* Dots Indicator */}
+          {testimonials.length > 0 && (
+            <div className="flex justify-center mt-8 space-x-3">
+              {testimonials.map((testimonial, dotIndex) => (
+                <button
+                  key={`dot-${testimonial.id}`}
+                  onClick={() => setCurrentTestimonial(dotIndex)}
+                  className={`flex items-center justify-center ${
+                    testimonial.type === 'video' ? 'w-5 h-5' : 'w-4 h-4'
+                  } transition-all duration-300 ${
+                    dotIndex === currentTestimonial 
+                      ? 'transform scale-110' 
+                      : ''
+                  }`}
+                  title={testimonial.type === 'video' ? 'Testimonio en video' : 'Testimonio escrito'}
+                >
+                  {testimonial.type === 'video' ? (
+                    <span className={`w-full h-full rounded-sm flex items-center justify-center ${
+                      dotIndex === currentTestimonial ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-500'
+                    }`}>
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/>
+                      </svg>
+                    </span>
+                  ) : (
+                    <span className={`w-full h-full rounded-full ${
+                      dotIndex === currentTestimonial ? 'bg-blue-600' : 'bg-gray-300'
+                    }`}></span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>        {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-16">
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">1+</div>
+            <div className="text-4xl font-bold text-blue-600 mb-2">
+              {testimonials.length > 0 ? `${testimonials.length}+` : '10+'}
+            </div>
             <div className="text-gray-600">Clientes Satisfechos</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">1000+</div>
-            <div className="text-gray-600">Proyectos Completados</div>
+            <div className="text-4xl font-bold text-blue-600 mb-2">100+</div>
+            <div className="text-gray-600">Casos Exitosos</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">99%</div>
+            <div className="text-4xl font-bold text-blue-600 mb-2">
+              {testimonials.length > 0 
+                ? `${Math.round(
+                    (testimonials.reduce((sum, t) => sum + (t.rating || 5), 0) / 
+                    (testimonials.length * 5)) * 100
+                  )}%` 
+                : '98%'}
+            </div>
             <div className="text-gray-600">Tasa de Satisfacción</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">24/7</div>
-            <div className="text-gray-600">Soporte Disponible</div>
+            <div className="text-4xl font-bold text-blue-600 mb-2">15+</div>
+            <div className="text-gray-600">Años de Experiencia</div>
           </div>
         </div>
       </div>

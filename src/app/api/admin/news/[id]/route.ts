@@ -5,9 +5,6 @@ import fs from 'fs';
 import { promisify } from 'util';
 import { NewsItem } from '@/components/ui/NewsCard';
 
-// Definir el tipo correcto para los parámetros
-type Params = { params: { id: string } };
-
 const unlinkAsync = promisify(fs.unlink);
 
 const DATA_DIR = path.join(process.cwd(), 'src', 'data');
@@ -16,10 +13,9 @@ const NEWS_FILE = path.join(DATA_DIR, 'news.json');
 
 export async function GET(
   req: NextRequest,
-  { params }: Params
-) {
-  try {
-    const { id } = params;
+  context: { params: { id: string } }
+) {  try {
+    const { id } = context.params;
     const news = await readJsonFile<NewsItem[]>(NEWS_FILE, []);
     const newsItem = news.find(item => item.id === id);
 
@@ -36,10 +32,10 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: Params
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const formData = await req.formData();
 
     const title = formData.get('title') as string;
@@ -99,9 +95,9 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: Params
+  context: { params: { id: string } }
 ) {  try {
-    const { id } = params;
+    const { id } = context.params;
     const news = await readJsonFile<NewsItem[]>(NEWS_FILE, []);
     const index = news.findIndex(item => item.id === id);
 

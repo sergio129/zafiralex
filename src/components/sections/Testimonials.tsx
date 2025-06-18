@@ -145,7 +145,7 @@ export default function Testimonials() {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-16">
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
+            <div className="text-4xl font-bold text-blue-600 mb-2">1+</div>
             <div className="text-gray-600">Clientes Satisfechos</div>
           </div>
           <div className="text-center">

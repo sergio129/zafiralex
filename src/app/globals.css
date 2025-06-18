@@ -46,6 +46,15 @@ html {
 
 /* Custom utilities */
 @layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE y Edge */
+    scrollbar-width: none;     /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;            /* Chrome, Safari and Opera */
+  }
+  
   .line-clamp-2 {
     overflow: hidden;
     display: -webkit-box;

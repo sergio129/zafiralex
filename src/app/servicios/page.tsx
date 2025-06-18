@@ -1,4 +1,4 @@
-import Services from '@/components/sections/Services';
+import ServicesInteractiveWrapper from '@/components/wrappers/ServicesInteractiveWrapper';
 
 export default function ServiciosPage() {
   return (
@@ -13,7 +13,7 @@ export default function ServiciosPage() {
           </p>
         </div>
       </div>
-      <Services />
+      <ServicesInteractiveWrapper />
     </main>
   );
 }

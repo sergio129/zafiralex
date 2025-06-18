@@ -39,7 +39,7 @@ export default function Hero() {
                   <div className="text-blue-100">Clientes Satisfechos</div>
                 </div>
                 <div className="bg-blue-500 bg-opacity-30 rounded-lg p-6 text-center hover-grow">
-                  <div className="text-4xl font-bold mb-2 counter-animation">10+</div>
+                  <div className="text-4xl font-bold mb-2 counter-animation">1+</div>
                   <div className="text-blue-100">Años de Experiencia</div>
                 </div>
                 <div className="bg-blue-500 bg-opacity-30 rounded-lg p-6 text-center hover-grow">

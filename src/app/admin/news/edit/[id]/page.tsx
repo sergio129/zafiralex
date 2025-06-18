@@ -4,14 +4,14 @@ import { useRouter } from 'next/navigation';
 import { NewsItem } from '@/components/ui/NewsCard';
 import Image from 'next/image';
 
-type EditNewsPageProps = {
+interface PageProps {
   params: {
     id: string;
   };
   searchParams?: Record<string, string | string[]>;
 }
 
-export default function EditNewsPage({ params }: EditNewsPageProps) {
+export default function EditNewsPage({ params }: PageProps) {
   const router = useRouter();
   const { id } = params;
   

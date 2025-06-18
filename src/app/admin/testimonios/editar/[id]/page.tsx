@@ -2,14 +2,16 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Testimonial } from '@/data/testimonials';
+import Image from 'next/image';
 
-interface EditarTestimonioProps {
+interface PageProps {
   params: {
     id: string;
   };
+  searchParams?: Record<string, string | string[]>;
 }
 
-export default function EditarTestimonio({ params }: EditarTestimonioProps) {
+export default function EditarTestimonio({ params }: PageProps) {
   const router = useRouter();
   const { id } = params;
   
@@ -266,12 +268,15 @@ export default function EditarTestimonio({ params }: EditarTestimonioProps) {
           </label>
           {currentImage && !imagePreview && (
             <div className="mb-2">
-              <p className="text-sm text-gray-600 mb-2">Imagen actual:</p>
-              <img 
-                src={currentImage} 
-                alt="Imagen actual" 
-                className="h-40 object-cover" 
-              />
+              <p className="text-sm text-gray-600 mb-2">Imagen actual:</p>              <div className="relative h-40 w-full">
+                <Image 
+                  src={currentImage} 
+                  alt="Imagen actual" 
+                  fill
+                  sizes="(max-width: 768px) 100vw, 300px"
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
             </div>
           )}
           <input
@@ -283,10 +288,13 @@ export default function EditarTestimonio({ params }: EditarTestimonioProps) {
           />
           {imagePreview && (
             <div className="mt-2">
-              <p className="text-sm text-gray-600 mb-2">Nueva imagen:</p>
-              <img 
-                src={imagePreview} 
-                alt="Vista previa" 
+              <p className="text-sm text-gray-600 mb-2">Nueva imagen:</p>              <div className="relative h-40 w-full">
+                <Image 
+                  src={imagePreview} 
+                  alt="Vista previa"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 300px"
+                  style={{ objectFit: 'contain' }}
                 className="h-40 object-cover" 
               />
             </div>

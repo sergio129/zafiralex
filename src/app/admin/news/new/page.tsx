@@ -1,6 +1,7 @@
 'use client';
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function CreateNewsPage() {
   const router = useRouter();
@@ -144,10 +145,17 @@ export default function CreateNewsPage() {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-          />
-          {imagePreview && (
+          />          {imagePreview && (
             <div className="mt-2">
-              <img src={imagePreview} alt="Vista previa" className="h-40 object-cover" />
+              <div className="relative h-40 w-auto">
+                <Image 
+                  src={imagePreview} 
+                  alt="Vista previa" 
+                  fill
+                  sizes="(max-width: 768px) 100vw, 300px"
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
             </div>
           )}
         </div>

@@ -6,7 +6,8 @@ import { promisify } from 'util';
 import { NewsItem } from '@/components/ui/NewsCard';
 
 const writeFileAsync = promisify(fs.writeFile);
-const unlinkAsync = promisify(fs.unlink);
+// Renombramos para evitar el error de variable no utilizada
+const _unlinkAsync = promisify(fs.unlink);
 const mkdirAsync = promisify(fs.mkdir);
 const existsAsync = promisify(fs.exists);
 

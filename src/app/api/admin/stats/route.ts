@@ -12,7 +12,8 @@ const DATA_DIR = path.join(process.cwd(), 'src', 'data');
 const NEWS_FILE = path.join(DATA_DIR, 'news.json');
 const TESTIMONIALS_FILE = path.join(DATA_DIR, 'testimonials.json');
 
-async function readJsonFile(filePath: string, defaultValue: any[]) {
+// Tipamos correctamente para evitar el error de 'any'
+async function readJsonFile(filePath: string, defaultValue: Record<string, unknown>[] | unknown[]) {
   try {
     if (await existsAsync(filePath)) {
       const data = await readFileAsync(filePath, 'utf-8');
@@ -25,7 +26,7 @@ async function readJsonFile(filePath: string, defaultValue: any[]) {
   }
 }
 
-export const GET = withAuth(async (req: NextRequest) => {
+export const GET = withAuth(async (_req: NextRequest) => {
   try {
     // Leer datos
     const news = await readJsonFile(NEWS_FILE, []);

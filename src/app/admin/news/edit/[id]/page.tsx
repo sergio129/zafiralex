@@ -2,6 +2,7 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { NewsItem } from '@/components/ui/NewsCard';
+import Image from 'next/image';
 
 interface EditNewsPageProps {
   params: {
@@ -198,13 +199,17 @@ export default function EditNewsPage({ params }: EditNewsPageProps) {
             Imagen
           </label>
           {currentImage && !imagePreview && (
-            <div className="mb-2">
-              <p className="text-sm text-gray-600 mb-2">Imagen actual:</p>
-              <img 
-                src={currentImage} 
-                alt="Imagen actual" 
-                className="h-40 object-cover" 
-              />
+            <div className="mb-2">              <p className="text-sm text-gray-600 mb-2">Imagen actual:</p>
+              <div className="relative h-40 w-auto">
+                <Image 
+                  src={currentImage} 
+                  alt="Imagen actual" 
+                  className="object-cover" 
+                  fill
+                  sizes="(max-width: 768px) 100vw, 300px"
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
             </div>
           )}
           <input
@@ -213,15 +218,19 @@ export default function EditNewsPage({ params }: EditNewsPageProps) {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-          />
-          {imagePreview && (
+          />          {imagePreview && (
             <div className="mt-2">
               <p className="text-sm text-gray-600 mb-2">Nueva imagen:</p>
-              <img 
-                src={imagePreview} 
-                alt="Vista previa" 
-                className="h-40 object-cover" 
-              />
+              <div className="relative h-40 w-auto">
+                <Image 
+                  src={imagePreview}
+                  alt="Vista previa de la nueva imagen"
+                  className="object-cover" 
+                  fill
+                  sizes="(max-width: 768px) 100vw, 300px"
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
             </div>
           )}
         </div>

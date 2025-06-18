@@ -4,14 +4,14 @@ import { useRouter } from 'next/navigation';
 import { NewsItem } from '@/components/ui/NewsCard';
 import Image from 'next/image';
 
-interface PageProps {
+// Tipo para el componente de página dinámica en Next.js
+type EditNewsPageProps = {
   params: {
     id: string;
-  };
-  searchParams?: Record<string, string | string[]>;
-}
+  }
+};
 
-export default function EditNewsPage({ params }: PageProps) {
+export default function EditNewsPage({ params }: Readonly<EditNewsPageProps>) {
   const router = useRouter();
   const { id } = params;
   
@@ -38,7 +38,7 @@ export default function EditNewsPage({ params }: PageProps) {
         const data: NewsItem = await response.json();
         setFormData({
           title: data.title,
-          excerpt: data.excerpt || '', // Puede ser que en el backend esté como summary
+          excerpt: data.excerpt ?? '', // Puede ser que en el backend esté como summary
           content: data.content,
           category: data.category,
         });
@@ -62,8 +62,7 @@ export default function EditNewsPage({ params }: PageProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {    if (e.target.files?.[0]) {
       const file = e.target.files[0];
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
@@ -93,7 +92,7 @@ export default function EditNewsPage({ params }: PageProps) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al actualizar la noticia');
+        throw new Error(errorData.message ?? 'Error al actualizar la noticia');
       }
 
       router.push('/admin/news');

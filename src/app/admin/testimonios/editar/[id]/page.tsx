@@ -4,14 +4,14 @@ import { useRouter } from 'next/navigation';
 import { Testimonial } from '@/data/testimonials';
 import Image from 'next/image';
 
-interface PageProps {
+// Tipo para el componente de página dinámica en Next.js
+type EditarTestimonioProps = {
   params: {
     id: string;
-  };
-  searchParams?: Record<string, string | string[]>;
-}
+  }
+};
 
-export default function EditarTestimonio({ params }: PageProps) {
+export default function EditarTestimonio({ params }: Readonly<EditarTestimonioProps>) {
   const router = useRouter();
   const { id } = params;
   

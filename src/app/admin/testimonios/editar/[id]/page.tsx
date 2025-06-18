@@ -288,15 +288,15 @@ export default function EditarTestimonio({ params }: PageProps) {
           />
           {imagePreview && (
             <div className="mt-2">
-              <p className="text-sm text-gray-600 mb-2">Nueva imagen:</p>              <div className="relative h-40 w-full">
+              <p className="text-sm text-gray-600 mb-2">Nueva imagen:</p> <div className="relative h-40 w-full">
                 <Image 
                   src={imagePreview} 
                   alt="Vista previa"
                   fill
                   sizes="(max-width: 768px) 100vw, 300px"
                   style={{ objectFit: 'contain' }}
-                className="h-40 object-cover" 
-              />
+                />
+              </div>
             </div>
           )}
         </div>
@@ -321,3 +321,4 @@ export default function EditarTestimonio({ params }: PageProps) {
     </div>
   );
 }
+

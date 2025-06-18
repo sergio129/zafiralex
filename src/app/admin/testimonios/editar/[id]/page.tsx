@@ -1,19 +1,16 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { Testimonial } from '@/data/testimonials';
 import Image from 'next/image';
 
-// Tipo para el componente de página dinámica en Next.js
-type EditarTestimonioProps = {
-  params: {
-    id: string;
-  }
-};
+// En Next.js App Router, usamos useParams en lugar de recibir props
+// para estar compatible con todos los entornos
 
-export default function EditarTestimonio({ params }: Readonly<EditarTestimonioProps>) {
+export default function EditarTestimonio() {
   const router = useRouter();
-  const { id } = params;
+  const params = useParams();
+  const id = params?.id as string;
   
   const [formData, setFormData] = useState({
     name: '',

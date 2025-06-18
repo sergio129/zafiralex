@@ -1,19 +1,17 @@
 'use client';
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { NewsItem } from '@/components/ui/NewsCard';
 import Image from 'next/image';
 
-// Tipo para el componente de página dinámica en Next.js
-type EditNewsPageProps = {
-  params: {
-    id: string;
-  }
-};
+// En Next.js App Router, no debemos definir tipos para las props de páginas dinámicas
+// ya que Next.js los maneja internamente. En su lugar, usaremos useParams.
 
-export default function EditNewsPage({ params }: Readonly<EditNewsPageProps>) {
+export default function EditNewsPage() {
+  // Usamos useParams para extraer el ID de la URL de manera segura
+  const params = useParams();
+  const id = params?.id as string;
   const router = useRouter();
-  const { id } = params;
   
   const [formData, setFormData] = useState({
     title: '',

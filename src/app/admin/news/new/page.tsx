@@ -20,9 +20,8 @@ export default function CreateNewsPage() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
+    if (e.target.files?.[0]) {
       const file = e.target.files[0];
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
@@ -52,7 +51,7 @@ export default function CreateNewsPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al crear la noticia');
+        throw new Error(errorData.message ?? 'Error al crear la noticia');
       }
 
       router.push('/admin/news');

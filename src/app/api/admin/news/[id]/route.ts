@@ -14,10 +14,10 @@ const NEWS_FILE = path.join(DATA_DIR, 'news.json');
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+  context: { params: { id: string } }
+){
   try {
-    const { id } = params;
+    const { id } = context.params;
     
     // Leer noticias
     const news = await readJsonFile<NewsItem[]>(NEWS_FILE, []);
@@ -44,10 +44,10 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const formData = await req.formData();
     
     // Extraer datos del formulario
@@ -127,10 +127,10 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     
     // Leer noticias
     const news = await readJsonFile<NewsItem[]>(NEWS_FILE, []);

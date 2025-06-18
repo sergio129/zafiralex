@@ -14,10 +14,10 @@ const TESTIMONIALS_FILE = path.join(DATA_DIR, 'testimonials.json');
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     
     // Leer testimonios
     const testimonials = await readJsonFile<Testimonial[]>(TESTIMONIALS_FILE, []);

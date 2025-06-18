@@ -51,7 +51,7 @@ export default function News() {
   ]
 
   return (
-    <section id="noticias" className="py-20 bg-white">
+    <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">        {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-block border-b-4 border-blue-600 mb-4">

@@ -6,13 +6,12 @@ import Link from 'next/link'
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-
   const menuItems = [
-    { href: '#inicio', label: 'Inicio' },
-    { href: '#servicios', label: 'Nuestros Servicios' },
-    { href: '#noticias', label: 'Noticias' },
-    { href: '#testimonios', label: 'Testimonios' },
-    { href: '#contacto', label: 'Contáctenos' },
+    { href: '/', label: 'Inicio' },
+    { href: '/servicios', label: 'Nuestros Servicios' },
+    { href: '/noticias', label: 'Noticias' },
+    { href: '/testimonios', label: 'Testimonios' },
+    { href: '/contacto', label: 'Contáctenos' },
   ]
   // Efecto para detectar scroll y cambiar el estilo del header
   useEffect(() => {

@@ -108,8 +108,8 @@ export default function Services() {
         }
       ]
     },]
-    return (
-    <section id="servicios" className="py-20 bg-gray-50">
+  return (
+    <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
@@ -212,7 +212,7 @@ export default function Services() {
         {/* CTA */}
         <div className="text-center mt-16">
           <a
-            href="#contacto"
+            href="/contacto"
             className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-blue-800 transition-all inline-block shadow-md hover:shadow-lg"
           >
             Solicite una Asesoría Jurídica Especializada

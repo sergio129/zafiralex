@@ -4,10 +4,11 @@ import { useRouter } from 'next/navigation';
 import { NewsItem } from '@/components/ui/NewsCard';
 import Image from 'next/image';
 
-interface EditNewsPageProps {
+type EditNewsPageProps = {
   params: {
     id: string;
   };
+  searchParams?: Record<string, string | string[]>;
 }
 
 export default function EditNewsPage({ params }: EditNewsPageProps) {

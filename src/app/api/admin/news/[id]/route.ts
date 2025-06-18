@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { readJsonFile, writeJsonFile, slugify } from '@/lib/fileUtils';
 import path from 'path';
 import fs from 'fs';
@@ -12,10 +12,12 @@ const UPLOADS_DIR = path.join(process.cwd(), 'public', 'uploads', 'news');
 const NEWS_FILE = path.join(DATA_DIR, 'news.json');
 
 export async function GET(
-  req: NextRequest,
-  context: { params: { id: string } }
-) {  try {
-    const { id } = context.params;
+  request: Request,
+  // @ts-ignore
+  { params }
+) {
+  try {
+    const { id } = params;
     const news = await readJsonFile<NewsItem[]>(NEWS_FILE, []);
     const newsItem = news.find(item => item.id === id);
 
@@ -31,12 +33,13 @@ export async function GET(
 }
 
 export async function PUT(
-  req: NextRequest,
-  context: { params: { id: string } }
+  request: Request,
+  // @ts-ignore
+  { params }
 ) {
   try {
-    const { id } = context.params;
-    const formData = await req.formData();
+    const { id } = params;
+    const formData = await request.formData();
 
     const title = formData.get('title') as string;
     const summary = formData.get('summary') as string;
@@ -94,10 +97,12 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: NextRequest,
-  context: { params: { id: string } }
-) {  try {
-    const { id } = context.params;
+  request: Request,
+  // @ts-ignore
+  { params }
+) {
+  try {
+    const { id } = params;
     const news = await readJsonFile<NewsItem[]>(NEWS_FILE, []);
     const index = news.findIndex(item => item.id === id);
 

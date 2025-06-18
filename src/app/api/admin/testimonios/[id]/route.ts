@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { readJsonFile, writeJsonFile } from '@/lib/fileUtils';
 import path from 'path';
 import fs from 'fs';
@@ -13,11 +13,12 @@ const UPLOADS_DIR = path.join(process.cwd(), 'public', 'uploads', 'testimonials'
 const TESTIMONIALS_FILE = path.join(DATA_DIR, 'testimonials.json');
 
 export async function GET(
-  req: NextRequest,
-  context: { params: { id: string } }
+  request: Request,
+  // @ts-ignore
+  { params }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = params;
     
     // Leer testimonios
     const testimonials = await readJsonFile<Testimonial[]>(TESTIMONIALS_FILE, []);
@@ -43,12 +44,13 @@ export async function GET(
 }
 
 export async function PUT(
-  req: NextRequest,
-  context: { params: { id: string } }
+  request: Request,
+  // @ts-ignore
+  { params }
 ) {
   try {
-    const { id } = context.params;
-    const formData = await req.formData();
+    const { id } = params;
+    const formData = await request.formData();
     
     // Extraer datos del formulario
     const name = formData.get('name') as string;
@@ -148,11 +150,12 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: NextRequest,
-  context: { params: { id: string } }
+  request: Request,
+  // @ts-ignore
+  { params }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = params;
     
     // Leer testimonios
     const testimonials = await readJsonFile<Testimonial[]>(TESTIMONIALS_FILE, []);

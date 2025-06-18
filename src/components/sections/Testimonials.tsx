@@ -110,8 +110,8 @@ export default function Testimonials() {
                 <blockquote className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-8 italic">
                   &ldquo;{testimonials[currentTestimonial].testimonial}&rdquo;
                 </blockquote>
-              ) : (
-                <div className="mb-8">                  <YouTubeEmbed 
+              ) : (                <div className="mb-8">
+                  <YouTubeEmbed 
                     videoId={testimonials[currentTestimonial].videoId ?? ''} 
                     title={`Testimonio de ${testimonials[currentTestimonial].name}`} 
                     className="max-w-3xl mx-auto rounded-lg shadow-lg"
@@ -153,9 +153,10 @@ export default function Testimonials() {
             >
               <svg className="h-6 w-6 text-gray-600" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                 <path d="M9 5l7 7-7 7"/>
-              </svg>
-            </button>
-          </div>          {/* Dots Indicator */}
+              </svg>            </button>
+          </div>
+          
+          {/* Dots Indicator */}
           <div className="flex justify-center mt-8 space-x-2">
             {testimonials.map((testimonial, dotIndex) => (
               <button

@@ -22,17 +22,17 @@ export default function ServicesInteractive() {
       title: "Derecho Administrativo en Colombia",
       description: "Servicios Jurídicos – Compañía Jurídica Zafira Lex",
       procedimientos: [
-        "1. Nulidad por Inconstitucionalidad",
-        "2. Control Inmediato de Legalidad",
-        "3. Acción de Nulidad",
-        "4. Nulidad y Restablecimiento del Derecho",
-        "5. Nulidad Electoral",
-        "6. Reparación Directa",
-        "7. Controversias Contractuales",
-        "8. Acción de Repetición",
-        "9. Pérdida de Investidura",
-        "10. Protección de Derechos e Intereses Colectivos",
-        "11. Reparación de Perjuicios a un Grupo (Acción de Grupo)"
+        "Nulidad por Inconstitucionalidad",
+        "Control Inmediato de Legalidad",
+        "Acción de Nulidad",
+        "Nulidad y Restablecimiento del Derecho",
+        "Nulidad Electoral",
+        "Reparación Directa",
+        "Controversias Contractuales",
+        "Acción de Repetición",
+        "Pérdida de Investidura",
+        "Protección de Derechos e Intereses Colectivos",
+        "Reparación de Perjuicios a un Grupo (Acción de Grupo)"
       ],
       consultorias: [
         "Procesos Coactivos",
@@ -50,17 +50,17 @@ export default function ServicesInteractive() {
       title: "Servicios Jurídicos para el Magisterio Colombiano",
       description: "Régimen Especial – Compañía Jurídica Zafira Lex",
       procedimientos: [
-        "1. Pensiones del Régimen Especial del Magisterio",
-        "2. Reliquidación Pensional Completa",
-        "3. Sustitución y Sobrevivencia",
-        "4. Indemnizaciones Sustitutivas",
-        "5. Seguros, Auxilios e Indemnizaciones FOMAG",
-        "6. Cesantías del Magisterio",
-        "7. Licencias, Incapacidades y Reembolsos",
-        "8. Liquidación de Fallos Judiciales",
-        "9. Sanción por Mora – Intereses Legales",
-        "10. Salud y Seguridad Laboral",
-        "11. Fuero Laboral y Protección Especial"
+        "Pensiones del Régimen Especial del Magisterio",
+        "Reliquidación Pensional Completa",
+        "Sustitución y Sobrevivencia",
+        "Indemnizaciones Sustitutivas",
+        "Seguros, Auxilios e Indemnizaciones FOMAG",
+        "Cesantías del Magisterio",
+        "Licencias, Incapacidades y Reembolsos",
+        "Liquidación de Fallos Judiciales",
+        "Sanción por Mora – Intereses Legales",
+        "Salud y Seguridad Laboral",
+        "Fuero Laboral y Protección Especial"
       ]
     },
     {

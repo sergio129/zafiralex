@@ -252,7 +252,7 @@ export default function UserManagementPage() {
             <form onSubmit={formMode === 'create' ? handleCreateUser : handleUpdateUser}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-800 mb-1">
                     Nombre completo
                   </label>
                   <input
@@ -262,12 +262,11 @@ export default function UserManagementPage() {
                     value={formData.name}
                     onChange={handleInputChange}
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-gray-900 bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
                 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <div>                  <label htmlFor="email" className="block text-sm font-medium text-gray-800 mb-1">
                     Correo electrónico
                   </label>
                   <input
@@ -277,12 +276,11 @@ export default function UserManagementPage() {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-gray-900 bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
                 
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <div>                  <label htmlFor="password" className="block text-sm font-medium text-gray-800 mb-1">
                     {formMode === 'create' ? 'Contraseña' : 'Nueva contraseña (dejar en blanco para no cambiarla)'}
                   </label>
                   <input
@@ -292,12 +290,11 @@ export default function UserManagementPage() {
                     value={formData.password}
                     onChange={handleInputChange}
                     required={formMode === 'create'}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-gray-900 bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
                 
-                <div>
-                  <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                <div>                  <label htmlFor="role" className="block text-sm font-medium text-gray-800 mb-1">
                     Rol
                   </label>
                   <select
@@ -305,7 +302,7 @@ export default function UserManagementPage() {
                     name="role"
                     value={formData.role}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-gray-900 bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="admin">Administrador</option>
                     <option value="editor">Editor</option>

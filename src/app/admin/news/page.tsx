@@ -2,11 +2,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { NewsItem } from '@/components/ui/NewsCard';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 export default function AdminNewsPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteNewsId, setDeleteNewsId] = useState<string | null>(null);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -26,31 +29,42 @@ export default function AdminNewsPage() {
 
     fetchNews();
   }, []);
-  const handleDelete = async (id: string | number) => {
-    if (window.confirm('¿Está seguro de que desea eliminar esta noticia?')) {
-      try {
-        const response = await fetch(`/api/admin/news/${id}`, {
-          method: 'DELETE',
-        });
 
-        if (!response.ok) {
-          throw new Error('Error al eliminar la noticia');
-        }
+  const handleDeleteClick = (id: string | number) => {
+    setDeleteNewsId(id.toString());
+    setIsConfirmDialogOpen(true);
+  };
 
-        // Actualizar lista de noticias
-        setNews(news.filter(item => item.id !== id));
-      } catch (err) {
-        alert(err instanceof Error ? err.message : 'Error al eliminar la noticia');
+  const handleDelete = async () => {
+    if (!deleteNewsId) return;
+    
+    try {
+      const response = await fetch(`/api/admin/news/${deleteNewsId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar la noticia');
       }
+
+      // Actualizar lista de noticias
+      setNews(news.filter(item => item.id !== deleteNewsId));
+      setIsConfirmDialogOpen(false);
+      setDeleteNewsId(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al eliminar la noticia');
     }
+  };
+
+  const handleCancelDelete = () => {
+    setIsConfirmDialogOpen(false);
+    setDeleteNewsId(null);
   };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="text-center">
-          <div className="spinner">Cargando...</div>
-        </div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
   }
@@ -120,7 +134,7 @@ export default function AdminNewsPage() {
                       Editar
                     </Link>
                     <button
-                      onClick={() => handleDelete(item.id)}
+                      onClick={() => handleDeleteClick(item.id)}
                       className="text-red-600 hover:text-red-900"
                     >
                       Eliminar
@@ -132,6 +146,16 @@ export default function AdminNewsPage() {
           </table>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={isConfirmDialogOpen}
+        title="Confirmar eliminación"
+        message="¿Está seguro de que desea eliminar esta noticia?"
+        confirmLabel="Eliminar"
+        cancelLabel="Cancelar"
+        onConfirm={handleDelete}
+        onCancel={handleCancelDelete}
+      />
     </div>
   );
 }

@@ -2,11 +2,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Testimonial } from '@/data/testimonials';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 export default function TestimoniosAdmin() {
   const [testimonios, setTestimonios] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteTestimonioId, setDeleteTestimonioId] = useState<string | null>(null);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchTestimonios = async () => {
@@ -187,6 +190,22 @@ export default function TestimoniosAdmin() {
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const openConfirmDialog = (id: string) => {
+    setDeleteTestimonioId(id);
+    setIsConfirmDialogOpen(true);
+  };
+
+  const closeConfirmDialog = () => {
+    setIsConfirmDialogOpen(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (deleteTestimonioId) {
+      await handleDeleteTestimonio(deleteTestimonioId);
+      closeConfirmDialog();
     }
   };
 
@@ -427,7 +446,7 @@ export default function TestimoniosAdmin() {
                           Editar
                         </button>
                         <button 
-                          onClick={() => handleDeleteTestimonio(testimonio.id)}
+                          onClick={() => openConfirmDialog(testimonio.id)}
                           className="text-red-600 hover:text-red-900 font-medium"
                           disabled={isSubmitting}
                         >
@@ -459,7 +478,16 @@ export default function TestimoniosAdmin() {
             <li>Todos los cambios se guardan automáticamente en el sistema de archivos</li>
             <li>Asegúrate de que todos los campos obligatorios estén completos</li>
           </ul>
-        </div>
+        </div>        {/* Confirm Dialog */}
+        <ConfirmDialog
+          isOpen={isConfirmDialogOpen}
+          onCancel={closeConfirmDialog}
+          onConfirm={handleConfirmDelete}
+          title="Eliminar testimonio"
+          message="¿Estás seguro de que deseas eliminar este testimonio? Esta acción no se puede deshacer."
+          confirmLabel="Eliminar"
+          cancelLabel="Cancelar"
+        />
       </div>
     </main>
   );

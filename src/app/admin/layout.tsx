@@ -9,6 +9,8 @@ const getHeaderTitle = (path: string): string => {
     return 'Gestión de Noticias';
   } else if (path.includes('/admin/testimonios')) {
     return 'Gestión de Testimonios';
+  } else if (path.includes('/admin/usuarios')) {
+    return 'Gestión de Usuarios';
   } else {
     return 'Panel de Control';
   }
@@ -118,6 +120,19 @@ export default function AdminLayout({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
               <span className="truncate">Testimonios</span>
+            </Link>
+            <Link 
+              href="/admin/usuarios" 
+              className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all ${
+                isActive('/admin/usuarios')
+                  ? 'bg-blue-100 text-blue-700 shadow-sm'
+                  : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600'
+              }`}
+            >
+              <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              <span className="truncate">Usuarios</span>
             </Link>
           </nav>        </div>
         

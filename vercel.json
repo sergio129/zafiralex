@@ -1,5 +1,8 @@
 {
-  "buildCommand": "prisma generate && next build",
+  "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "env": {
+    "VERCEL": "1"
+  }
 }

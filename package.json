@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "migrate-data": "node scripts/migrate-data.cjs",
-    "postinstall": "prisma generate"
+    "postinstall": "node scripts/postinstall.js"
   },
   "dependencies": {
     "@prisma/client": "^6.10.1",

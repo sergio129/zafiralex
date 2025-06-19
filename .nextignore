@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+build
+.vercel
+.env
+.env.local
+
+# Ignora las carpetas de configuración de usuario local en Windows
+**/Configuración local/
+**/Local Settings/

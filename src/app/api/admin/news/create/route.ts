@@ -52,17 +52,16 @@ export async function POST(request: Request) {
         mimeType = null;
       }
     }
-    
-    // Crear noticia en la base de datos con los datos binarios de la imagen
+      // Crear noticia en la base de datos con los datos binarios de la imagen
     const newNews = await prisma.news.create({
       data: {
         title,
         summary,
         content, 
         date,
-        imageData: imageData || undefined,
-        imageName: imageName || undefined,
-        mimeType: mimeType || undefined,
+        imageData: imageData ?? undefined,
+        imageName: imageName ?? undefined,
+        mimeType: mimeType ?? undefined,
         category,
         slug
       }

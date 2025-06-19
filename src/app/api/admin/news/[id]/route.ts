@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { slugify } from '@/lib/fileUtils';
 import { prisma } from '@/lib/prisma';
 
+// Utilizamos una definición de tipos más simple para evitar problemas de compilación
+// y usamos la misma implementación que funciona en testimonios
+
 // GET: Obtener una noticia por ID
 export async function GET(request: Request) {
   try {
@@ -14,6 +17,18 @@ export async function GET(request: Request) {
 
     if (!newsItem) {
       return NextResponse.json({ message: 'Noticia no encontrada' }, { status: 404 });
+    }
+
+    // Para evitar devolver el buffer de la imagen en JSON y sobrecargar la respuesta,
+    // generamos una url para acceder a la imagen en su lugar cuando se necesite
+    if (newsItem.imageData) {
+      const newsWithoutImageData = {
+        ...newsItem,
+        imageData: undefined, // No enviamos los datos binarios en la API
+        hasImage: true // Indicamos que tiene imagen
+      };
+      
+      return NextResponse.json(newsWithoutImageData, { status: 200 });
     }
 
     return NextResponse.json(newsItem, { status: 200 });

@@ -1,12 +1,15 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+// Definimos los tipos correctos para la API route
+export const dynamic = 'force-dynamic'; // No caché para asegurar que siempre obtenemos la imagen actualizada
+
+// Usamos el mismo patrón que funciona en testimonios
+export async function GET(request: Request) {
   try {
-    const id = params.id;
+    // Extraer el ID de la URL
+    const urlParts = request.url.split('/');
+    const id = urlParts[urlParts.length - 2]; // El ID está en la penúltima posición porque la última es "image"
     
     // Obtener la noticia de la base de datos
     const news = await prisma.news.findUnique({

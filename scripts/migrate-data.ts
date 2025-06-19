@@ -68,15 +68,15 @@ async function migrateNews() {
     await prisma.news.deleteMany({});
 
     // Insertar noticias
-    for (const item of news) {
-      await prisma.news.create({
+    for (const item of news) {      await prisma.news.create({
         data: {
           id: item.id,
           title: item.title,
           summary: item.summary,
           content: item.content,
           date: new Date(item.date),
-          image: item.image || null,
+          // Los campos de imagen han cambiado a imageData, imageName y mimeType
+          // Por ahora no migramos las imágenes antiguas
           category: item.category,
           slug: item.slug,
         }

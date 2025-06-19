@@ -1,29 +1,17 @@
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient } from '@prisma/client';
 
-// En entornos no serverless, usamos global para evitar múltiples instancias
+// Declaración para el objeto global en Node.js
 declare global {
   // eslint-disable-next-line no-var
-  var cachedPrisma: PrismaClient;
+  var prisma: PrismaClient | undefined;
 }
 
-// Asegúrate de que PrismaClient sea instanciado sólo una vez
-// eslint-disable-next-line import/no-mutable-exports
-export let prisma: PrismaClient;
+// Usar una única instancia de PrismaClient para reducir conexiones
+export const prisma = global.prisma ?? new PrismaClient({
+  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+});
 
-if (process.env.NODE_ENV === 'production') {
-  // En producción, crea una nueva instancia cada vez (Vercel serverless)
-  prisma = new PrismaClient({
-    log: ['error'],
-    errorFormat: 'minimal',
-  });
-} else {
-  // En desarrollo, reutiliza la instancia para evitar múltiples conexiones
-  if (!global.cachedPrisma) {
-    global.cachedPrisma = new PrismaClient({
-      log: ['query', 'error', 'warn'],
-    });
-  }
-  prisma = global.cachedPrisma;
-}
+// Si no estamos en producción, asignar la instancia al objeto global
+if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
 
 export default prisma;

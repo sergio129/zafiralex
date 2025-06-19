@@ -1,20 +1,22 @@
 import { AdminUser } from '../types/admin';
-import { hashPassword } from './fileUtils';
 import prisma from './prisma';
+import bcrypt from 'bcryptjs';
 
 // Ahora usamos Prisma para interactuar con la base de datos
 export const AuthService = {
   async validateCredentials(username: string, password: string): Promise<AdminUser | null> {
     try {
-      const hashedPassword = hashPassword(password);
-      
-      // Buscar usuario por email (usado como username) y comparar contraseña
+      // Buscar usuario por email (usado como username)
       const user = await prisma.user.findFirst({
         where: {
-          email: username,
-          password: hashedPassword
+          email: username
         }
       });
+      
+      // Si no se encuentra el usuario o la contraseña no coincide
+      if (!user || !(await bcrypt.compare(password, user.password))) {
+        return null;
+      }
       
       if (!user) return null;
       

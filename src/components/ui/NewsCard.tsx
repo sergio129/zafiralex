@@ -1,8 +1,21 @@
 'use client'
 
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
+
+// Función para formatear la fecha
+function formatearFecha(fechaString: string) {
+  try {
+    const fecha = new Date(fechaString);
+    return format(fecha, "d 'de' MMMM 'de' yyyy", { locale: es });
+  } catch {
+    return fechaString;
+  }
+}
 
 // Función para obtener la URL de la imagen basada en el tipo de almacenamiento
 function getImageUrl(news: NewsItem): string {
@@ -127,9 +140,7 @@ export default function NewsCard({ news, index = 0, featured = false }: NewsCard
             >
             </path>
           </svg>
-        </Link>
-      </div>
+        </Link>      </div>
     </motion.div>
   );
-}
 }

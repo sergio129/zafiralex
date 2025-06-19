@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { promisify } from 'util';
 import { prisma } from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../../../../generated/prisma';
 
 const writeFileAsync = promisify(fs.writeFile);
 const mkdirAsync = promisify(fs.mkdir);

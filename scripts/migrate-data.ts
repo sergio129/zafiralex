@@ -1,3 +1,4 @@
+// Usamos la importación desde @prisma/client para scripts
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
 import path from 'path';

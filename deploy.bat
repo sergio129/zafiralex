@@ -2,16 +2,20 @@
 echo ===== Preparando despliegue a Vercel =====
 
 echo.
-echo 1. Añadiendo cambios al repositorio...
+echo 1. Generando cliente Prisma...
+call npx prisma generate
+
+echo.
+echo 2. Añadiendo cambios al repositorio...
 git add .
 
 echo.
-echo 2. Realizando commit...
+echo 3. Realizando commit...
 set /p commit_msg="Ingrese el mensaje del commit: "
 git commit -m "%commit_msg%"
 
 echo.
-echo 3. Enviando cambios a GitHub...
+echo 4. Enviando cambios a GitHub...
 git push origin master
 
 echo.

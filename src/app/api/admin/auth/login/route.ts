@@ -8,17 +8,15 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-producti
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { username, password } = body;
-
-    // Validar credenciales
-    const user = AuthService.validateCredentials(username, password);
+    const { username, password } = body;    // Validar credenciales
+    const user = await AuthService.validateCredentials(username, password);
 
     if (!user) {
       return NextResponse.json(
         { message: 'Credenciales inválidas' },
         { status: 401 }
       );
-    }    // Importar jsonwebtoken dinámicamente
+    }// Importar jsonwebtoken dinámicamente
     const { sign } = await import('jsonwebtoken');
     
     // Crear token JWT

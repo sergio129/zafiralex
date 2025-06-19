@@ -1,9 +1,11 @@
 import Hero from '@/components/sections/Hero'
+import ExecutiveServicesWrapper from '@/components/wrappers/ExecutiveServicesWrapper'
 import Link from 'next/link'
 
 export default function Home() {
   const featuredSections = [
     {
+      id: "servicios",
       title: "Servicios Jurídicos",
       description: "Explore nuestra amplia gama de servicios jurídicos especializados",
       icon: (
@@ -14,6 +16,7 @@ export default function Home() {
       link: "/servicios"
     },
     {
+      id: "noticias",
       title: "Noticias Legales",
       description: "Manténgase actualizado con las últimas noticias y cambios en la legislación",
       icon: (
@@ -24,6 +27,7 @@ export default function Home() {
       link: "/noticias"
     },
     {
+      id: "testimonios",
       title: "Testimonios",
       description: "Vea lo que nuestros clientes dicen sobre nuestros servicios",
       icon: (
@@ -39,6 +43,9 @@ export default function Home() {
     <main>
       <Hero />
       
+      {/* Proceso Ejecutivos Highlighted Section */}
+      <ExecutiveServicesWrapper />
+      
       {/* Featured sections */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,8 +57,8 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredSections.map((section, index) => (
-              <Link href={section.link} key={index} className="block">
+            {featuredSections.map((section) => (
+              <Link href={section.link} key={section.id} className="block">
                 <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl hover:translate-y-[-5px] transition-all duration-300 h-full flex flex-col">
                   <div className="mb-4">{section.icon}</div>
                   <h3 className="text-xl font-semibold mb-3 text-gray-900">{section.title}</h3>

@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Testimonial } from '@/data/testimonials';
+import { Testimonial } from '@/types/testimonial';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 export default function TestimoniosAdmin() {

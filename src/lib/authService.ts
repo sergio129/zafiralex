@@ -1,22 +1,56 @@
-import { AdminUser, adminUsers } from '../data/admin';
+import { AdminUser } from '../types/admin';
 import { hashPassword } from './fileUtils';
+import prisma from './prisma';
 
-// In a real application, this would interact with a database or file system
-// For demo purposes, we'll use the admin.ts file data
-
+// Ahora usamos Prisma para interactuar con la base de datos
 export const AuthService = {
-  validateCredentials(username: string, password: string): AdminUser | null {
-    const hashedPassword = hashPassword(password);
-    
-    const user = adminUsers.find(
-      (u: AdminUser) => u.username === username && u.passwordHash === hashedPassword
-    );
-    
-    return user ?? null;
+  async validateCredentials(username: string, password: string): Promise<AdminUser | null> {
+    try {
+      const hashedPassword = hashPassword(password);
+      
+      // Buscar usuario por email (usado como username) y comparar contraseña
+      const user = await prisma.user.findFirst({
+        where: {
+          email: username,
+          password: hashedPassword
+        }
+      });
+      
+      if (!user) return null;
+      
+      // Convertir el usuario de Prisma a nuestro tipo AdminUser
+      return {
+        id: user.id,
+        username: user.email,
+        name: user.name ?? user.email.split('@')[0],
+        email: user.email,
+        role: user.role
+      };
+    } catch (error) {
+      console.error('Error validando credenciales:', error);
+      return null;
+    }
   },
 
-  getUserByUsername(username: string): AdminUser | null {
-    const user = adminUsers.find((u: AdminUser) => u.username === username);
-    return user ?? null;
+  async getUserByUsername(username: string): Promise<AdminUser | null> {
+    try {
+      const user = await prisma.user.findFirst({
+        where: { email: username }
+      });
+      
+      if (!user) return null;
+      
+      // Convertir el usuario de Prisma a nuestro tipo AdminUser
+      return {
+        id: user.id,
+        username: user.email,
+        name: user.name ?? user.email.split('@')[0],
+        email: user.email,
+        role: user.role
+      };
+    } catch (error) {
+      console.error('Error obteniendo usuario:', error);
+      return null;
+    }
   }
 };

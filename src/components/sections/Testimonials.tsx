@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import YouTubeEmbed from '../ui/YouTubeEmbed'
-import { Testimonial } from '@/data/testimonials'
+import { Testimonial } from '@/types/testimonial'
 
 // Función para extraer el ID de YouTube de una URL
 const getVideoId = (url: string = ''): string => {

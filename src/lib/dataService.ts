@@ -3,7 +3,7 @@ import fs from 'fs';
 import { promisify } from 'util';
 import { readJsonFile, writeJsonFile, generateId, slugify } from './fileUtils';
 import { NewsItem } from '@/components/ui/NewsCard';
-import { Testimonial } from '../data/testimonials';
+import { Testimonial } from '../types/testimonial';
 
 const unlinkAsync = promisify(fs.unlink);
 const copyFileAsync = promisify(fs.copyFile);

@@ -1,42 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import { promisify } from 'util';
 import { withAuth } from '@/lib/authMiddleware';
-
-const readFileAsync = promisify(fs.readFile);
-const existsAsync = promisify(fs.exists);
-
-// Define rutas a archivos
-const DATA_DIR = path.join(process.cwd(), 'src', 'data');
-const NEWS_FILE = path.join(DATA_DIR, 'news.json');
-const TESTIMONIALS_FILE = path.join(DATA_DIR, 'testimonials.json');
-
-// Tipamos correctamente para evitar el error de 'any'
-async function readJsonFile(filePath: string, defaultValue: Record<string, unknown>[] | unknown[]) {
-  try {
-    if (await existsAsync(filePath)) {
-      const data = await readFileAsync(filePath, 'utf-8');
-      return JSON.parse(data);
-    }
-    return defaultValue;
-  } catch (error) {
-    console.error(`Error al leer archivo JSON: ${filePath}`, error);
-    return defaultValue;
-  }
-}
+import prisma from '@/lib/prisma';
 
 export const GET = withAuth(async (_req: NextRequest) => {
   try {
-    // Leer datos
-    const news = await readJsonFile(NEWS_FILE, []);
-    const testimonials = await readJsonFile(TESTIMONIALS_FILE, []);
+    // Consultar datos directamente desde la base de datos usando Prisma
+    const newsCount = await prisma.news.count();
+    const testimonialsCount = await prisma.testimonial.count();
 
-    // Construir estadísticas
+    // Construir estadísticas con los datos reales de la base de datos
     const stats = {
-      newsCount: news.length,
-      testimonialsCount: testimonials.length
-    };    return NextResponse.json(stats, { status: 200 });
+      newsCount,
+      testimonialsCount
+    };
+    
+    return NextResponse.json(stats, { status: 200 });
   } catch (error) {
     console.error('Error al obtener estadísticas:', error);
     return NextResponse.json(

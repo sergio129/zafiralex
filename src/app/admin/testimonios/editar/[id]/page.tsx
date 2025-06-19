@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Testimonial } from '@/data/testimonials';
+import { Testimonial } from '@/types/testimonial';
 import Image from 'next/image';
 
 // En Next.js App Router, usamos useParams en lugar de recibir props

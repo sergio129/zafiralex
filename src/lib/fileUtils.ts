@@ -69,12 +69,7 @@ export async function writeJsonFile<T>(filePath: string, data: T): Promise<void>
         
         // Nota: Esto es un ejemplo conceptual, no funcionará directamente en Vercel sin configuración adicional
         // Requeriría tokens de acceso a GitHub y configuración de Git en el entorno
-        /*
-        execSync('git add ' + filePath);
-        execSync('git commit -m "Actualización automática de datos JSON"');
-        execSync('git push origin main');
-        console.log('Repositorio actualizado con éxito');
-        */
+
         
         // En vez de intentar actualizar el repositorio directamente (que es complicado en Vercel),
         // mostraremos un mensaje indicando que esta funcionalidad requiere implementación adicional

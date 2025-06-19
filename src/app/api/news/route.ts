@@ -1,15 +1,14 @@
 import { NextResponse } from 'next/server';
-import { readJsonFile } from '@/lib/fileUtils';
-import path from 'path';
-
-// Define rutas a archivos
-const DATA_DIR = path.join(process.cwd(), 'src', 'data');
-const NEWS_FILE = path.join(DATA_DIR, 'news.json');
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   try {
-    // Leer noticias
-    const news = await readJsonFile(NEWS_FILE, []);
+    // Obtener noticias desde la base de datos
+    const news = await prisma.news.findMany({
+      orderBy: {
+        date: 'desc'
+      }
+    });
     
     return NextResponse.json(news, { status: 200 });
   } catch (error) {

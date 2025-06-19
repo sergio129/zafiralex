@@ -1,25 +1,24 @@
 import { NextResponse } from 'next/server';
-import { readJsonFile, writeJsonFile, slugify } from '@/lib/fileUtils';
+import { slugify } from '@/lib/fileUtils';
 import path from 'path';
 import fs from 'fs';
 import { promisify } from 'util';
-import { NewsItem } from '@/components/ui/NewsCard';
+import { prisma } from '@/lib/prisma';
 
 const unlinkAsync = promisify(fs.unlink);
 
-const DATA_DIR = path.join(process.cwd(), 'src', 'data');
 const UPLOADS_DIR = path.join(process.cwd(), 'public', 'uploads', 'news');
-const NEWS_FILE = path.join(DATA_DIR, 'news.json');
 
 export async function GET(
   request: Request,
-  // @ts-ignore
-  { params }
+  { params }: { params: { id: string } }
 ) {
   try {
     const { id } = params;
-    const news = await readJsonFile<NewsItem[]>(NEWS_FILE, []);
-    const newsItem = news.find(item => item.id === id);
+
+    const newsItem = await prisma.news.findUnique({
+      where: { id }
+    });
 
     if (!newsItem) {
       return NextResponse.json({ message: 'Noticia no encontrada' }, { status: 404 });
@@ -34,8 +33,7 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  // @ts-ignore
-  { params }
+  { params }: { params: { id: string } }
 ) {
   try {
     const { id } = params;
@@ -51,24 +49,22 @@ export async function PUT(
       return NextResponse.json({ message: 'Todos los campos son requeridos' }, { status: 400 });
     }
 
-    const news = await readJsonFile<NewsItem[]>(NEWS_FILE, []);
-    const index = news.findIndex(item => item.id === id);
+    // Verificamos si la noticia existe
+    const existingNews = await prisma.news.findUnique({
+      where: { id }
+    });
 
-    if (index === -1) {
+    if (!existingNews) {
       return NextResponse.json({ message: 'Noticia no encontrada' }, { status: 404 });
     }
 
-    const updatedNews = { ...news[index] };
-    updatedNews.title = title;
-    updatedNews.summary = summary;
-    updatedNews.content = content;
-    updatedNews.category = category;
-    updatedNews.slug = slugify(title);
+    let imagePath = existingNews.image;
 
     if (imageFile && imageFile instanceof File) {
-      if (updatedNews.image?.startsWith('/uploads/')) {
+      // Si hay una imagen anterior, intentamos eliminarla
+      if (imagePath?.startsWith('/uploads/')) {
         try {
-          const oldImagePath = path.join(process.cwd(), 'public', updatedNews.image);
+          const oldImagePath = path.join(process.cwd(), 'public', imagePath);
           await unlinkAsync(oldImagePath);
         } catch (err) {
           console.error('Error al eliminar imagen anterior:', err);
@@ -76,18 +72,28 @@ export async function PUT(
       }
 
       const fileExtension = imageFile.name.split('.').pop();
-      const fileName = `${id}.${fileExtension}`;
+      const fileName = `${Date.now()}.${fileExtension}`;
       const filePath = path.join(UPLOADS_DIR, fileName);
 
       const arrayBuffer = await imageFile.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       await fs.promises.writeFile(filePath, buffer);
 
-      updatedNews.image = `/uploads/news/${fileName}`;
+      imagePath = `/uploads/news/${fileName}`;
     }
 
-    news[index] = updatedNews;
-    await writeJsonFile(NEWS_FILE, news);
+    // Actualizar en la base de datos
+    const updatedNews = await prisma.news.update({
+      where: { id },
+      data: {
+        title,
+        summary,
+        content,
+        category,
+        slug: slugify(title),
+        image: imagePath
+      }
+    });
 
     return NextResponse.json(updatedNews, { status: 200 });
   } catch (error) {
@@ -98,30 +104,34 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  // @ts-ignore
-  { params }
+  { params }: { params: { id: string } }
 ) {
   try {
     const { id } = params;
-    const news = await readJsonFile<NewsItem[]>(NEWS_FILE, []);
-    const index = news.findIndex(item => item.id === id);
+    
+    // Buscamos la noticia en la base de datos
+    const newsToDelete = await prisma.news.findUnique({
+      where: { id }
+    });
 
-    if (index === -1) {
+    if (!newsToDelete) {
       return NextResponse.json({ message: 'Noticia no encontrada' }, { status: 404 });
     }
 
-    const imageToDelete = news[index].image;
-    if (imageToDelete?.startsWith('/uploads/')) {
+    // Si hay una imagen, intentamos eliminarla
+    if (newsToDelete.image?.startsWith('/uploads/')) {
       try {
-        const imagePath = path.join(process.cwd(), 'public', imageToDelete);
+        const imagePath = path.join(process.cwd(), 'public', newsToDelete.image);
         await unlinkAsync(imagePath);
       } catch (err) {
         console.error('Error al eliminar imagen:', err);
       }
     }
 
-    news.splice(index, 1);
-    await writeJsonFile(NEWS_FILE, news);
+    // Eliminar de la base de datos
+    await prisma.news.delete({
+      where: { id }
+    });
 
     return NextResponse.json({ message: 'Noticia eliminada correctamente' }, { status: 200 });
   } catch (error) {

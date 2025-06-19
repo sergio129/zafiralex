@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { readJsonFile, writeJsonFile, generateId, slugify } from '@/lib/fileUtils';
+import { slugify } from '@/lib/fileUtils';
 import path from 'path';
 import fs from 'fs';
 import { promisify } from 'util';
-import { NewsItem } from '@/components/ui/NewsCard';
+import { prisma } from '@/lib/prisma';
 
 const writeFileAsync = promisify(fs.writeFile);
 // Renombramos para evitar el error de variable no utilizada
@@ -16,14 +16,10 @@ const isVercel = process.env.VERCEL === '1';
 console.log(`Entorno de ejecución: ${isVercel ? 'Vercel' : 'Local'}`);
 
 // Define rutas a archivos
-const DATA_DIR = path.join(process.cwd(), 'src', 'data');
 const UPLOADS_DIR = path.join(process.cwd(), 'public', 'uploads', 'news');
-const NEWS_FILE = path.join(DATA_DIR, 'news.json');
 
 // Logging para debug
-console.log(`DATA_DIR: ${DATA_DIR}`);
 console.log(`UPLOADS_DIR: ${UPLOADS_DIR}`);
-console.log(`NEWS_FILE: ${NEWS_FILE}`);
 
 // Asegurar que el directorio de subidas existe
 async function ensureUploadsDir() {
@@ -89,19 +85,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // Leer noticias existentes
-    const news = await readJsonFile<NewsItem[]>(NEWS_FILE, []);
-
-    // Crear nueva noticia
-    const newNewsId = generateId();
+    // Generar slug para la noticia
     const slug = slugify(title);
-    const date = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    const date = new Date(); // Fecha actual
     
-    let imagePath = '';    // Procesar imagen si se proporcionó
+    let imagePath = '';
+    
+    // Procesar imagen si se proporcionó
     if (imageFile && imageFile instanceof File) {
       try {
         const fileExtension = imageFile.name.split('.').pop();
-        const fileName = `${newNewsId}.${fileExtension}`;
+        // Usamos Date.now() para generar un nombre único
+        const fileName = `${Date.now()}${fileExtension}`;
         const filePath = path.join(UPLOADS_DIR, fileName);
         
         console.log('Procesando imagen:', fileExtension, fileName);
@@ -120,27 +115,18 @@ export async function POST(request: Request) {
       }
     }
     
-    // Crear objeto de noticia
-    const newNews: NewsItem = {
-      id: newNewsId,
-      title,
-      summary,
-      content,
-      date,
-      image: imagePath,
-      category,
-      slug
-    };
-      // Añadir a la lista y guardar
-    news.push(newNews);
-    
-    try {
-      await writeJsonFile(NEWS_FILE, news);
-      console.log('Archivo JSON guardado exitosamente');
-    } catch (jsonError) {
-      console.error('Error al escribir archivo JSON:', jsonError);
-      // Si falla la escritura al archivo, al menos devolvemos la noticia creada
-    }
+    // Crear noticia en la base de datos
+    const newNews = await prisma.news.create({
+      data: {
+        title,
+        summary,
+        content, 
+        date,
+        image: imagePath || null,
+        category,
+        slug
+      }
+    });
     
     return NextResponse.json(newNews, { status: 201 });
   } catch (error) {

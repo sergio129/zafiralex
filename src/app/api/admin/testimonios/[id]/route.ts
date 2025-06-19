@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-import { readJsonFile, writeJsonFile } from '@/lib/fileUtils';
 import path from 'path';
 import fs from 'fs';
 import { promisify } from 'util';
-import { Testimonial } from '@/data/testimonials';
+import { prisma } from '@/lib/prisma';
 
 const unlinkAsync = promisify(fs.unlink);
 const writeFileAsync = promisify(fs.writeFile);
@@ -14,14 +13,10 @@ const isVercel = process.env.VERCEL === '1';
 console.log(`Entorno de ejecución: ${isVercel ? 'Vercel' : 'Local'}`);
 
 // Define rutas a archivos
-const DATA_DIR = path.join(process.cwd(), 'src', 'data');
 const UPLOADS_DIR = path.join(process.cwd(), 'public', 'uploads', 'testimonials');
-const TESTIMONIALS_FILE = path.join(DATA_DIR, 'testimonials.json');
 
 // Logging para debug
-console.log(`DATA_DIR: ${DATA_DIR}`);
 console.log(`UPLOADS_DIR: ${UPLOADS_DIR}`);
-console.log(`TESTIMONIALS_FILE: ${TESTIMONIALS_FILE}`);
 
 // Función adaptada para guardar archivos en Vercel
 async function saveFileWithVercelCheck(filePath: string, buffer: Buffer): Promise<string> {
@@ -45,17 +40,15 @@ async function saveFileWithVercelCheck(filePath: string, buffer: Buffer): Promis
 
 export async function GET(
   request: Request,
-  // @ts-ignore
-  { params }
+  { params }: { params: { id: string } }
 ) {
   try {
     const { id } = params;
     
-    // Leer testimonios
-    const testimonials = await readJsonFile<Testimonial[]>(TESTIMONIALS_FILE, []);
-    
-    // Buscar testimonio por ID
-    const testimonial = testimonials.find(item => item.id === id);
+    // Buscar testimonio en la base de datos
+    const testimonial = await prisma.testimonial.findUnique({
+      where: { id }
+    });
     
     if (!testimonial) {
       return NextResponse.json(
@@ -76,8 +69,7 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  // @ts-ignore
-  { params }
+  { params }: { params: { id: string } }
 ) {
   try {
     console.log('Iniciando actualización de testimonio');
@@ -117,14 +109,12 @@ export async function PUT(
       );
     }
     
-    console.log('Leyendo datos de testimonios existentes');
-    // Leer testimonios
-    const testimonials = await readJsonFile<Testimonial[]>(TESTIMONIALS_FILE, []);
+    // Verificar si el testimonio existe en la base de datos
+    const testimonial = await prisma.testimonial.findUnique({
+      where: { id }
+    });
     
-    // Buscar testimonio por ID
-    const index = testimonials.findIndex(item => item.id === id);
-    
-    if (index === -1) {
+    if (!testimonial) {
       console.log('Testimonio no encontrado');
       return NextResponse.json(
         { message: 'Testimonio no encontrado' },
@@ -132,10 +122,8 @@ export async function PUT(
       );
     }
     
-    console.log('Testimonio encontrado, creando versión actualizada');
-    // Actualizar testimonio
-    const updatedTestimonial: Testimonial = {
-      ...testimonials[index],
+    // Preparar datos para actualizar
+    const updateData: any = {
       name,
       company,
       position,
@@ -146,10 +134,10 @@ export async function PUT(
     
     // Actualizar URL de video si es testimonio de tipo video
     if (type === 'video') {
-      updatedTestimonial.videoUrl = videoUrl ?? '';
+      updateData.videoUrl = videoUrl;
     } else {
       // Si cambia de video a texto, eliminar URL de video
-      delete updatedTestimonial.videoUrl;
+      updateData.videoUrl = null;
     }
     
     // Procesar nueva imagen si se proporcionó
@@ -157,10 +145,10 @@ export async function PUT(
       console.log('Procesando nueva imagen');
       
       // Eliminar imagen anterior si existe (solo en entorno local)
-      if (!isVercel && updatedTestimonial.image?.startsWith('/uploads/')) {
+      if (!isVercel && testimonial.image?.startsWith('/uploads/')) {
         try {
           console.log('Intentando eliminar imagen anterior');
-          const oldImagePath = path.join(process.cwd(), 'public', updatedTestimonial.image);
+          const oldImagePath = path.join(process.cwd(), 'public', testimonial.image);
           if (await existsAsync(oldImagePath)) {
             await unlinkAsync(oldImagePath);
             console.log('Imagen anterior eliminada');
@@ -187,25 +175,19 @@ export async function PUT(
         console.log('Ruta de imagen establecida:', imagePath);
         
         // Actualizar ruta de imagen
-        updatedTestimonial.image = imagePath;
+        updateData.image = imagePath;
       } catch (imageError) {
         console.error('Error al procesar imagen:', imageError);
         // Continuamos con la imagen anterior si hay error
       }
     }
     
-    // Actualizar en la lista
-    testimonials[index] = updatedTestimonial;
-    
-    // Guardar cambios
-    console.log('Guardando cambios en el archivo JSON');
-    try {
-      await writeJsonFile(TESTIMONIALS_FILE, testimonials);
-      console.log('Archivo JSON guardado exitosamente');
-    } catch (jsonError) {
-      console.error('Error al escribir archivo JSON:', jsonError);
-      // Aún así devolvemos respuesta exitosa ya que actualizamos el objeto en memoria
-    }
+    // Actualizar en la base de datos
+    console.log('Actualizando testimonio en la base de datos');
+    const updatedTestimonial = await prisma.testimonial.update({
+      where: { id },
+      data: updateData
+    });
     
     return NextResponse.json(updatedTestimonial, { status: 200 });
   } catch (error) {
@@ -219,19 +201,17 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  // @ts-ignore
-  { params }
+  { params }: { params: { id: string } }
 ) {
   try {
     const { id } = params;
     
-    // Leer testimonios
-    const testimonials = await readJsonFile<Testimonial[]>(TESTIMONIALS_FILE, []);
-    
     // Buscar testimonio por ID
-    const index = testimonials.findIndex(item => item.id === id);
+    const testimonial = await prisma.testimonial.findUnique({
+      where: { id }
+    });
     
-    if (index === -1) {
+    if (!testimonial) {
       return NextResponse.json(
         { message: 'Testimonio no encontrado' },
         { status: 404 }
@@ -239,9 +219,9 @@ export async function DELETE(
     }
     
     // Eliminar imagen si existe (solo en entorno local)
-    if (!isVercel && testimonials[index].image?.startsWith('/uploads/')) {
+    if (!isVercel && testimonial.image?.startsWith('/uploads/')) {
       try {
-        const imagePath = path.join(process.cwd(), 'public', testimonials[index].image);
+        const imagePath = path.join(process.cwd(), 'public', testimonial.image);
         if (await existsAsync(imagePath)) {
           await unlinkAsync(imagePath);
         }
@@ -250,9 +230,10 @@ export async function DELETE(
       }
     }
     
-    // Eliminar testimonio
-    testimonials.splice(index, 1);
-    await writeJsonFile(TESTIMONIALS_FILE, testimonials);
+    // Eliminar testimonio de la base de datos
+    await prisma.testimonial.delete({
+      where: { id }
+    });
     
     return NextResponse.json(
       { message: 'Testimonio eliminado correctamente' },

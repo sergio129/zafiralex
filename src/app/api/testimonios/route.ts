@@ -1,16 +1,14 @@
 import { NextResponse } from 'next/server';
-import { readJsonFile } from '@/lib/fileUtils';
-import path from 'path';
-import { Testimonial } from '@/data/testimonials';
-
-// Define rutas a archivos
-const DATA_DIR = path.join(process.cwd(), 'src', 'data');
-const TESTIMONIALS_FILE = path.join(DATA_DIR, 'testimonials.json');
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   try {
-    // Leer testimonios
-    const testimonios = await readJsonFile<Testimonial[]>(TESTIMONIALS_FILE, []);
+    // Obtener testimonios desde la base de datos
+    const testimonios = await prisma.testimonial.findMany({
+      orderBy: {
+        id: 'desc'
+      }
+    });
     
     return NextResponse.json(testimonios, { status: 200 });
   } catch (error) {

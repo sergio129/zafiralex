@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Usamos la conexión con pool de conexiones para consultas regulares
+  url       = env("DATABASE_URL")
+  // Usamos la conexión directa para migraciones
+  directUrl = env("DIRECT_URL")
+}
+
+// Modelo para los testimonios
+model Testimonial {
+  id        String    @id @default(cuid())
+  name      String
+  company   String?
+  position  String?
+  content   String    @db.Text
+  type      String    // 'text' o 'video'
+  videoUrl  String?
+  rating    Int       @default(5)
+  image     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// Modelo para las noticias
+model News {
+  id        String    @id @default(cuid())
+  title     String
+  summary   String
+  content   String    @db.Text
+  date      DateTime
+  image     String?
+  category  String
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// Modelo para usuarios administradores
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  password  String
+  role      String    @default("admin")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}

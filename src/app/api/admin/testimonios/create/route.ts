@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readJsonFile, writeJsonFile, generateId } from '@/lib/fileUtils';
 import path from 'path';
 import fs from 'fs';
 import { promisify } from 'util';
-import { Testimonial } from '@/data/testimonials';
+import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
 const writeFileAsync = promisify(fs.writeFile);
 const mkdirAsync = promisify(fs.mkdir);
@@ -14,14 +14,10 @@ const isVercel = process.env.VERCEL === '1';
 console.log(`Entorno de ejecución: ${isVercel ? 'Vercel' : 'Local'}`);
 
 // Define rutas a archivos
-const DATA_DIR = path.join(process.cwd(), 'src', 'data');
 const UPLOADS_DIR = path.join(process.cwd(), 'public', 'uploads', 'testimonials');
-const TESTIMONIALS_FILE = path.join(DATA_DIR, 'testimonials.json');
 
 // Logging para debug
-console.log(`DATA_DIR: ${DATA_DIR}`);
 console.log(`UPLOADS_DIR: ${UPLOADS_DIR}`);
-console.log(`TESTIMONIALS_FILE: ${TESTIMONIALS_FILE}`);
 
 // Asegurar que el directorio de subidas existe
 async function ensureUploadsDir() {
@@ -105,22 +101,16 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    console.log('Leyendo datos de testimonios existentes');
-    // Leer testimonios existentes
-    const testimonials = await readJsonFile<Testimonial[]>(TESTIMONIALS_FILE, []);
-
-    // Crear nuevo testimonio
-    const newTestimonialId = generateId();
-    console.log(`Nuevo ID de testimonio: ${newTestimonialId}`);
-    
     let imagePath = '';
     
     // Procesar imagen si se proporcionó
     if (imageFile && imageFile instanceof File) {
       try {
         console.log('Procesando imagen recibida');
+        // Generar ID único para la imagen basado en la marca de tiempo
+        const uniqueId = Date.now().toString() + Math.random().toString(36).substring(2, 9);
         const fileExtension = imageFile.name.split('.').pop();
-        const fileName = `${newTestimonialId}.${fileExtension}`;
+        const fileName = `${uniqueId}.${fileExtension}`;
         const filePath = path.join(UPLOADS_DIR, fileName);
         
         console.log('Procesando imagen:', fileExtension, fileName);
@@ -139,37 +129,20 @@ export async function POST(req: NextRequest) {
       }
     }
     
-    // Crear objeto de testimonio
-    const newTestimonial: Testimonial = {
-      id: newTestimonialId,
-      name,
-      company,
-      position,
-      content,
-      type,
-      rating
-    };
-    
-    // Añadir datos opcionales
-    if (imagePath) {
-      newTestimonial.image = imagePath;
-    }
-    
-    if (type === 'video' && videoUrl) {
-      newTestimonial.videoUrl = videoUrl;
-    }
-    
-    // Añadir a la lista y guardar
-    testimonials.push(newTestimonial);
-    
-    console.log('Guardando cambios en el archivo JSON');
-    try {
-      await writeJsonFile(TESTIMONIALS_FILE, testimonials);
-      console.log('Archivo JSON guardado exitosamente');
-    } catch (jsonError) {
-      console.error('Error al escribir archivo JSON:', jsonError);
-      // Aún así devolvemos respuesta exitosa ya que actualizamos el objeto en memoria
-    }
+    // Crear testimonio en la base de datos
+    console.log('Creando testimonio en la base de datos');
+    const newTestimonial = await prisma.testimonial.create({
+      data: {
+        name,
+        company,
+        position,
+        content,
+        type,
+        rating,
+        videoUrl: type === 'video' ? videoUrl : null,
+        image: imagePath || null
+      }
+    });
     
     return NextResponse.json(newTestimonial, { status: 201 });
   } catch (error) {

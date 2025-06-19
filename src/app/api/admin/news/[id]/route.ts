@@ -1,13 +1,6 @@
 import { NextResponse } from 'next/server';
 import { slugify } from '@/lib/fileUtils';
-import path from 'path';
-import fs from 'fs';
-import { promisify } from 'util';
 import { prisma } from '@/lib/prisma';
-
-const unlinkAsync = promisify(fs.unlink);
-
-const UPLOADS_DIR = path.join(process.cwd(), 'public', 'uploads', 'news');
 
 // GET: Obtener una noticia por ID
 export async function GET(request: Request) {
@@ -55,41 +48,31 @@ export async function PUT(request: Request) {
       return NextResponse.json({ message: 'Noticia no encontrada' }, { status: 404 });
     }
 
-    let imagePath = existingNews.image;
+    // Datos para actualizar
+    const updateData: any = {
+      title,
+      summary,
+      content,
+      category,
+      slug: slugify(title),
+    };
 
+    // Procesar la imagen si se proporciona una nueva
     if (imageFile && imageFile instanceof File) {
-      // Si hay una imagen anterior, intentamos eliminarla
-      if (imagePath?.startsWith('/uploads/')) {
-        try {
-          const oldImagePath = path.join(process.cwd(), 'public', imagePath);
-          await unlinkAsync(oldImagePath);
-        } catch (err) {
-          console.error('Error al eliminar imagen anterior:', err);
-        }
-      }
-
-      const fileExtension = imageFile.name.split('.').pop();
-      const fileName = `${Date.now()}.${fileExtension}`;
-      const filePath = path.join(UPLOADS_DIR, fileName);
-
+      // Obtener los datos binarios de la imagen
       const arrayBuffer = await imageFile.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      await fs.promises.writeFile(filePath, buffer);
-
-      imagePath = `/uploads/news/${fileName}`;
+      const imageData = Buffer.from(arrayBuffer);
+      
+      // Actualizar los campos de la imagen en la base de datos
+      updateData.imageData = imageData;
+      updateData.imageName = imageFile.name;
+      updateData.mimeType = imageFile.type;
     }
 
     // Actualizar en la base de datos
     const updatedNews = await prisma.news.update({
       where: { id },
-      data: {
-        title,
-        summary,
-        content,
-        category,
-        slug: slugify(title),
-        image: imagePath
-      }
+      data: updateData
     });
 
     return NextResponse.json(updatedNews, { status: 200 });
@@ -113,17 +96,7 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ message: 'Noticia no encontrada' }, { status: 404 });
     }
 
-    // Si hay una imagen, intentamos eliminarla
-    if (newsToDelete.image?.startsWith('/uploads/')) {
-      try {
-        const imagePath = path.join(process.cwd(), 'public', newsToDelete.image);
-        await unlinkAsync(imagePath);
-      } catch (err) {
-        console.error('Error al eliminar imagen:', err);
-      }
-    }
-
-    // Eliminar de la base de datos
+    // Eliminar de la base de datos (la imagen se eliminará automáticamente)
     await prisma.news.delete({
       where: { id }
     });

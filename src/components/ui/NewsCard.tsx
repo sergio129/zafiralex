@@ -4,6 +4,22 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
+// Función para obtener la URL de la imagen basada en el tipo de almacenamiento
+function getImageUrl(news: NewsItem): string {
+  // Si tenemos un ID y es una noticia con imagen almacenada en la base de datos
+  if (news.id && (news.imageData !== undefined || news.mimeType !== undefined)) {
+    return `/api/news/${news.id}/image`;
+  }
+  
+  // Si es una noticia con imagen legacy (ruta de archivo)
+  if (news.image) {
+    return news.image.startsWith('/') ? news.image : `/uploads/news/${news.image}`;
+  }
+  
+  // Si no hay imagen, usar un placeholder
+  return '/placeholder-image.jpg';
+}
+
 export interface NewsItem {
   id: number | string;
   title: string;
@@ -12,16 +28,19 @@ export interface NewsItem {
   excerpt?: string;
   summary?: string; // Para compatibilidad con la API
   content: string; // Contenido completo de la noticia
-  image: string; // Ruta a la imagen
+  image?: string; // Campo legacy - ruta a la imagen
+  imageData?: Uint8Array | null; // Datos binarios de la imagen (no se usa en frontend)
+  imageName?: string | null; // Nombre original del archivo
+  mimeType?: string | null; // Tipo MIME de la imagen
   imageAlt?: string; // Texto alternativo para la imagen
   category: string; // Categoría de la noticia
   featured?: boolean; // Si es una noticia destacada
 }
 
 interface NewsCardProps {
-  news: NewsItem;
-  index?: number; // Para animaciones escalonadas
-  featured?: boolean; // Si debería mostrarse como destacada
+  readonly news: NewsItem;
+  readonly index?: number; // Para animaciones escalonadas
+  readonly featured?: boolean; // Si debería mostrarse como destacada
 }
 
 export default function NewsCard({ news, index = 0, featured = false }: NewsCardProps) {
@@ -36,8 +55,8 @@ export default function NewsCard({ news, index = 0, featured = false }: NewsCard
     >      {/* Imagen */}
       <div className={`relative ${featured ? 'h-64 lg:h-full' : 'h-48'}`}>
         <Image 
-          src={news.image.startsWith('/') ? news.image : `/uploads/news/${news.image}`}
-          alt={news.imageAlt || news.title}
+          src={getImageUrl(news)}
+          alt={news.imageAlt ?? news.title}
           fill
           sizes={featured ? "(max-width: 1024px) 100vw, 50vw" : "100vw"}
           className="object-cover"

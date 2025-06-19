@@ -4,6 +4,27 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
+// Función para verificar si la noticia tiene imagen
+function hasImage(article: NewsItem): boolean {
+  return !!(article.image || article.imageData || (article.id && article.mimeType));
+}
+
+// Función para obtener la URL de la imagen basada en el tipo de almacenamiento
+function getImageUrl(article: NewsItem): string {
+  // Si tenemos un ID y es una noticia con imagen almacenada en la base de datos
+  if (article.id && (article.imageData !== undefined || article.mimeType !== undefined)) {
+    return `/api/news/${article.id}/image`;
+  }
+  
+  // Si es una noticia con imagen legacy (ruta de archivo)
+  if (article.image) {
+    return article.image.startsWith('/') ? article.image : `/uploads/news/${article.image}`;
+  }
+  
+  // Si no hay imagen, usar un placeholder
+  return '/placeholder-image.jpg';
+}
+
 interface NewsItem {
   id: string;
   title: string;
@@ -11,6 +32,9 @@ interface NewsItem {
   content: string;
   date: string;
   image?: string;
+  imageData?: Uint8Array | null;
+  imageName?: string | null;
+  mimeType?: string | null;
   category: string;
   slug: string;
 }
@@ -75,12 +99,11 @@ export default function News() {
               <article
                 key={article.id}
                 className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
-              >
-                {/* Image */}
-                {article.image ? (
+              >                {/* Image */}
+                {hasImage(article) ? (
                   <div className="h-48 relative">
                     <Image
-                      src={article.image}
+                      src={getImageUrl(article)}
                       alt={article.title}
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"

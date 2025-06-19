@@ -33,16 +33,18 @@ model Testimonial {
 
 // Modelo para las noticias
 model News {
-  id        String    @id @default(cuid())
-  title     String
-  summary   String
-  content   String    @db.Text
-  date      DateTime
-  image     String?
-  category  String
-  slug      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id          String    @id @default(cuid())
+  title       String
+  summary     String
+  content     String    @db.Text
+  date        DateTime
+  imageData   Bytes?    // Datos binarios de la imagen
+  imageName   String?   // Nombre original del archivo
+  mimeType    String?   // Tipo MIME de la imagen
+  category    String
+  slug        String    @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 // Modelo para usuarios administradores

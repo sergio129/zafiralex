@@ -2,10 +2,6 @@
 echo ===== Preparando despliegue a Vercel =====
 
 echo.
-echo 1. Generando cliente Prisma...
-call npx prisma generate
-
-echo.
 echo 2. Añadiendo cambios al repositorio...
 git add .
 

@@ -16,12 +16,18 @@ const existsAsync = promisify(fs.exists);
 // Ensure directory exists
 export async function ensureDirExists(dirPath: string): Promise<void> {
   try {
+    // En Vercel, no intentamos crear directorios fuera de /tmp
+    if (isVercel && !dirPath.startsWith('/tmp')) {
+      console.log(`No se puede crear directorio ${dirPath} en Vercel fuera de /tmp`);
+      return;
+    }
+
     if (!await existsAsync(dirPath)) {
       await mkdirAsync(dirPath, { recursive: true });
     }
   } catch (error) {
     console.error(`Error ensuring directory exists: ${dirPath}`, error);
-    throw error;
+    // No lanzamos el error para poder continuar la ejecución
   }
 }
 
@@ -45,6 +51,26 @@ export async function writeJsonFile<T>(filePath: string, data: T): Promise<void>
     // Log para debugging
     console.log(`Intentando escribir en archivo: ${filePath}`);
     
+    // Si estamos en Vercel, y tratamos de escribir en un archivo que no está en /tmp
+    if (isVercel && !filePath.startsWith('/tmp')) {
+      console.log(`Advertencia: Intentando escribir en archivo no temporal en Vercel: ${filePath}`);
+      console.log('En entorno de producción, se debería usar un servicio de almacenamiento externo');
+      
+      // Crear una versión temporal del archivo para mantener la consistencia durante la ejecución
+      const tmpPath = path.join('/tmp', path.basename(filePath));
+      console.log(`Escribiendo a archivo temporal: ${tmpPath}`);
+      
+      try {
+        await writeFileAsync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
+        console.log(`Archivo temporal escrito exitosamente: ${tmpPath}`);
+      } catch (tmpError) {
+        console.error(`Error escribiendo archivo temporal: ${tmpPath}`, tmpError);
+      }
+      
+      // Intentamos continuar con la escritura al archivo original para entorno de desarrollo
+      // pero no bloqueamos si falla
+    }
+    
     // Verificar si el directorio existe
     const dir = path.dirname(filePath);
     console.log(`Verificando directorio: ${dir}`);
@@ -62,7 +88,8 @@ export async function writeJsonFile<T>(filePath: string, data: T): Promise<void>
     console.log('Archivo escrito exitosamente');
   } catch (error) {
     console.error(`Error writing JSON file: ${filePath}`, error);
-    throw error;
+    // No lanzamos el error para permitir que la aplicación continúe funcionando
+    // incluso si la escritura del archivo falla
   }
 }
 

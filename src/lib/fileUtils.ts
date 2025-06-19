@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 import crypto from 'crypto';
+import { execSync } from 'child_process';
 
 // Verificar si estamos en Vercel
 const isVercel = process.env.VERCEL === '1';
@@ -16,18 +17,12 @@ const existsAsync = promisify(fs.exists);
 // Ensure directory exists
 export async function ensureDirExists(dirPath: string): Promise<void> {
   try {
-    // En Vercel, no intentamos crear directorios fuera de /tmp
-    if (isVercel && !dirPath.startsWith('/tmp')) {
-      console.log(`No se puede crear directorio ${dirPath} en Vercel fuera de /tmp`);
-      return;
-    }
-
     if (!await existsAsync(dirPath)) {
       await mkdirAsync(dirPath, { recursive: true });
     }
   } catch (error) {
     console.error(`Error ensuring directory exists: ${dirPath}`, error);
-    // No lanzamos el error para poder continuar la ejecución
+    throw error;
   }
 }
 
@@ -48,28 +43,7 @@ export async function readJsonFile<T>(filePath: string, defaultValue: T): Promis
 // Write data to JSON file
 export async function writeJsonFile<T>(filePath: string, data: T): Promise<void> {
   try {
-    // Log para debugging
     console.log(`Intentando escribir en archivo: ${filePath}`);
-    
-    // Si estamos en Vercel, y tratamos de escribir en un archivo que no está en /tmp
-    if (isVercel && !filePath.startsWith('/tmp')) {
-      console.log(`Advertencia: Intentando escribir en archivo no temporal en Vercel: ${filePath}`);
-      console.log('En entorno de producción, se debería usar un servicio de almacenamiento externo');
-      
-      // Crear una versión temporal del archivo para mantener la consistencia durante la ejecución
-      const tmpPath = path.join('/tmp', path.basename(filePath));
-      console.log(`Escribiendo a archivo temporal: ${tmpPath}`);
-      
-      try {
-        await writeFileAsync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
-        console.log(`Archivo temporal escrito exitosamente: ${tmpPath}`);
-      } catch (tmpError) {
-        console.error(`Error escribiendo archivo temporal: ${tmpPath}`, tmpError);
-      }
-      
-      // Intentamos continuar con la escritura al archivo original para entorno de desarrollo
-      // pero no bloqueamos si falla
-    }
     
     // Verificar si el directorio existe
     const dir = path.dirname(filePath);
@@ -79,17 +53,42 @@ export async function writeJsonFile<T>(filePath: string, data: T): Promise<void>
       await ensureDirExists(dir);
     } catch (dirError) {
       console.error(`Error al crear directorio ${dir}:`, dirError);
-      // Continuamos a pesar del error
     }
     
     // Escribir el archivo
     console.log('Escribiendo datos al archivo...');
     await writeFileAsync(filePath, JSON.stringify(data, null, 2), 'utf-8');
     console.log('Archivo escrito exitosamente');
+    
+    // Si estamos en Vercel y es un archivo JSON importante, hacemos un commit y push automático
+    // Esto solo funcionará si configuramos correctamente los permisos y tokens en Vercel
+    if (isVercel && 
+        (filePath.includes('testimonials.json') || filePath.includes('news.json'))) {
+      try {
+        console.log('Intentando actualizar repositorio remoto con cambios...');
+        
+        // Nota: Esto es un ejemplo conceptual, no funcionará directamente en Vercel sin configuración adicional
+        // Requeriría tokens de acceso a GitHub y configuración de Git en el entorno
+        /*
+        execSync('git add ' + filePath);
+        execSync('git commit -m "Actualización automática de datos JSON"');
+        execSync('git push origin main');
+        console.log('Repositorio actualizado con éxito');
+        */
+        
+        // En vez de intentar actualizar el repositorio directamente (que es complicado en Vercel),
+        // mostraremos un mensaje indicando que esta funcionalidad requiere implementación adicional
+        console.log('Para que los cambios persistan en Vercel, se necesita implementar una solución de almacenamiento persistente como:');
+        console.log('1. Usar Vercel KV Store o Vercel Blob Storage');
+        console.log('2. Implementar una base de datos externa (MongoDB, PostgreSQL, etc.)');
+        console.log('3. Usar un servicio de almacenamiento de archivos (S3, Firebase Storage, etc.)');
+      } catch (gitError) {
+        console.error('Error al actualizar repositorio:', gitError);
+      }
+    }
   } catch (error) {
     console.error(`Error writing JSON file: ${filePath}`, error);
-    // No lanzamos el error para permitir que la aplicación continúe funcionando
-    // incluso si la escritura del archivo falla
+    throw error;
   }
 }
 

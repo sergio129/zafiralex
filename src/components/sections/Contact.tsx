@@ -72,7 +72,7 @@ export default function Contact() {
                   </svg>
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900">Dirección</h4>
-                    <p className="text-gray-600">Calle Principal 123<br />Ciudad, Departamento<br />Colombia</p>
+                    <p className="text-gray-600">Carrera 11W #18-27<br />Monteria, Cordoba<br />Colombia</p>
                   </div>
                 </div>
 

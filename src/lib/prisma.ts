@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma';
 
 // PrismaClient es adjunto al objeto global en desarrollo para evitar
 // agotar el límite de conexiones a la DB durante hot-reloading

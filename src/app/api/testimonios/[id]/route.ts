@@ -1,12 +1,10 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(
-  _request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request) {
   try {
-    const id = params.id;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     
     // Obtener el testimonio de la base de datos
     const testimonio = await prisma.testimonial.findUnique({

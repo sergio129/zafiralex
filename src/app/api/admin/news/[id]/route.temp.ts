@@ -6,17 +6,16 @@ import { promisify } from 'util';
 import { prisma } from '@/lib/prisma';
 
 const unlinkAsync = promisify(fs.unlink);
-
 const UPLOADS_DIR = path.join(process.cwd(), 'public', 'uploads', 'news');
 
 // GET: Obtener una noticia por ID
-export async function GET(request: Request) {
+export async function GET(
+  _request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    // Extraer el ID de la URL en lugar de los parámetros
-    const id = request.url.split('/').pop() as string;
-
     const newsItem = await prisma.news.findUnique({
-      where: { id }
+      where: { id: params.id }
     });
 
     if (!newsItem) {
@@ -30,10 +29,12 @@ export async function GET(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
+// PUT: Actualizar una noticia existente
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    // Extraer el ID de la URL en lugar de los parámetros
-    const id = request.url.split('/').pop() as string;
     const formData = await request.formData();
 
     const title = formData.get('title') as string;
@@ -48,7 +49,7 @@ export async function PUT(request: Request) {
 
     // Verificamos si la noticia existe
     const existingNews = await prisma.news.findUnique({
-      where: { id }
+      where: { id: params.id }
     });
 
     if (!existingNews) {
@@ -81,7 +82,7 @@ export async function PUT(request: Request) {
 
     // Actualizar en la base de datos
     const updatedNews = await prisma.news.update({
-      where: { id },
+      where: { id: params.id },
       data: {
         title,
         summary,
@@ -99,14 +100,15 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+// DELETE: Eliminar una noticia
+export async function DELETE(
+  _request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    // Extraer el ID de la URL en lugar de los parámetros
-    const id = request.url.split('/').pop() as string;
-    
     // Buscamos la noticia en la base de datos
     const newsToDelete = await prisma.news.findUnique({
-      where: { id }
+      where: { id: params.id }
     });
 
     if (!newsToDelete) {
@@ -125,7 +127,7 @@ export async function DELETE(request: Request) {
 
     // Eliminar de la base de datos
     await prisma.news.delete({
-      where: { id }
+      where: { id: params.id }
     });
 
     return NextResponse.json({ message: 'Noticia eliminada correctamente' }, { status: 200 });

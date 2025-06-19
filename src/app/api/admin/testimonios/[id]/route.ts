@@ -38,12 +38,13 @@ async function saveFileWithVercelCheck(filePath: string, buffer: Buffer): Promis
   return relativePath;
 }
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+// Utilizamos una definición de tipos más simple para evitar problemas de compilación
+type Params = { id: string };
+
+export async function GET(request: Request) {
   try {
-    const { id } = params;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     
     // Buscar testimonio en la base de datos
     const testimonial = await prisma.testimonial.findUnique({
@@ -67,13 +68,11 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: Request) {
   try {
     console.log('Iniciando actualización de testimonio');
-    const { id } = params;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     console.log(`ID del testimonio a actualizar: ${id}`);
     
     const formData = await request.formData();
@@ -199,12 +198,10 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: Request) {
   try {
-    const { id } = params;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     
     // Buscar testimonio por ID
     const testimonial = await prisma.testimonial.findUnique({

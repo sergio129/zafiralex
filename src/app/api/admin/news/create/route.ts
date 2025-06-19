@@ -1,16 +1,19 @@
 import { NextResponse } from 'next/server';
 import { slugify } from '@/lib/fileUtils';
 import { prisma } from '@/lib/prisma';
+import { sanitizeHTML, sanitizeText } from '@/lib/sanitizeUtils';
+import { validateImage } from '@/lib/fileValidation';
 
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     
-    // Extraer datos del formulario
-    const title = formData.get('title') as string;
-    const summary = formData.get('summary') as string;
-    const content = formData.get('content') as string;
-    const category = formData.get('category') as string;
+    // Extraer y sanitizar datos del formulario
+    const title = sanitizeText(formData.get('title') as string ?? '');
+    const summary = sanitizeText(formData.get('summary') as string ?? '');
+    // Permitimos HTML limitado en el contenido de las noticias
+    const content = sanitizeHTML(formData.get('content') as string ?? '');
+    const category = sanitizeText(formData.get('category') as string ?? '');
     const imageFile = formData.get('image') as File | null;
     
     // Validar datos
@@ -28,10 +31,22 @@ export async function POST(request: Request) {
     let imageData: Buffer | null = null;
     let imageName: string | null = null;
     let mimeType: string | null = null;
-    
-    // Procesar imagen si se proporcionó
+      // Procesar imagen si se proporcionó
     if (imageFile && imageFile instanceof File) {
       try {
+        // Validar la imagen para prevenir ataques
+        const validationResult = await validateImage(imageFile, {
+          maxSizeBytes: 10 * 1024 * 1024, // 10MB máximo
+          allowedTypes: ['image/jpeg', 'image/png', 'image/webp']
+        });
+        
+        if (!validationResult.valid) {
+          return NextResponse.json(
+            { message: 'Error en la imagen', errors: validationResult.errors },
+            { status: 400 }
+          );
+        }
+        
         // Guardar el nombre original del archivo
         imageName = imageFile.name;
         // Guardar el tipo MIME

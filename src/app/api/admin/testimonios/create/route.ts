@@ -4,6 +4,8 @@ import fs from 'fs';
 import { promisify } from 'util';
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
+import { sanitizeHTML, sanitizeText } from '@/lib/sanitizeUtils';
+import { validateImage, generateSecureFileName } from '@/lib/fileValidation';
 
 const writeFileAsync = promisify(fs.writeFile);
 const mkdirAsync = promisify(fs.mkdir);
@@ -70,14 +72,14 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     console.log('FormData recibido');
-    
-    // Extraer datos del formulario
-    const name = formData.get('name') as string;
-    const company = formData.get('company') as string;
-    const position = formData.get('position') as string;
-    const content = formData.get('content') as string;
-    const type = formData.get('type') as 'text' | 'video';
-    const videoUrl = formData.get('videoUrl') as string | null;
+      // Extraer y sanitizar datos del formulario
+    const name = sanitizeText(formData.get('name') as string ?? '');
+    const company = sanitizeText(formData.get('company') as string ?? '');
+    const position = sanitizeText(formData.get('position') as string ?? '');
+    // Permitimos HTML limitado en el contenido de los testimonios
+    const content = sanitizeHTML(formData.get('content') as string ?? '');
+    const type = (formData.get('type') as string ?? 'text') as 'text' | 'video';
+    const videoUrl = sanitizeText(formData.get('videoUrl') as string ?? '');
     const rating = parseInt(formData.get('rating') as string) || 5;
     const imageFile = formData.get('image') as File | null;
     
@@ -102,18 +104,29 @@ export async function POST(req: NextRequest) {
     }
     
     let imagePath = '';
-    
-    // Procesar imagen si se proporcionó
+      // Procesar imagen si se proporcionó
     if (imageFile && imageFile instanceof File) {
       try {
         console.log('Procesando imagen recibida');
-        // Generar ID único para la imagen basado en la marca de tiempo
-        const uniqueId = Date.now().toString() + Math.random().toString(36).substring(2, 9);
-        const fileExtension = imageFile.name.split('.').pop();
-        const fileName = `${uniqueId}.${fileExtension}`;
+        
+        // Validar la imagen para prevenir ataques
+        const validationResult = await validateImage(imageFile, {
+          maxSizeBytes: 5 * 1024 * 1024, // 5MB máximo
+          allowedTypes: ['image/jpeg', 'image/png', 'image/webp']
+        });
+        
+        if (!validationResult.valid) {
+          return NextResponse.json(
+            { message: 'Error en la imagen', errors: validationResult.errors },
+            { status: 400 }
+          );
+        }
+        
+        // Generar nombre de archivo seguro
+        const fileName = generateSecureFileName(imageFile.name);
         const filePath = path.join(UPLOADS_DIR, fileName);
         
-        console.log('Procesando imagen:', fileExtension, fileName);
+        console.log('Procesando imagen:', imageFile.type, fileName);
         
         // Guardar archivo
         const arrayBuffer = await imageFile.arrayBuffer();

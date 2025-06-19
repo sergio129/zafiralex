@@ -1,15 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Importamos jsonwebtoken usando import dinámico para evitar problemas con Next.js
 import { AuthService } from '@/lib/authService';
+import { sanitizeText } from '@/lib/sanitizeUtils';
 
 // Usar la variable de entorno JWT_SECRET
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET ?? 'your-secret-key-change-in-production';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { username, password } = body;    // Validar credenciales
-    const user = await AuthService.validateCredentials(username, password);
+      // Sanitizar entradas para prevenir ataques
+    const sanitizedUsername = sanitizeText(body.username ?? '');
+    const password = body.password ?? ''; // No sanitizamos password para no afectar la autenticación
+    
+    // Validar que los datos existan
+    if (!sanitizedUsername || !password) {
+      return NextResponse.json({ message: 'Credenciales incompletas' }, { status: 400 });
+    }
+    
+    // Validar credenciales
+    const user = await AuthService.validateCredentials(sanitizedUsername, password);
 
     if (!user) {
       return NextResponse.json(

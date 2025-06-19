@@ -8,5 +8,15 @@
     "image": "/uploads/news/1750281941099wosimi2.jpg",
     "category": "Clientes",
     "slug": "noticas"
+  },
+  {
+    "id": "1750336852878r4vron0",
+    "title": "prueba",
+    "summary": "prueba",
+    "content": "prueba",
+    "date": "2025-06-19",
+    "image": "/uploads/news/1750336852878r4vron0.png",
+    "category": "Clientes",
+    "slug": "prueba"
   }
 ]

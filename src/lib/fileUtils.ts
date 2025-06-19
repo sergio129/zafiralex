@@ -3,6 +3,10 @@ import path from 'path';
 import { promisify } from 'util';
 import crypto from 'crypto';
 
+// Verificar si estamos en Vercel
+const isVercel = process.env.VERCEL === '1';
+console.log(`Entorno de ejecución: ${isVercel ? 'Vercel' : 'Local'}`);
+
 // Promisify fs functions
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
@@ -38,8 +42,24 @@ export async function readJsonFile<T>(filePath: string, defaultValue: T): Promis
 // Write data to JSON file
 export async function writeJsonFile<T>(filePath: string, data: T): Promise<void> {
   try {
-    await ensureDirExists(path.dirname(filePath));
+    // Log para debugging
+    console.log(`Intentando escribir en archivo: ${filePath}`);
+    
+    // Verificar si el directorio existe
+    const dir = path.dirname(filePath);
+    console.log(`Verificando directorio: ${dir}`);
+    
+    try {
+      await ensureDirExists(dir);
+    } catch (dirError) {
+      console.error(`Error al crear directorio ${dir}:`, dirError);
+      // Continuamos a pesar del error
+    }
+    
+    // Escribir el archivo
+    console.log('Escribiendo datos al archivo...');
     await writeFileAsync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+    console.log('Archivo escrito exitosamente');
   } catch (error) {
     console.error(`Error writing JSON file: ${filePath}`, error);
     throw error;

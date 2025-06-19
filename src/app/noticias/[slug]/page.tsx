@@ -28,6 +28,21 @@ export default function NoticiaDetailPage() {
   const [noticia, setNoticia] = useState<NewsItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Aplicar estilos globales para evitar el modo oscuro
+  useEffect(() => {
+    // Guardar el estilo original para restaurarlo después
+    const originalStyle = document.body.style.cssText;
+    
+    // Forzar el fondo blanco y texto oscuro
+    document.body.style.backgroundColor = 'white';
+    document.body.style.color = '#333333';
+    
+    // Limpiar efecto al desmontar
+    return () => {
+      document.body.style.cssText = originalStyle;
+    };
+  }, []);
   useEffect(() => {
     const fetchNoticia = async () => {
       if (!slug) {
@@ -71,11 +86,9 @@ export default function NoticiaDetailPage() {
       return fechaString;
     }
   };
-
   if (loading) {
-    return (
-      <main className="pt-24 pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    return (      <main className="pt-24 pb-20 bg-white text-black noticia-detail-page">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 bg-white rounded-lg shadow-sm noticia-detail-container">
           <div className="animate-pulse">
             <div className="h-10 bg-gray-200 rounded w-3/4 mb-6"></div>
             <div className="h-6 bg-gray-200 rounded w-1/4 mb-10"></div>
@@ -90,29 +103,24 @@ export default function NoticiaDetailPage() {
       </main>
     );
   }
-
   if (error || !noticia) {
-    return (
-      <main className="pt-24 pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    return (      <main className="pt-24 pb-20 bg-white text-black noticia-detail-page">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-white rounded-lg shadow-sm py-12 noticia-detail-container">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">No se encontró la noticia</h1>
-          <p className="text-lg text-gray-600 mb-8">{error || 'La noticia que buscas no existe o ha sido eliminada.'}</p>
+          <p className="text-lg text-gray-600 mb-8">{error ?? 'La noticia que buscas no existe o ha sido eliminada.'}</p>
           <Link 
             href="/noticias" 
-            className="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition"
+            className="bg-blue-600 text-white py-3 px-8 rounded-lg hover:bg-blue-700 transition shadow-md"
           >
             Volver a Noticias
           </Link>
         </div>
       </main>
     );
-  }
-
-  return (
-    <main className="pt-24 pb-20">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+  }  return (
+    <main className="pt-24 pb-20 bg-white text-black noticia-detail-page">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 bg-white rounded-lg shadow-sm noticia-detail-container">
+        <div className="mb-8">          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" style={{ color: '#202020' }}>
             {noticia.title}
           </h1>
           
@@ -129,7 +137,7 @@ export default function NoticiaDetailPage() {
               alt={noticia.title}
               fill
               sizes="(max-width: 1024px) 100vw, 1024px"
-              className="object-cover rounded-lg"
+              className="object-cover rounded-lg shadow"
               onError={(e) => {
                 // Si la imagen falla, usar un placeholder
                 const target = e.target as HTMLImageElement;
@@ -140,19 +148,23 @@ export default function NoticiaDetailPage() {
           </div>
           
           <div className="prose prose-lg max-w-none">
-            <p className="text-xl text-gray-700 font-medium mb-6">{noticia.summary}</p>
+            <p className="text-xl text-gray-800 font-medium mb-6" style={{ color: '#333' }}>{noticia.summary}</p>
             
-            <div className="text-gray-700" dangerouslySetInnerHTML={{ __html: noticia.content }} />
+            <div 
+              className="text-gray-800 prose-headings:text-gray-900 prose-a:text-blue-600 prose prose-lg prose-img:rounded-xl prose-img:shadow-md"
+              style={{ color: '#333', lineHeight: '1.7' }}
+              dangerouslySetInnerHTML={{ __html: noticia.content }} 
+            />
           </div>
         </div>
         
         <div className="mt-12">
           <Link 
             href="/noticias" 
-            className="flex items-center text-blue-600 hover:text-blue-800 font-medium"
+            className="inline-flex items-center px-5 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md"
           >
             <svg 
-              className="mr-1 w-5 h-5" 
+              className="mr-2 w-5 h-5" 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24" 

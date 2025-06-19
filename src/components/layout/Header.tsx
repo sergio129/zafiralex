@@ -15,6 +15,9 @@ export default function Header() {
   ]
   // Efecto para detectar scroll y cambiar el estilo del header
   useEffect(() => {
+    // Comprobar inmediatamente el estado de scroll al cargar
+    setScrolled(window.scrollY > 50);
+    
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
@@ -23,24 +26,22 @@ export default function Header() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
-
-  return (
+  }, []);return (
     <header className={`fixed w-full top-0 z-50 transition-all duration-300 ${
       scrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'
-    }`}>
+    }`} style={{ 
+      background: scrolled ? 'white' : 'linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)'
+    }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className={`text-2xl font-bold transition-colors ${
               scrolled ? 'text-blue-600' : 'text-white'
-            }`}>
+            }`} style={{ color: scrolled ? '#1a4b8b' : 'white' }}>
               Zafira Lex
             </Link>
-          </div>
-
-          {/* Desktop Menu */}
+          </div>          {/* Desktop Menu */}
           <nav className="hidden md:flex space-x-8">
             {menuItems.map((item) => (
               <Link
@@ -49,19 +50,19 @@ export default function Header() {
                 className={`transition-colors duration-200 font-medium hover:text-blue-400 ${
                   scrolled ? 'text-gray-700' : 'text-white'
                 }`}
+                style={{ color: scrolled ? '#333' : 'white' }}
               >
                 {item.label}
               </Link>
             ))}
-          </nav>
-
-          {/* Mobile menu button */}
+          </nav>          {/* Mobile menu button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={`focus:outline-none transition-colors ${
                 scrolled ? 'text-gray-700' : 'text-white'
               }`}
+              style={{ color: scrolled ? '#333' : 'white' }}
             >
               <svg
                 className="h-6 w-6"

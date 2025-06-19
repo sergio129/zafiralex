@@ -52,14 +52,13 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Panel de Administración</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <h1 className="text-3xl font-bold mb-6 text-gray-900">Panel de Administración</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {/* Noticias Card */}
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Noticias</h2>
-            <span className="text-2xl font-bold text-indigo-600">{stats?.newsCount || 0}</span>
+            <h2 className="text-xl font-semibold text-gray-900">Noticias</h2>
+            <span className="text-2xl font-bold text-indigo-600">{stats?.newsCount ?? 0}</span>
           </div>
           <p className="text-gray-600 mt-2">Gestione las noticias de su sitio web</p>
           <div className="mt-4">
@@ -75,8 +74,8 @@ export default function Dashboard() {
         {/* Testimonios Card */}
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Testimonios</h2>
-            <span className="text-2xl font-bold text-indigo-600">{stats?.testimonialsCount || 0}</span>
+            <h2 className="text-xl font-semibold text-gray-900">Testimonios</h2>
+            <span className="text-2xl font-bold text-indigo-600">{stats?.testimonialsCount ?? 0}</span>
           </div>
           <p className="text-gray-600 mt-2">Gestione los testimonios de clientes</p>
           <div className="mt-4">
@@ -88,18 +87,40 @@ export default function Dashboard() {
             </Link>
           </div>
         </div>
+        
+        {/* Usuarios Card */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold text-gray-900">Usuarios</h2>
+            <span className="text-2xl font-bold text-blue-600">Admin</span>
+          </div>
+          <p className="text-gray-600 mt-2">Gestione los usuarios del sistema</p>
+          <div className="mt-4">
+            <Link href="/admin/usuarios" className="text-blue-600 hover:text-blue-800">
+              Ver todos los usuarios
+            </Link>
+            <button 
+              onClick={() => window.location.href='/admin/usuarios'} 
+              className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Gestionar
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Accesos rápidos</h2>
+      <div className="bg-white rounded-lg shadow p-6">        <h2 className="text-xl font-semibold mb-4 text-gray-900">Accesos rápidos</h2>
         <div className="flex flex-wrap gap-4">
-          <Link href="/admin/news/new" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded">
+          <Link href="/admin/news/new" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded text-white font-medium">
             Nueva noticia
           </Link>
-          <Link href="/admin/testimonios/nuevo" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded">
+          <Link href="/admin/testimonios/nuevo" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded text-white font-medium">
             Nuevo testimonio
           </Link>
-          <Link href="/" target="_blank" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded">
+          <Link href="/admin/usuarios" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-medium">
+            Gestionar usuarios
+          </Link>
+          <Link href="/" target="_blank" className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded text-white font-medium">
             Ver sitio web
           </Link>
         </div>

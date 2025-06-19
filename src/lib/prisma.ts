@@ -1,36 +1,29 @@
 import { PrismaClient } from '../generated/prisma';
 
-// Esta variable se usa para almacenar la instancia de PrismaClient
-let prismaInstance: PrismaClient | undefined;
-
 // En entornos no serverless, usamos global para evitar múltiples instancias
 declare global {
   // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
+  var cachedPrisma: PrismaClient;
 }
 
-// Función para obtener la instancia de Prisma
-function getPrismaInstance() {
-  // Para entornos no serverless como desarrollo
-  if (process.env.NODE_ENV !== 'production') {
-    if (!global.prisma) {
-      global.prisma = new PrismaClient({
-        log: ['query', 'error', 'warn'],
-      });
-    }
-    return global.prisma;
-  }
+// Asegúrate de que PrismaClient sea instanciado sólo una vez
+// eslint-disable-next-line import/no-mutable-exports
+export let prisma: PrismaClient;
 
-  // Para entornos serverless como Vercel
-  if (!prismaInstance) {
-    prismaInstance = new PrismaClient({
-      log: ['error'],
+if (process.env.NODE_ENV === 'production') {
+  // En producción, crea una nueva instancia cada vez (Vercel serverless)
+  prisma = new PrismaClient({
+    log: ['error'],
+    errorFormat: 'minimal',
+  });
+} else {
+  // En desarrollo, reutiliza la instancia para evitar múltiples conexiones
+  if (!global.cachedPrisma) {
+    global.cachedPrisma = new PrismaClient({
+      log: ['query', 'error', 'warn'],
     });
   }
-  return prismaInstance;
+  prisma = global.cachedPrisma;
 }
-
-// Exportamos la instancia
-export const prisma = getPrismaInstance();
 
 export default prisma;

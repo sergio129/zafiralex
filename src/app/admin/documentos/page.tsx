@@ -3,14 +3,33 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+// Definición del tipo Document
+type Document = {
+  id: string;
+  title: string;
+  documentRef: string;
+  category?: string;
+  description?: string;
+  tags?: string;
+  fileName: string;
+  fileSize: number;
+  mimeType: string;
+  fileUrl: string;
+  createdAt: string;
+  uploadedBy: string;
+  uploader?: {
+    name: string;
+    id: string;
+  };
+};
+
 export default function DocumentosPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [documents, setDocuments] = useState([]);
-  const [filteredDocuments, setFilteredDocuments] = useState([]);
-  const [user, setUser] = useState<{id: string, name: string, email: string, role: string} | null>(null);
-  const [viewDocument, setViewDocument] = useState<any>(null);
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [filteredDocuments, setFilteredDocuments] = useState<Document[]>([]);
+  const [user, setUser] = useState<{id: string, name: string, email: string, role: string} | null>(null);  const [viewDocument, setViewDocument] = useState<Document | null>(null);
   const [showPreview, setShowPreview] = useState(false);
-  const [hoverPreview, setHoverPreview] = useState<{doc: any, x: number, y: number} | null>(null);
+  const [hoverPreview, setHoverPreview] = useState<{doc: Document, x: number, y: number} | null>(null);
   
   // Estados para filtros
   const [dateFrom, setDateFrom] = useState("");

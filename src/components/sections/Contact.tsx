@@ -19,26 +19,42 @@ export default function Contact() {
       [e.target.name]: e.target.value
     })
   }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    setSubmitted(true)
-    setIsSubmitting(false)
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
-    })
-
-    // Reset success message after 3 seconds
-    setTimeout(() => setSubmitted(false), 3000)
+    try {
+      // Enviar datos a la API
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+      
+      if (!response.ok) {
+        throw new Error('Error al enviar el mensaje')
+      }
+      
+      // Éxito
+      setSubmitted(true)
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      })
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => setSubmitted(false), 5000)
+    } catch (error) {
+      console.error('Error al enviar formulario:', error)
+      alert('Hubo un problema al enviar tu mensaje. Por favor, intenta nuevamente.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -148,7 +164,7 @@ export default function Contact() {
 
             {submitted && (
               <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-                ¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.
+                ¡Gracias por contactarnos! Un miembro de nuestro equipo jurídico revisará su caso y se pondrá en contacto a la brevedad. Le recordamos que este mensaje no constituye una relación abogado-cliente hasta que se formalice la misma.
               </div>
             )}
 

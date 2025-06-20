@@ -18,42 +18,57 @@ datasource db {
 
 // Modelo para los testimonios
 model Testimonial {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   company   String?
   position  String?
-  content   String    @db.Text
-  type      String    // 'text' o 'video'
+  content   String   @db.Text
+  type      String // 'text' o 'video'
   videoUrl  String?
-  rating    Int       @default(5)
+  rating    Int      @default(5)
   image     String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Modelo para las noticias
 model News {
-  id          String    @id @default(cuid())
-  title       String
-  summary     String
-  content     String    @db.Text
-  date        DateTime
-  imageData   Bytes?    // Datos binarios de la imagen
-  imageName   String?   // Nombre original del archivo
-  mimeType    String?   // Tipo MIME de la imagen
-  category    String
-  slug        String    @unique
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String   @id @default(cuid())
+  title     String
+  summary   String
+  content   String   @db.Text
+  date      DateTime
+  imageData Bytes? // Datos binarios de la imagen
+  imageName String? // Nombre original del archivo
+  mimeType  String? // Tipo MIME de la imagen
+  category  String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Modelo para usuarios administradores
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
+  id        String   @id @default(cuid())
+  email     String   @unique
   name      String?
   password  String
-  role      String    @default("admin")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Modelo para mensajes de contacto
+model ContactMessage {
+  id         String   @id @default(cuid())
+  name       String
+  email      String
+  phone      String?
+  subject    String
+  message    String   @db.Text
+  status     String   @default("pending") // pending, in-progress, completed
+  notes      String?  @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  assignedTo String? // ID del usuario asignado (opcional)
 }

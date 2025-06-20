@@ -20,6 +20,7 @@ export default function Hero() {
               >
                 VER MÁS
               </a>
+
               <a
                 href="/contacto"
                 className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-colors text-center hover-grow"
@@ -32,7 +33,7 @@ export default function Hero() {
             <div className="bg-white bg-opacity-10 rounded-2xl p-8 backdrop-blur-sm shadow-lg">
               <div className="grid grid-cols-2 gap-6">
                 <div className="bg-blue-500 bg-opacity-30 rounded-lg p-6 text-center hover-grow">
-                  <div className="text-4xl font-bold mb-2 counter-animation">500+</div>
+                  <div className="text-4xl font-bold mb-2 counter-animation">200+</div>
                   <div className="text-blue-100">Clientes Satisfechos</div>
                 </div>
                 <div className="bg-blue-500 bg-opacity-30 rounded-lg p-6 text-center hover-grow">

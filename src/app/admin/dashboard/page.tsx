@@ -5,6 +5,8 @@ import Link from 'next/link';
 interface DashboardStats {
   newsCount: number;
   testimonialsCount: number;
+  messagesCount: number;
+  pendingMessagesCount: number;
 }
 
 export default function Dashboard() {
@@ -87,6 +89,28 @@ export default function Dashboard() {
             </Link>
           </div>
         </div>
+          {/* Mensajes Card */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold text-gray-900">Mensajes</h2>
+            <span className="text-2xl font-bold text-green-600">              {stats?.messagesCount ?? 0}
+              {stats && stats.pendingMessagesCount > 0 && (
+                <span className="ml-2 bg-yellow-100 text-yellow-800 text-xs px-1.5 py-0.5 rounded-full">
+                  {stats.pendingMessagesCount} pendientes
+                </span>
+              )}
+            </span>
+          </div>
+          <p className="text-gray-600 mt-2">Gestione los mensajes del formulario de contacto</p>
+          <div className="mt-4">
+            <Link href="/admin/mensajes" className="text-green-600 hover:text-green-800">
+              Ver todos los mensajes
+            </Link>
+            <Link href="/admin/mensajes" className="ml-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+              Gestionar
+            </Link>
+          </div>
+        </div>
         
         {/* Usuarios Card */}
         <div className="bg-white rounded-lg shadow p-6">
@@ -116,6 +140,9 @@ export default function Dashboard() {
           </Link>
           <Link href="/admin/testimonios/nuevo" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded text-white font-medium">
             Nuevo testimonio
+          </Link>
+          <Link href="/admin/mensajes" className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded text-white font-medium">
+            Ver mensajes
           </Link>
           <Link href="/admin/usuarios" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-medium">
             Gestionar usuarios

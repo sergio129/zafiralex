@@ -46,12 +46,11 @@ const rolePermissions: Record<Role, SystemPermissions> = {
     messages: { view: true, create: true, edit: true, delete: true },
     users: { view: false, create: false, edit: false, delete: false },
     documents: { view: false, create: false, edit: false, delete: false }
-  },
-  abogado: {
+  },  abogado: {
     dashboard: { view: true },
-    news: { view: true, create: false, edit: false, delete: false },
-    testimonials: { view: true, create: false, edit: false, delete: false },
-    messages: { view: true, create: false, edit: false, delete: false },
+    news: { view: false, create: false, edit: false, delete: false },
+    testimonials: { view: false, create: false, edit: false, delete: false },
+    messages: { view: false, create: false, edit: false, delete: false },
     users: { view: false, create: false, edit: false, delete: false },
     documents: { view: true, create: true, edit: true, delete: true }
   }

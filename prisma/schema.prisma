@@ -53,7 +53,7 @@ model User {
   email     String   @unique
   name      String?
   password  String
-  role      String   @default("admin")
+  role      String   @default("admin") // Valores: "admin", "editor", "secretaria", "abogado"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -71,4 +71,20 @@ model ContactMessage {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   assignedTo String? // ID del usuario asignado (opcional)
+}
+
+// Modelo para documentos legales
+model Document {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  fileName    String
+  fileUrl     String
+  fileSize    Int
+  mimeType    String
+  uploadedBy  String   // ID del usuario que subió el documento
+  category    String?  // Categoría del documento (opcional)
+  tags        String?  // Tags separados por comas (opcional)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

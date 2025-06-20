@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "ContactMessage" (
+CREATE TABLE IF NOT EXISTS "ContactMessage" (
   "id" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "email" TEXT NOT NULL,

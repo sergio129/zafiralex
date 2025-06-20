@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "Testimonial" (
+CREATE TABLE IF NOT EXISTS "Testimonial" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "company" TEXT,
@@ -16,7 +16,7 @@ CREATE TABLE "Testimonial" (
 );
 
 -- CreateTable
-CREATE TABLE "News" (
+CREATE TABLE IF NOT EXISTS "News" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "summary" TEXT NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE "News" (
 );
 
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE IF NOT EXISTS "User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT,

@@ -47,25 +47,12 @@ export default function Hero() {
               <h2 className="text-3xl font-bold mb-4">Ofrecemos soluciones</h2>
              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
              Soluciones jurídicas <span className="text-blue-300">efectivas</span> y <span className="text-blue-300">personalizadas</span>
-              </h1>
-            </div>  
-           <p className="text-xl md:text-2xl text-gray-100 mb-8 max-w-3xl">
-                  Somos expertos en servicios jurídicos de alta calidad, comprometidos con la defensa de tus derechos y la satisfacción de tus necesidades legales.
+              </h1>            </div>  
+           <p className="text-xl md:text-2xl text-gray-100 mb-8 max-w-3xl mx-auto text-center">
+              Somos expertos en servicios jurídicos de alta calidad, comprometidos con la defensa de tus derechos y la satisfacción de tus necesidades legales.
             </p>
               <div className="flex flex-col sm:flex-row gap-4 fade-in" style={{ animationDelay: '0.6s' }}>
-              <a
-                href="/servicios"
-                className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-50 transition-colors text-center hover-grow"
-              >
-                VER MÁS
-              </a>
-
-              <a
-                href="/contacto"
-                className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-colors text-center hover-grow"
-              >
-                CONTÁCTANOS
-              </a>
+              
             </div>
           </div>
         </div>

@@ -36,30 +36,33 @@ export default function Footer() {
                  </svg>
                 </a>
             </div>
-          </div>
-
-          {/* Quick Links */}
+          </div>          {/* Quick Links */}
           <div>
             <h4 className="text-lg font-semibold mb-4">Enlaces Rápidos</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="#inicio" className="text-gray-300 hover:text-blue-400 transition-colors">
+                <Link href="/" className="text-gray-300 hover:text-blue-400 transition-colors">
                   Inicio
                 </Link>
               </li>
               <li>
-                <Link href="#servicios" className="text-gray-300 hover:text-blue-400 transition-colors">
+                <Link href="/servicios" className="text-gray-300 hover:text-blue-400 transition-colors">
                   Servicios
                 </Link>
               </li>
               <li>
-                <Link href="#noticias" className="text-gray-300 hover:text-blue-400 transition-colors">
+                <Link href="/noticias" className="text-gray-300 hover:text-blue-400 transition-colors">
                   Noticias
                 </Link>
               </li>
               <li>
-                <Link href="#testimonios" className="text-gray-300 hover:text-blue-400 transition-colors">
+                <Link href="/testimonios" className="text-gray-300 hover:text-blue-400 transition-colors">
                   Testimonios
+                </Link>
+              </li>
+              <li>
+                <Link href="/contacto" className="text-gray-300 hover:text-blue-400 transition-colors">
+                  Contacto
                 </Link>
               </li>
             </ul>

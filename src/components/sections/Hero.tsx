@@ -6,15 +6,12 @@ export default function Hero() {
           <div className="space-y-8">
             <div className="mb-10 fade-in" style={{ animationDelay: '0.2s' }}>
               <h2 className="text-3xl font-bold mb-4">Ofrecemos soluciones</h2>
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                innovadoras y{' '}
-                <span className="text-blue-200">personalizadas</span>
+             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+             Soluciones jurídicas <span className="text-blue-300">efectivas</span> y <span className="text-blue-300">personalizadas</span>
               </h1>
-            </div>
-            
-            <p className="text-xl lg:text-2xl text-blue-100 leading-relaxed fade-in" style={{ animationDelay: '0.4s' }}>
-              Somos expertos en servicios de alta calidad, comprometidos con la excelencia
-              y la satisfacción de nuestros clientes.
+            </div>  
+           <p className="text-xl md:text-2xl text-gray-100 mb-8 max-w-3xl">
+                  Somos expertos en servicios jurídicos de alta calidad, comprometidos con la defensa de tus derechos y la satisfacción de tus necesidades legales.
             </p>
               <div className="flex flex-col sm:flex-row gap-4 fade-in" style={{ animationDelay: '0.6s' }}>
               <a

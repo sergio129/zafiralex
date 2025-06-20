@@ -76,6 +76,7 @@ model ContactMessage {
 // Modelo para documentos legales
 model Document {
   id          String   @id @default(cuid())
+  documentRef String   @unique // Consecutivo único con formato fecha + 5 dígitos aleatorios
   title       String
   description String?
   fileName    String

@@ -47,68 +47,72 @@ export default function ExecutiveServices() {
       description: "Evaluamos jurídicamente su cartera para identificar riesgos y oportunidades de mejora en sus procesos de cobro."
     }
   ];
-
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-blue-50 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-blue-800"></div>
-      <div className="absolute top-0 right-0 h-64 w-64 bg-blue-100 rounded-full -mr-32 -mt-32 opacity-50"></div>
+    <section className="pt-28 pb-20 bg-gradient-to-br from-blue-50 via-white to-blue-50 relative overflow-hidden">
+      {/* Decorative elements - Mejorados para mayor impacto visual */}
+      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-600 to-blue-800"></div>
+      <div className="absolute top-0 right-0 h-96 w-96 bg-blue-100 rounded-full -mr-32 -mt-32 opacity-50"></div>
       <div className="absolute bottom-0 left-0 h-96 w-96 bg-blue-100 rounded-full -ml-48 -mb-48 opacity-50"></div>
+      <div className="absolute top-40 left-1/4 h-20 w-20 bg-blue-200 rounded-full blur-xl opacity-60"></div>
+      <div className="absolute bottom-40 right-1/4 h-32 w-32 bg-blue-200 rounded-full blur-xl opacity-60"></div>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">        <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
           <div className="inline-block">
-            <div className="bg-blue-100 text-blue-800 text-sm font-semibold py-1 px-4 rounded-full mb-4">
+            <div className="bg-blue-100 text-blue-800 text-sm font-semibold py-1.5 px-6 rounded-full mb-4 shadow-sm">
               Servicios Destacados
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 border-b-4 border-blue-600 inline-block pb-2">
+            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-5 border-b-4 border-blue-600 inline-block pb-3">
               Procesos Ejecutivos
             </h2>
           </div>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto mt-4">
+          <p className="text-2xl text-gray-700 max-w-3xl mx-auto mt-6 leading-relaxed">
             Somos especialistas en recuperación de cartera y ejecución efectiva de obligaciones contractuales
           </p>
         </motion.div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
           {ejecutivoServicios.map((servicio, index) => (
             <motion.div
               key={servicio.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white p-8 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:translate-y-[-8px] border-l-4 border-blue-600 group"
+              className="bg-white p-8 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:translate-y-[-8px] border-l-4 border-blue-600 group relative overflow-hidden"
               whileHover={{ scale: 1.02 }}
             >
-              <div className="flex items-start">
-                <div className="mr-5 p-4 bg-blue-100 rounded-full group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300 flex-shrink-0">
+              {/* Elemento decorativo */}
+              <div className="absolute -right-12 -bottom-12 h-40 w-40 bg-blue-50 rounded-full opacity-50 group-hover:bg-blue-100 transition-all duration-300"></div>
+              
+              <div className="flex items-start relative z-10">
+                <div className="mr-5 p-6 bg-blue-100 rounded-full group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300 flex-shrink-0 shadow-md">
                   {servicio.icon}
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-700 transition-colors duration-300">{servicio.title}</h3>
-                  <p className="text-gray-600 group-hover:text-gray-800 transition-colors duration-300">{servicio.description}</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-blue-700 transition-colors duration-300">{servicio.title}</h3>
+                  <p className="text-gray-600 group-hover:text-gray-800 transition-colors duration-300 text-lg">{servicio.description}</p>
                 </div>
               </div>
             </motion.div>
           ))}
-        </div>
-
-        <motion.div 
+        </div>        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="text-center mt-12"
+          className="text-center mt-16"
         >
           <Link
             href="/servicios"
-            className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-blue-900 transition-all inline-block shadow-lg hover:shadow-xl transform hover:scale-105"
+            className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-10 py-5 rounded-lg font-bold text-xl hover:from-blue-700 hover:to-blue-900 transition-all inline-block shadow-xl hover:shadow-2xl transform hover:scale-105 relative overflow-hidden group"
           >
+            <span className="absolute top-0 left-0 w-full h-full bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
             Ver Todos Nuestros Servicios Jurídicos
+            <svg className="w-6 h-6 inline-block ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
           </Link>
         </motion.div>
       </div>

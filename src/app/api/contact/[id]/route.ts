@@ -1,19 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { PrismaClient } from '@prisma/client';
-
-// Esto es una aserción de tipo para poder acceder a contactMessage
-// Necesario si el cliente prisma no ha sido regenerado correctamente
-type PrismaClientWithContactMessage = PrismaClient & {
-  contactMessage: any;
-};
-
-const prismaWithContactMessage = prisma as unknown as PrismaClientWithContactMessage;
 
 // API para actualizar un mensaje específico (solo admin)
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest) {
   try {
-    const { id } = params;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     const data = await request.json();
     
     // Validación
@@ -23,8 +15,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         { status: 400 }
       );
     }
-      // Actualizar en la base de datos
-    const updatedMessage = await prismaWithContactMessage.contactMessage.update({
+      // Actualizar en la base de datos    const updatedMessage = await prisma.contactMessage.update({
       where: { id },
       data: {
         status: data.status,
@@ -44,9 +35,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // API para obtener un mensaje específico (solo admin)
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest) {
   try {
-    const { id } = params;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     
     // Validación
     if (!id) {
@@ -54,8 +46,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         { error: 'ID de mensaje requerido' },
         { status: 400 }
       );
-    }
-      const message = await prismaWithContactMessage.contactMessage.findUnique({
+    }    const message = await prisma.contactMessage.findUnique({
       where: { id },
     });
     
@@ -77,9 +68,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // API para eliminar un mensaje (solo admin)
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest) {
   try {
-    const { id } = params;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     
     // Validación
     if (!id) {
@@ -87,8 +79,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
         { error: 'ID de mensaje requerido' },
         { status: 400 }
       );
-    }
-      await prismaWithContactMessage.contactMessage.delete({
+    }    await prisma.contactMessage.delete({
       where: { id },
     });
     

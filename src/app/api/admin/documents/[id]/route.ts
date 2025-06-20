@@ -1,10 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
 import { validateToken, checkUserPermission } from '@/lib/authServerUtils';
+
+// Instanciar PrismaClient directamente para evitar problemas con la importación
+const prisma = new PrismaClient();
 
 // Obtener un documento por ID
 export async function GET(request: NextRequest) {
   try {
+    // Verificar autenticación
+    const user = await validateToken();
+    if (!user) {
+      return NextResponse.json(
+        { error: 'No autorizado' },
+        { status: 401 }
+      );
+    }
+    
+    // Verificar permisos (solo usuarios autorizados pueden ver documentos)
+    const hasPermission = await checkUserPermission('documents', 'view');
+    if (!hasPermission) {
+      return NextResponse.json(
+        { error: 'No tienes permisos para ver documentos' },
+        { status: 403 }
+      );
+    }
+    
     // Extraer el ID de la URL en lugar de los parámetros
     const id = request.url.split('/').pop() as string;
     

@@ -7,6 +7,8 @@ export default function DocumentosPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [documents, setDocuments] = useState([]);
   const [user, setUser] = useState(null);
+  const [viewDocument, setViewDocument] = useState<any>(null);
+  const [showPreview, setShowPreview] = useState(false);
 
   // Obtener el usuario actual
   useEffect(() => {
@@ -32,7 +34,11 @@ export default function DocumentosPage() {
         const res = await fetch('/api/admin/documents');
         if (res.ok) {
           const data = await res.json();
-          setDocuments(data);
+          if (data.documents) {
+            setDocuments(data.documents);
+          } else {
+            setDocuments(data); // Para compatibilidad si la API devuelve directamente un array
+          }
         } else {
           console.error('Error al obtener documentos');
         }
@@ -115,19 +121,45 @@ export default function DocumentosPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(doc.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <a 
-                        href={doc.fileUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-900 mr-4"
+                    </td>                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <button
+                        onClick={() => {
+                          setViewDocument(doc);
+                          setShowPreview(true);
+                        }}
+                        className="text-blue-600 hover:text-blue-900 mr-2"
                       >
                         Ver
+                      </button>
+                      <a 
+                        href={doc.fileUrl} 
+                        download={doc.fileName}
+                        className="text-green-600 hover:text-green-900 mr-2"
+                      >
+                        Descargar
                       </a>
-                      <a href="#" className="text-red-600 hover:text-red-900">
+                      <button 
+                        onClick={async () => {
+                          if (confirm('¿Está seguro de que desea eliminar este documento?')) {
+                            try {
+                              const res = await fetch(`/api/admin/documents/${doc.id}`, {
+                                method: 'DELETE'
+                              });
+                              if (res.ok) {
+                                setDocuments(documents.filter((d: any) => d.id !== doc.id));
+                              } else {
+                                alert('Error al eliminar el documento');
+                              }
+                            } catch (error) {
+                              console.error('Error:', error);
+                              alert('Error al eliminar el documento');
+                            }
+                          }
+                        }}
+                        className="text-red-600 hover:text-red-900"
+                      >
                         Eliminar
-                      </a>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -143,7 +175,122 @@ export default function DocumentosPage() {
             <p className="text-gray-500">Comience subiendo un nuevo documento.</p>
           </div>
         )}
-      </div>
+      </div>      {/* Modal de vista previa de documento */}
+      {showPreview && viewDocument && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-screen overflow-hidden flex flex-col">
+            <div className="p-4 border-b flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">
+                {viewDocument.title} <span className="text-sm text-gray-500">({viewDocument.documentRef})</span>
+              </h3>
+              <button 
+                onClick={() => setShowPreview(false)}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+              {/* Información del documento */}
+              <div className="w-full md:w-1/3 p-4 border-r overflow-y-auto">
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500">Descripción</h4>
+                    <p className="mt-1">{viewDocument.description || 'Sin descripción'}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500">Categoría</h4>
+                    <p className="mt-1">{viewDocument.category || 'Sin categoría'}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500">Etiquetas</h4>
+                    <p className="mt-1">{viewDocument.tags || 'Sin etiquetas'}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500">Subido por</h4>
+                    <p className="mt-1">{viewDocument.uploadedBy}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500">Fecha de creación</h4>
+                    <p className="mt-1">{new Date(viewDocument.createdAt).toLocaleString()}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500">Archivo</h4>
+                    <p className="mt-1">{viewDocument.fileName}</p>
+                    <p className="text-xs text-gray-500">
+                      {(viewDocument.fileSize / 1024).toFixed(2)} KB • {viewDocument.mimeType}
+                    </p>
+                  </div>
+                  
+                  <div className="pt-4 flex space-x-2">
+                    <a 
+                      href={viewDocument.fileUrl} 
+                      download={viewDocument.fileName}
+                      className="px-4 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 flex items-center"
+                    >
+                      <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                      Descargar
+                    </a>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Visor de documentos */}
+              <div className="w-full md:w-2/3 flex-1 overflow-hidden flex flex-col">
+                {viewDocument.mimeType?.includes('image/') ? (
+                  <div className="flex-1 overflow-auto flex items-center justify-center bg-gray-100 p-4">
+                    <img 
+                      src={viewDocument.fileUrl} 
+                      alt={viewDocument.title} 
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                ) : viewDocument.mimeType === 'application/pdf' ? (
+                  <iframe 
+                    src={viewDocument.fileUrl} 
+                    className="w-full h-full border-0" 
+                    title={viewDocument.title}
+                  />
+                ) : (
+                  <div className="flex-1 overflow-auto flex items-center justify-center bg-gray-100 p-4">
+                    <div className="text-center">
+                      <div className="bg-white p-6 rounded-lg shadow-md">
+                        <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <h3 className="mt-2 text-sm font-medium text-gray-900">Vista previa no disponible</h3>
+                        <p className="mt-1 text-sm text-gray-500">
+                          Este tipo de archivo no se puede previsualizar en el navegador.
+                        </p>
+                        <div className="mt-4">
+                          <a
+                            href={viewDocument.fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                          >
+                            Abrir en nueva pestaña
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
         <div className="flex">

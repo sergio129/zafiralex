@@ -5,6 +5,24 @@ import { validateToken, checkUserPermission } from '@/lib/authServerUtils';
 
 export async function GET(request: NextRequest) {
   try {
+    // Verificar autenticación
+    const user = await validateToken();
+    if (!user) {
+      return NextResponse.json(
+        { error: 'No autorizado' },
+        { status: 401 }
+      );
+    }
+    
+    // Verificar permisos (solo usuarios autorizados pueden ver documentos)
+    const hasPermission = await checkUserPermission('documents', 'view');
+    if (!hasPermission) {
+      return NextResponse.json(
+        { error: 'No tienes permisos para ver documentos' },
+        { status: 403 }
+      );
+    }
+    
     // Obtener parámetros de búsqueda de la URL
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category') || undefined;

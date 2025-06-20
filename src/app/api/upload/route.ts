@@ -21,9 +21,7 @@ export async function POST(request: NextRequest) {
         { error: 'No tienes permisos para subir documentos' },
         { status: 403 }
       );
-    }
-
-    // Extraer el archivo del FormData
+    }    // Extraer el archivo del FormData
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
 
@@ -34,9 +32,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Lista de tipos MIME permitidos
+    const allowedMimeTypes = [
+      'application/pdf',                                                 // PDF
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // DOCX
+      'application/msword',                                              // DOC
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',      // XLSX
+      'application/vnd.ms-excel'                                         // XLS
+    ];
+
+    // Verificar si el tipo de archivo está permitido
+    if (!allowedMimeTypes.includes(file.type)) {
+      return NextResponse.json(
+        { error: 'Tipo de archivo no permitido. Solo se aceptan documentos PDF, Word y Excel.' },
+        { status: 400 }
+      );
+    }
+
     // Validar el archivo
-    // En un entorno de producción, deberíamos hacer más validaciones
-    // como tamaño máximo, tipos de archivo permitidos, escaneo de virus, etc.
+    const maxSize = 15 * 1024 * 1024; // 15MB
+    if (file.size > maxSize) {
+      return NextResponse.json(
+        { error: 'El archivo excede el tamaño máximo permitido (15MB)' },
+        { status: 400 }
+      );
+    }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     

@@ -3,11 +3,20 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-export default function DocumentosPage() {  const [isLoading, setIsLoading] = useState(true);
+export default function DocumentosPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [documents, setDocuments] = useState([]);
+  const [filteredDocuments, setFilteredDocuments] = useState([]);
   const [user, setUser] = useState<{id: string, name: string, email: string, role: string} | null>(null);
   const [viewDocument, setViewDocument] = useState<any>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [hoverPreview, setHoverPreview] = useState<{doc: any, x: number, y: number} | null>(null);
+  
+  // Estados para filtros
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [docRef, setDocRef] = useState("");
+  const [searchTitle, setSearchTitle] = useState("");
 
   // Obtener el usuario actual
   useEffect(() => {
@@ -25,6 +34,51 @@ export default function DocumentosPage() {  const [isLoading, setIsLoading] = us
     
     getUser();
   }, []);
+  // Cargar documentos desde la API  // Función para aplicar filtros a los documentos
+  const applyFilters = () => {
+    if (!documents || documents.length === 0) return;
+    
+    let filtered = [...documents];
+    
+    // Filtrar por número de documento/referencia
+    if (docRef.trim() !== "") {
+      filtered = filtered.filter(doc => 
+        doc.documentRef.toLowerCase().includes(docRef.toLowerCase())
+      );
+    }
+    
+    // Filtrar por título
+    if (searchTitle.trim() !== "") {
+      filtered = filtered.filter(doc => 
+        doc.title.toLowerCase().includes(searchTitle.toLowerCase())
+      );
+    }
+    
+    // Filtrar por fecha desde
+    if (dateFrom.trim() !== "") {
+      const fromDate = new Date(dateFrom);
+      filtered = filtered.filter(doc => 
+        new Date(doc.createdAt) >= fromDate
+      );
+    }
+    
+    // Filtrar por fecha hasta
+    if (dateTo.trim() !== "") {
+      const toDate = new Date(dateTo);
+      toDate.setHours(23, 59, 59, 999); // Establecer al final del día
+      filtered = filtered.filter(doc => 
+        new Date(doc.createdAt) <= toDate
+      );
+    }
+    
+    setFilteredDocuments(filtered);
+  };
+  
+  // Observar cambios en los filtros y aplicarlos
+  useEffect(() => {
+    applyFilters();
+  }, [documents, docRef, searchTitle, dateFrom, dateTo]);
+
   // Cargar documentos desde la API
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -35,8 +89,10 @@ export default function DocumentosPage() {  const [isLoading, setIsLoading] = us
           const data = await res.json();
           if (data.documents) {
             setDocuments(data.documents);
+            setFilteredDocuments(data.documents);
           } else {
             setDocuments(data); // Para compatibilidad si la API devuelve directamente un array
+            setFilteredDocuments(data);
           }
         } else {
           console.error('Error al obtener documentos');
@@ -72,6 +128,79 @@ export default function DocumentosPage() {  const [isLoading, setIsLoading] = us
         >
           Subir Documento
         </Link>
+      </div>      {/* Filtros de búsqueda */}
+      <div className="bg-white rounded-lg shadow p-4 mb-4">
+        <h2 className="text-lg font-medium mb-4">Filtros de búsqueda</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label htmlFor="docRef" className="block text-sm font-medium text-gray-700 mb-1">
+              Número de Referencia
+            </label>
+            <input
+              type="text"
+              id="docRef"
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="20250620-12345"
+              value={docRef}
+              onChange={(e) => setDocRef(e.target.value)}
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="searchTitle" className="block text-sm font-medium text-gray-700 mb-1">
+              Título del Documento
+            </label>
+            <input
+              type="text"
+              id="searchTitle"
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Buscar por título..."
+              value={searchTitle}
+              onChange={(e) => setSearchTitle(e.target.value)}
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="dateFrom" className="block text-sm font-medium text-gray-700 mb-1">
+              Fecha Desde
+            </label>
+            <input
+              type="date"
+              id="dateFrom"
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="dateTo" className="block text-sm font-medium text-gray-700 mb-1">
+              Fecha Hasta
+            </label>
+            <input
+              type="date"
+              id="dateTo"
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+            />
+          </div>
+        </div>
+        
+        <div className="flex justify-end mt-4">
+          <button
+            type="button"
+            onClick={() => {
+              setDocRef("");
+              setSearchTitle("");
+              setDateFrom("");
+              setDateTo("");
+            }}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md mr-2"
+          >
+            Limpiar Filtros
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -80,7 +209,7 @@ export default function DocumentosPage() {  const [isLoading, setIsLoading] = us
             <div className="inline-block animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
             <p className="mt-2 text-gray-600">Cargando documentos...</p>
           </div>
-        ) : documents.length > 0 ? (
+        ) : filteredDocuments.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -130,12 +259,19 @@ export default function DocumentosPage() {  const [isLoading, setIsLoading] = us
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(doc.createdAt).toLocaleDateString()}
-                    </td>                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button
+                    </td>                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">                      <button
                         onClick={() => {
                           setViewDocument(doc);
                           setShowPreview(true);
                         }}
+                        onMouseEnter={(e) => {
+                          setHoverPreview({
+                            doc,
+                            x: e.clientX,
+                            y: e.clientY
+                          });
+                        }}
+                        onMouseLeave={() => setHoverPreview(null)}
                         className="text-blue-600 hover:text-blue-900 mr-2"
                       >
                         Ver

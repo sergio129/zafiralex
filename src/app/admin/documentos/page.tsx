@@ -472,46 +472,69 @@ export default function DocumentosPage() {
                   src={hoverPreview.doc.fileUrl + "#toolbar=0&navpanes=0"} 
                   className="w-full h-full border-0" 
                   title={hoverPreview.doc.title}
-                />
-              </div>            ) : hoverPreview.doc.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||               hoverPreview.doc.mimeType === 'application/msword' ? (
-              <div className="flex items-center justify-center h-[70vh]">
+                />              </div>            ) : hoverPreview.doc.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||               hoverPreview.doc.mimeType === 'application/msword' ? (
+              <div className="bg-white flex items-center justify-center h-[80vh]">
                 <a
                   href={hoverPreview.doc.fileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 flex flex-col items-center p-8"
+                  className="bg-blue-50 p-10 rounded-lg"
                 >
-                  <svg className="h-16 w-16 text-blue-600" fill="currentColor" viewBox="0 0 384 512">
-                    <path d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48zm220.1-208c-5.7 0-10.6-4-11.7-9.5-20.6-97.7-20.4-95.4-21-103.2-.2-1.5-1.4-2.5-3-2.5H140c-7.8 0-14-6.3-14-14V82c0-7.8 6.3-14 14-14h93.3c7.8 0 14 6.3 14 14v39.7c0 1.3.9 2.6 2 3.1 35.6 15.3 65.4 46.3 80.5 86.6 1.5 3.6 5 6 8.8 6h38.5c7.8 0 14 6.3 14 14v112c0 7.8-6.3 14-14 14H202.8c-7.8 0-14-6.3-14-14v-30.2c0-1.8-1.4-3.3-3.2-3.4-43.4-3.4-80.4-29.5-96.7-67.6-.9-1.9-2.9-3-5-2.9-2.1.1-3.9 1.4-4.7 3.4-1.7 4.3-3.7 8.4-5.9 12.3-2.1 3.7-3.7 7.7-5.1 11.7-1.3 3.8-3.6 7.1-6.9 9.3-3.3 2.2-7.1 3.2-10.9 3.2H14c-7.8 0-14-6.3-14-14v-78c0-7.8 6.3-14 14-14h37.7c3.8 0 7.6 1 10.9 3.2 3.3 2.2 5.6 5.5 6.9 9.3 1.3 3.9 2.9 7.8 4.9 11.4 2.1 3.9 4.1 7.9 6 12 .9 1.9 2.8 3.1 4.9 3.1 2.1 0 4-1.2 5-3.1 17-35.6 52.5-59.5 92.6-60.8 1.8-.1 3.2-1.6 3.2-3.4V169c0-7.8 6.3-14 14-14h92.8c7.8 0 14 6.3 14 14v30c0 7.8-6.3 14.1-14 14.1h-38.5z"/>
-                  </svg>
-                  <span className="mt-4">Click para ver documento Word</span>
+                  <div className="flex flex-col items-center">
+                    <img 
+                      src="/word-icon.png" 
+                      alt="Documento Word" 
+                      className="w-24 h-24 mb-4"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgd2lkdGg9IjQ4cHgiIGhlaWdodD0iNDhweCI+PHBhdGggZmlsbD0iIzIxOTZmMyIgZD0iTTM3LDQ1SDExYy0xLjY1NywwLTMtMS4zNDMtMy0zVjZjMC0xLjY1NywxLjM0My0zLDMtM2gxOS42MjFDMzEuNzIsMywzMi44MTYsMy40NDksMzMuNjIxLDQuMjM0TDQxLjcxMSwxMi4zNUMyLjQ4NCwxMy4xNDMsNDMsMTQuMjUxLDQzLDE1LjM3MVY0MkM0Myw0My42NTcsNDEuNjU3LDQ1LDQwLDQ1eiIvPjxwYXRoIGZpbGw9IiNFM0YyRkQiIGQ9Ik00MC4yNSwxNS4zNzVoLTYuNzVjLTEuMjQ0LDAtMi4yNS0xLjAwNi0yLjI1LTIuMjVWNi4zNzV7Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTMwLjI1LDE4LjEyNWgtMTMuNWMtMC41NTIsMC0xLTAuNDQ4LTEtMXMwLjQ0OC0xLDEtMWgxMy41YzAuNTUyLDAsMS4wMDMsMC40NDcsMS4wMDEsMSBDMzEuMjUxLDE3LjY3OCwzMC44MDIsMTguMTI1LDMwLjI1LDE4LjEyNXogTTMwLjI1LDIzLjEyNWgtMTMuNWMtMC41NTIsMC0xLTAuNDQ4LTEtMXMwLjQ0OC0xLDEtMWgxMy41IGMwLjU1MiwwLDEuMDAzLDAuNDQ3LDEuMDAxLDFDMzEuMjUxLDIyLjY3OCwzMC44MDIsMjMuMTI1LDMwLjI1LDIzLjEyNXogTTMwLjI1LDI4LjEyNWgtMTMuNWMtMC41NTIsMC0xLTAuNDQ4LTEtMSBzMC40NDgtMSwxLTFoMTMuNWMwLjU1MiwwLDEuMDAzLDAuNDQ3LDEuMDAxLDFDMzEuMjUxLDI3LjY3OCwzMC44MDIsMjguMTI1LDMwLjI1LDI4LjEyNXogTTMwLjI1LDMzLjEyNWgtMTMuNSBjLTAuNTUyLDAtMS0wLjQ0OC0xLTFzMC40NDgtMSwxLTFoMTMuNWMwLjU1MiwwLDEuMDAzLDAuNDQ3LDEuMDAxLDFDMzEuMjUxLDMyLjY3OCwzMC44MDIsMzMuMTI1LDMwLjI1LDMzLjEyNXogTTI5LjI1LDM4LjEyNSBoLTExLjVjLTAuNTUyLDAtMS0wLjQ0OC0xLTFzMC40NDgtMSwxLTFoMTEuNWMwLjU1MiwwLDEsMC40NDgsMSwxUzI5LjgwMiwzOC4xMjUsMjkuMjUsMzguMTI1eiIvPjwvc3ZnPiAg";
+                      }} 
+                    />
+                    <span className="text-blue-800 font-semibold">Ver documento Word</span>
+                  </div>
                 </a>
               </div>
             ) : hoverPreview.doc.mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || 
                hoverPreview.doc.mimeType === 'application/vnd.ms-excel' ? (
-              <div className="flex items-center justify-center h-[70vh]">
+              <div className="bg-white flex items-center justify-center h-[80vh]">
                 <a
                   href={hoverPreview.doc.fileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-green-600 hover:text-green-800 flex flex-col items-center p-8"
+                  className="bg-green-50 p-10 rounded-lg"
                 >
-                  <svg className="h-16 w-16 text-green-600" fill="currentColor" viewBox="0 0 384 512">
-                    <path d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48zm32-48h224V288H80v128zm32-32h64v-32h-64v32zm96 0h64v-32h-64v32zM80 224h224V160H80v64zm32-32h64v-32h-64v32zm96 0h64v-32h-64v32z"/>
-                  </svg>
-                  <span className="mt-4">Click para ver hoja de Excel</span>
+                  <div className="flex flex-col items-center">
+                    <img 
+                      src="/excel-icon.png" 
+                      alt="Documento Excel" 
+                      className="w-24 h-24 mb-4"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgd2lkdGg9IjQ4cHgiIGhlaWdodD0iNDhweCI+PHBhdGggZmlsbD0iIzQzQTA0NyIgZD0iTTM3LDQ1SDExYy0xLjY1NywwLTMtMS4zNDMtMy0zVjZjMC0xLjY1NywxLjM0My0zLDMtM2gxOS42MjFDMzEuNzIsMywzMi44MTYsMy40NDksMzMuNjIxLDQuMjM0TDQxLjcxMSwxMi4zNUMyLjQ4NCwxMy4xNDMsNDMsMTQuMjUxLDQzLDE1LjM3MVY0MkM0Myw0My42NTcsNDEuNjU3LDQ1LDQwLDQ1eiIvPjxwYXRoIGZpbGw9IiNlOGY1ZTkiIGQ9Ik00MC4yNSwxNS4zNzVoLTYuNzVjLTEuMjQ0LDAtMi4yNS0xLjAwNi0yLjI1LTIuMjVWNi4zNzV6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTMwIDI0LjAyOEwyNi44ODggMjcuMDY3IDMwIDMwLjA1NCAzMCAzM0wyNSAyOC4yNSAyNSAyNi4xOTQgMzAgMjEgMzAgMjQuMDI4ek0xOCAyOC4yNUwxMyAzM0wxMyAzMC4wNTQgMTYuMTEzIDI3LjA2NyAxMyAyNC4wMjggMTMgMjFMMTggMjYuMTk0IDE4IDI4LjI1eiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0yMS44NjMgMzBMMjEgMzAgMjYuMDkxIDE4IDI3IDExIDIxLjg2MyAzMHoiLz48L3N2Zz4g";
+                      }}
+                    />
+                    <span className="text-green-800 font-semibold">Ver hoja de Excel</span>
+                  </div>
                 </a>
-              </div>            ) : (              <div className="flex items-center justify-center h-[70vh]">
+              </div>            ) : (              <div className="bg-white flex items-center justify-center h-[80vh]">
                 <a
                   href={hoverPreview.doc.fileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-gray-800 flex flex-col items-center p-8"
+                  className="bg-gray-50 p-10 rounded-lg"
                 >
-                  <svg className="h-16 w-16 text-gray-500" fill="currentColor" viewBox="0 0 384 512">
-                    <path d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"/>
-                  </svg>
-                  <span className="mt-4">Click para ver documento</span>
+                  <div className="flex flex-col items-center">
+                    <img 
+                      src="/document-icon.png" 
+                      alt="Documento" 
+                      className="w-24 h-24 mb-4"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgd2lkdGg9IjQ4cHgiIGhlaWdodD0iNDhweCI+PHBhdGggZmlsbD0iIzg0ODQ4NCIgZD0iTTM3LDQ1SDExYy0xLjY1NywwLTMtMS4zNDMtMy0zVjZjMC0xLjY1NywxLjM0My0zLDMtM2gxOS42MjFDMzEuNzIsMywzMi44MTYsMy40NDksMzMuNjIxLDQuMjM0TDQxLjcxMSwxMi4zNUMyLjQ4NCwxMy4xNDMsNDMsMTQuMjUxLDQzLDE1LjM3MVY0MkM0Myw0My42NTcsNDEuNjU3LDQ1LDQwLDQ1eiIvPjxwYXRoIGZpbGw9IiNFMEUwRTAiIGQ9Ik00MC4yNSwxNS4zNzVoLTYuNzVjLTEuMjQ0LDAtMi4yNS0xLjAwNi0yLjI1LTIuMjVWNi4zNzV6Ii8+PHBhdGggZmlsbD0iI0ZGRkZGRiIgZD0iTTMwLjI1LDE4LjEyNWgtMTMuNWMtMC41NTIsMC0xLTAuNDQ4LTEtMXMwLjQ0OC0xLDEtMWgxMy41YzAuNTUyLDAsMS4wMDMsMC40NDcsMS4wMDEsMSBDMzEuMjUxLDE3LjY3OCwzMC44MDIsMTguMTI1LDMwLjI1LDE4LjEyNXogTTMwLjI1LDIzLjEyNWgtMTMuNWMtMC41NTIsMC0xLTAuNDQ4LTEtMXMwLjQ0OC0xLDEtMWgxMy41IGMwLjU1MiwwLDEuMDAzLDAuNDQ3LDEuMDAxLDFDMzEuMjUxLDIyLjY3OCwzMC44MDIsMjMuMTI1LDMwLjI1LDIzLjEyNXogTTMwLjI1LDI4LjEyNWgtMTMuNWMtMC41NTIsMC0xLTAuNDQ4LTEtMSBzMC40NDgtMSwxLTFoMTMuNWMwLjU1MiwwLDEuMDAzLDAuNDQ3LDEuMDAxLDFDMzEuMjUxLDI3LjY3OCwzMC44MDIsMjguMTI1LDMwLjI1LDI4LjEyNXogTTMwLjI1LDMzLjEyNWgtMTMuNSBjLTAuNTUyLDAtMS0wLjQ0OC0xLTFzMC40NDgtMSwxLTFoMTMuNWMwLjU1MiwwLDEuMDAzLDAuNDQ3LDEuMDAxLDFDMzEuMjUxLDMyLjY3OCwzMC44MDIsMzMuMTI1LDMwLjI1LDMzLjEyNXogTTI5LjI1LDM4LjEyNSBoLTExLjVjLTAuNTUyLDAtMS0wLjQ0OC0xLTFzMC40NDgtMSwxLTFoMTEuNWMwLjU1MiwwLDEsMC40NDgsMSwxUzI5LjgwMiwzOC4xMjUsMjkuMjUsMzguMTI1eiIvPjwvc3ZnPiA=";
+                      }}
+                    />
+                    <span className="text-gray-800 font-semibold">Ver documento</span>
+                  </div>
                 </a>
               </div>
             )}          </div>

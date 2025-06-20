@@ -211,9 +211,8 @@ export default function Testimonials() {  const [currentTestimonial, setCurrentT
         </div>        {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-16">
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">
-              {testimonials.length > 0 ? `${testimonials.length}+` : '10+'}
-            </div>
+           
+       <div className="text-4xl font-bold text-blue-600 mb-2">50+</div>
             <div className="text-gray-600">Clientes Satisfechos</div>
           </div>
           <div className="text-center">
@@ -232,7 +231,7 @@ export default function Testimonials() {  const [currentTestimonial, setCurrentT
             <div className="text-gray-600">Tasa de Satisfacción</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">15+</div>
+            <div className="text-4xl font-bold text-blue-600 mb-2">5+</div>
             <div className="text-gray-600">Años de Experiencia</div>
           </div>
         </div>

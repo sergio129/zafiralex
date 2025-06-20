@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { validateAuthToken } from './lib/authMiddleware';
 import { hasPermission } from './lib/roleUtils';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // Get the token from cookies
   const authCookie = request.cookies.get('admin-auth-token')?.value;
   

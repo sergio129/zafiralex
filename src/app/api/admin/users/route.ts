@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { withAuth } from '@/lib/authMiddleware';
 
 // GET: Obtener todos los usuarios
-export async function GET() {
+async function handler(req: NextRequest) {
   try {
     const users = await prisma.user.findMany({
       select: {
@@ -24,6 +25,8 @@ export async function GET() {
     return NextResponse.json(
       { message: 'Error interno del servidor' },
       { status: 500 }
-    );
-  }
+    );  }
 }
+
+// Solo administradores pueden gestionar usuarios
+export const GET = withAuth(handler, ['admin']);

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { validateAuthToken } from '@/lib/authMiddleware';
-import { hasPermission } from '@/lib/roleUtils';
+import { validateToken, checkUserPermission } from '@/lib/authServerUtils';
 
 interface Params {
   params: {
@@ -40,9 +39,9 @@ export async function PUT(request: NextRequest, { params }: Params) {
   try {
     const { id } = params;
     
-    // Verificar autenticación
-    const userData = await validateAuthToken(request);
-    if (!userData) {
+    // Verificar autenticación y permisos
+    const user = await validateToken();
+    if (!user) {
       return NextResponse.json(
         { error: 'No autorizado' },
         { status: 401 }
@@ -50,7 +49,8 @@ export async function PUT(request: NextRequest, { params }: Params) {
     }
 
     // Verificar permisos (solo admin y abogado pueden editar documentos)
-    if (!hasPermission(userData.role as string, 'documents', 'edit')) {
+    const hasPermission = await checkUserPermission('documents', 'edit');
+    if (!hasPermission) {
       return NextResponse.json(
         { error: 'No tienes permisos para editar documentos' },
         { status: 403 }
@@ -86,9 +86,9 @@ export async function DELETE(request: NextRequest, { params }: Params) {
   try {
     const { id } = params;
     
-    // Verificar autenticación
-    const userData = await validateAuthToken(request);
-    if (!userData) {
+    // Verificar autenticación y permisos
+    const user = await validateToken();
+    if (!user) {
       return NextResponse.json(
         { error: 'No autorizado' },
         { status: 401 }
@@ -96,7 +96,8 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     }
 
     // Verificar permisos (solo admin y abogado pueden eliminar documentos)
-    if (!hasPermission(userData.role as string, 'documents', 'delete')) {
+    const hasPermission = await checkUserPermission('documents', 'delete');
+    if (!hasPermission) {
       return NextResponse.json(
         { error: 'No tienes permisos para eliminar documentos' },
         { status: 403 }

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { validateAuthToken } from './lib/authMiddleware';
 import { hasPermission } from './lib/roleUtils';
+import { verifyEdgeToken } from './lib/edgeAuthUtils';
 
 export async function middleware(request: NextRequest) {
   // Get the token from cookies
@@ -24,10 +24,10 @@ export async function middleware(request: NextRequest) {
 
   // Verificar permisos específicos por ruta
   if (authCookie && pathname.startsWith('/admin')) {
-    // Obtener datos del usuario
-    const userData = await validateAuthToken(request);
+    // Verificar token usando josé (compatible con Edge)
+    const userData = await verifyEdgeToken(authCookie);
 
-    if (userData) {
+    if (userData && userData.role) {
       const role = userData.role as string;
 
       // Verificar permisos según la ruta

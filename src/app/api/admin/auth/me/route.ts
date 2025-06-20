@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateAuthToken } from '@/lib/authMiddleware';
+import { validateToken } from '@/lib/authServerUtils';
 
 export async function GET(req: NextRequest) {
   try {
-    const userData = await validateAuthToken(req);
+    const user = await validateToken();
     
-    if (!userData) {
+    if (!user) {
       return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
     }
     
-    return NextResponse.json(userData);
+    return NextResponse.json(user);
   } catch (error) {
     console.error('Error al obtener datos del usuario:', error);
     return NextResponse.json({ error: 'Error al obtener datos del usuario' }, { status: 500 });

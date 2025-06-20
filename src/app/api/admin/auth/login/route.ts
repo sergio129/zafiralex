@@ -28,10 +28,9 @@ export async function POST(req: NextRequest) {
       );
     }// Importar jsonwebtoken dinámicamente
     const { sign } = await import('jsonwebtoken');
-    
-    // Crear token JWT
+      // Crear token JWT
     const token = sign(
-      { id: user.username, role: user.role },
+      { id: user.id, role: user.role },
       JWT_SECRET,
       { expiresIn: '8h' }
     );

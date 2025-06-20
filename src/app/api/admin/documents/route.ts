@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { createDocument, findDocuments } from '@/lib/documentUtils';
-import { validateAuthToken } from '@/lib/authMiddleware';
-import { hasPermission } from '@/lib/roleUtils';
+import { validateToken, checkUserPermission } from '@/lib/authServerUtils';
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,8 +35,8 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Verificar autenticación
-    const userData = await validateAuthToken(request);
-    if (!userData) {
+    const user = await validateToken();
+    if (!user) {
       return NextResponse.json(
         { error: 'No autorizado' },
         { status: 401 }
@@ -45,14 +44,15 @@ export async function POST(request: NextRequest) {
     }
     
     // Verificar permisos (solo admin y abogado pueden crear documentos)
-    if (!hasPermission(userData.role as string, 'documents', 'create')) {
+    const hasPermission = await checkUserPermission('documents', 'create');
+    if (!hasPermission) {
       return NextResponse.json(
         { error: 'No tienes permisos para crear documentos' },
         { status: 403 }
       );
     }
 
-    const userId = userData.id as string;
+    const userId = user.id;
     const data = await request.json();
 
     // Validar datos requeridos

@@ -453,24 +453,23 @@ export default function DocumentosPage() {
           </div>
         </div>      </div>
         {/* Vista previa flotante al pasar el mouse */}      {hoverPreview && (        <div 
-          className="fixed z-50 bg-white rounded-lg shadow-xl"
+          className="fixed z-50 shadow-2xl"
           style={{
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: '800px',
+            width: '750px',
             maxHeight: '80vh',
             overflow: 'hidden'
           }}
-        >          <div>
-            {hoverPreview.doc.mimeType?.includes('image/') ? (              <img 
+        >          <div>            {hoverPreview.doc.mimeType?.includes('image/') ? (              <img 
                 src={hoverPreview.doc.fileUrl} 
                 alt={hoverPreview.doc.title} 
-                className="w-full h-auto max-h-[70vh] object-contain"
+                className="w-full h-auto max-h-[80vh] object-contain"
               />            ) : hoverPreview.doc.mimeType === 'application/pdf' ? (
-              <div className="h-[70vh]">
+              <div className="h-[80vh] bg-white">
                 <iframe 
-                  src={hoverPreview.doc.fileUrl} 
+                  src={hoverPreview.doc.fileUrl + "#toolbar=0&navpanes=0"} 
                   className="w-full h-full border-0" 
                   title={hoverPreview.doc.title}
                 />

@@ -64,10 +64,12 @@ export async function findDocuments(options: {
   category?: string;
   tags?: string;
   search?: string;
+  userId?: string;  // ID del usuario para filtrar documentos
+  roleType?: string; // Tipo de rol para determinar filtrado
   limit?: number;
   offset?: number;
 }) {
-  const { category, tags, search, limit = 10, offset = 0 } = options;
+  const { category, tags, search, userId, roleType, limit = 10, offset = 0 } = options;
   
   // Construir el filtro de búsqueda
   const where: any = {};
@@ -91,6 +93,12 @@ export async function findDocuments(options: {
     ];
   }
   
+  // Si es un abogado, solo ve sus propios documentos
+  // Admin y otros roles ven todos los documentos
+  if (roleType === 'abogado' && userId) {
+    where.uploadedBy = userId;
+  }
+  
   // Realizar la búsqueda
   const documents = await prisma.document.findMany({
     where,
@@ -98,6 +106,48 @@ export async function findDocuments(options: {
     skip: offset,
     take: limit
   });
+  
+  // Obtener los datos de los usuarios por cada documento
+  const userIds = [...new Set(documents.map(doc => doc.uploadedBy))]; // Eliminar duplicados
+  
+  if (userIds.length > 0) {
+    const users = await prisma.user.findMany({
+      where: {
+        id: { in: userIds }
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true
+      }
+    });
+    
+    // Crear un mapa de ID de usuario a datos de usuario para acceso rápido
+    const userMap = new Map();
+    users.forEach(user => {
+      userMap.set(user.id, user);
+    });
+    
+    // Añadir información de usuario a cada documento
+    const documentsWithUsers = documents.map(doc => ({
+      ...doc,
+      uploader: userMap.get(doc.uploadedBy) || null
+    }));
+    
+    return {
+      documents: documentsWithUsers,
+      total: await prisma.document.count({ where }),
+      limit,
+      offset
+    };
+  }
+  
+  return {
+    documents,
+    total: await prisma.document.count({ where }),
+    limit,
+    offset
+  };
   
   // Contar el total de documentos que coinciden con el filtro
   const total = await prisma.document.count({ where });

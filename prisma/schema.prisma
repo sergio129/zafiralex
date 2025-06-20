@@ -49,13 +49,14 @@ model News {
 
 // Modelo para usuarios administradores
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  password  String
-  role      String   @default("admin") // Valores: "admin", "editor", "secretaria", "abogado"
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String     @id @default(cuid())
+  email       String     @unique
+  name        String?
+  password    String
+  role        String     @default("admin") // Valores: "admin", "editor", "secretaria", "abogado"
+  documents   Document[] // Relación con documentos subidos por el usuario
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 // Modelo para mensajes de contacto
@@ -84,6 +85,7 @@ model Document {
   fileSize    Int
   mimeType    String
   uploadedBy  String   // ID del usuario que subió el documento
+  uploader    User     @relation(fields: [uploadedBy], references: [id]) // Relación con el usuario que subió el documento
   category    String?  // Categoría del documento (opcional)
   tags        String?  // Tags separados por comas (opcional)
   createdAt   DateTime @default(now())

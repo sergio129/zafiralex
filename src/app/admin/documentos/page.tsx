@@ -3,10 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-export default function DocumentosPage() {
-  const [isLoading, setIsLoading] = useState(true);
+export default function DocumentosPage() {  const [isLoading, setIsLoading] = useState(true);
   const [documents, setDocuments] = useState([]);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{id: string, name: string, email: string, role: string} | null>(null);
   const [viewDocument, setViewDocument] = useState<any>(null);
   const [showPreview, setShowPreview] = useState(false);
 
@@ -51,11 +50,22 @@ export default function DocumentosPage() {
     
     fetchDocuments();
   }, []);
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Gestión de Documentos</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Gestión de Documentos</h1>
+          {user?.role === 'abogado' && (
+            <p className="text-sm text-gray-600 mt-1">
+              Solo se muestran los documentos que usted ha subido
+            </p>
+          )}
+          {user?.role !== 'abogado' && (
+            <p className="text-sm text-gray-600 mt-1">
+              Se muestran todos los documentos del sistema
+            </p>
+          )}
+        </div>
         <Link 
           href="/admin/documentos/nuevo"
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -115,9 +125,8 @@ export default function DocumentosPage() {
                       <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                         {doc.category || 'Sin categoría'}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {doc.uploadedBy}
+                    </td>                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {doc.uploader?.name || doc.uploadedBy}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(doc.createdAt).toLocaleDateString()}
@@ -211,10 +220,9 @@ export default function DocumentosPage() {
                     <h4 className="text-sm font-medium text-gray-500">Etiquetas</h4>
                     <p className="mt-1">{viewDocument.tags || 'Sin etiquetas'}</p>
                   </div>
-                  
-                  <div>
+                    <div>
                     <h4 className="text-sm font-medium text-gray-500">Subido por</h4>
-                    <p className="mt-1">{viewDocument.uploadedBy}</p>
+                    <p className="mt-1">{viewDocument.uploader?.name || viewDocument.uploadedBy}</p>
                   </div>
                   
                   <div>
@@ -290,9 +298,7 @@ export default function DocumentosPage() {
             </div>
           </div>
         </div>
-      )}
-
-      <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+      )}      <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
         <div className="flex">
           <div className="flex-shrink-0">
             <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
@@ -302,6 +308,11 @@ export default function DocumentosPage() {
           <div className="ml-3">
             <p className="text-sm text-blue-800">
               Esta sección le permite gestionar documentos legales importantes. Puede subir, categorizar y compartir documentos con su equipo.
+              {user?.role === 'abogado' && (
+                <span className="block mt-2 font-medium">
+                  Como abogado, solo puede ver los documentos que usted ha subido.
+                </span>
+              )}
             </p>
           </div>
         </div>

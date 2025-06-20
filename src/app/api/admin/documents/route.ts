@@ -29,13 +29,13 @@ export async function GET(request: NextRequest) {
     const tags = searchParams.get('tags') || undefined;
     const search = searchParams.get('search') || undefined;
     const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit') as string) : 10;
-    const offset = searchParams.get('offset') ? parseInt(searchParams.get('offset') as string) : 0;
-
-    // Buscar documentos según los criterios
+    const offset = searchParams.get('offset') ? parseInt(searchParams.get('offset') as string) : 0;    // Buscar documentos según los criterios
     const result = await findDocuments({
       category,
       tags,
       search,
+      userId: user.id, // ID del usuario actual
+      roleType: user.role, // Rol del usuario (para filtrar solo si es abogado)
       limit,
       offset
     });

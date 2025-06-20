@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface AlertDialogProps {
   isOpen: boolean;
@@ -104,65 +105,86 @@ export default function AlertDialog({
     }
   };
 
-  const colors = getColors();
-  return (
-    <div className="fixed inset-0 z-[9999] overflow-y-auto">
-      {/* Overlay de fondo con backdrop blur */}
-      <div 
-        className="fixed inset-0 bg-slate-700/30 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
-        onClick={onCancel}
-        aria-hidden="true"
-      ></div>
-      
-      {/* Contenedor de centrado */}
-      <div className="flex min-h-screen items-center justify-center p-4 text-center">
-        {/* Diálogo con animación */}
-        <div 
-          ref={dialogRef}
-          className="relative transform overflow-hidden rounded-xl bg-white text-left shadow-lg transition-all w-full max-w-lg animate-in fade-in-50 slide-in-from-bottom-5 duration-300"
-          onClick={e => e.stopPropagation()}
-        >
-          {/* Borde superior con color según el tipo */}
-          <div className={`h-1 w-full ${colors.button.replace('hover:', '')}`}></div>
+  const colors = getColors();  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[9999] overflow-y-auto">
+          {/* Overlay de fondo con backdrop blur */}          <motion.div 
+            className="fixed inset-0 bg-slate-700/20 backdrop-blur-[2px]"
+            onClick={onCancel}
+            aria-hidden="true"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          />
           
-          <div className="p-8">
-            {/* Encabezado con icono */}
-            <div className="flex items-start">
-              <div className={`flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full ${colors.icon} mr-4`}>
-                {getIcon()}
-              </div>
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold leading-6 text-gray-800">
-                  {title}
-                </h3>
-                <div className="mt-3">
-                  <p className="text-sm text-gray-600">
-                    {message}
-                  </p>
+          {/* Contenedor de centrado */}
+          <div className="flex min-h-screen items-center justify-center p-4 text-center">
+            {/* Diálogo con animación */}
+            <motion.div 
+              ref={dialogRef}
+              className="relative overflow-hidden rounded-xl bg-white text-left shadow-xl ring-1 ring-gray-200 w-full max-w-lg"
+              onClick={e => e.stopPropagation()}
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              transition={{ 
+                type: "spring", 
+                damping: 25, 
+                stiffness: 300 
+              }}
+            >
+              {/* Borde superior con color según el tipo */}
+              <motion.div 
+                className={`h-1.5 w-full ${colors.button.replace('hover:', '')}`}
+                layoutId="dialog-border"
+              ></motion.div>
+              
+              <div className="p-6 sm:p-8">
+                {/* Encabezado con icono */}
+                <div className="flex items-start">
+                  <div className={`flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full ${colors.icon} mr-4`}>
+                    {getIcon()}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-semibold leading-6 text-gray-800">
+                      {title}
+                    </h3>
+                    <div className="mt-3">
+                      <p className="text-sm text-gray-600">
+                        {message}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Botones de acción */}
+                <div className="mt-8 flex flex-row-reverse gap-4">
+                  <motion.button
+                    type="button"
+                    className={`inline-flex justify-center items-center rounded-md border border-transparent px-5 py-2.5 text-sm font-medium text-white shadow-sm ${colors.button} focus:outline-none focus:ring-2 focus:ring-offset-2`}
+                    onClick={onConfirm}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {confirmLabel}
+                  </motion.button>
+                  <motion.button
+                    type="button"
+                    className="inline-flex justify-center items-center rounded-md border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
+                    onClick={onCancel}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {cancelLabel}
+                  </motion.button>
                 </div>
               </div>
-            </div>
-            
-            {/* Botones de acción */}
-            <div className="mt-8 flex flex-row-reverse gap-4">
-              <button
-                type="button"
-                className={`inline-flex justify-center items-center rounded-md border border-transparent px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors ${colors.button} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${colors.button.split('-')[1]}-500`}
-                onClick={onConfirm}
-              >
-                {confirmLabel}
-              </button>
-              <button
-                type="button"
-                className="inline-flex justify-center items-center rounded-md border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
-                onClick={onCancel}
-              >
-                {cancelLabel}
-              </button>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }

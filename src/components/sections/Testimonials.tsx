@@ -221,12 +221,7 @@ export default function Testimonials() {  const [currentTestimonial, setCurrentT
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold text-blue-600 mb-2">
-              {testimonials.length > 0 
-                ? `${Math.round(
-                    (testimonials.reduce((sum, t) => sum + (t.rating || 5), 0) / 
-                    (testimonials.length * 5)) * 100
-                  )}%` 
-                : '98%'}
+              <div className="text-4xl font-bold text-blue-600 mb-2">100%</div>
             </div>
             <div className="text-gray-600">Tasa de Satisfacción</div>
           </div>

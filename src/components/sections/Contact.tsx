@@ -72,7 +72,7 @@ export default function Contact() {
                   </svg>
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900">Dirección</h4>
-                    <p className="text-gray-600">Carrera 11W #18-27<br />Monteria, Cordoba<br />Colombia</p>
+                    <p className="text-gray-600">Calle 25 Nro 5-14 Oficina 206 <br />Edificio Galenos - Barrio Centro<br />Monteria, Cordoba<br />Colombia</p>
                   </div>
                 </div>
 
@@ -82,7 +82,7 @@ export default function Contact() {
                   </svg>
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900">Teléfono</h4>
-                    <p className="text-gray-600">+57 300 123 4567<br />+57 300 123 4568</p>
+                    <p className="text-gray-600">301 5208548<br />322 6798057</p>
                   </div>
                 </div>
 
@@ -92,38 +92,54 @@ export default function Contact() {
                   </svg>
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900">Email</h4>
-                    <p className="text-gray-600">info@zafira.com<br />ventas@zafira.com</p>
+                    <p className="text-gray-600">faecob.sas@hotmail.com</p>
                   </div>
                 </div>
+                  {/* Información legal y NIT */}
+              <div className="flex items-start">
+                 <svg className="h-6 w-6 text-blue-600 mt-1 mr-4" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                 </svg>
+               <div>
+          <h4 className="text-lg font-semibold text-gray-900">Información Legal</h4>
+               <p className="text-gray-600">
+                 Razón Social: COMPAÑIA JURIDICA ZAFIRA LEX S.A.S<br />
+                 Sigla: ZAFIRA LEX S.A.S<br />
+                  Nit: 901477641-7<br />
+               </p>
+            </div>
+            </div>
 
-                <div className="flex items-start">
-                  <svg className="h-6 w-6 text-blue-600 mt-1 mr-4" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+           <div className="flex items-start">
+             <svg className="h-6 w-6 text-blue-600 mt-1 mr-4" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                 <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900">Horarios de Atención</h4>
                     <p className="text-gray-600">
                       Lunes - Viernes: 8:00 AM - 6:00 PM<br />
                       Sábados: 9:00 AM - 2:00 PM<br />
-                      Soporte 24/7 disponible
+                      Domingos: Cerrado
                     </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Map placeholder */}
-            <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center">
-              <div className="text-center text-gray-500">
-                <svg className="h-16 w-16 mx-auto mb-4" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                  <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                  <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                <p>Mapa de ubicación</p>
-              </div>
+            {/* Google Maps Embed */}
+            <div className="rounded-lg overflow-hidden h-64 shadow-md">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!4v1750427227642!6m8!1m7!1s7vtmCVc4UbinOZMOwa8T6w!2m2!1d8.753474274467434!2d-75.88661968823664!3f198.74085278305944!4f3.3060047461240885!5f0.7820865974627469"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Ubicación de Zafira Lex"
+              ></iframe>
             </div>
-          </div>
-
+</div>
           {/* Contact Form */}
           <div className="bg-gray-50 rounded-2xl p-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-6">

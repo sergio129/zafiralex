@@ -39,7 +39,7 @@ export default function Header() {
             <Link href="/" className={`text-2xl font-bold transition-colors ${
               scrolled ? 'text-blue-600' : 'text-white'
             }`} style={{ color: scrolled ? '#1a4b8b' : 'white' }}>
-              Zafira Lex
+              Compañia Juridica Zafira Lex
             </Link>
           </div>          {/* Desktop Menu */}
           <nav className="hidden md:flex space-x-8">

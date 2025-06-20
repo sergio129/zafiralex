@@ -296,14 +296,12 @@ export default function AdminContactMessages() {
             </tbody>
           </table>
         </div>
-      )}
-
-      <ConfirmDialog
+      )}      <ConfirmDialog
         isOpen={isConfirmDialogOpen}
         title="Confirmar eliminación"
         message="¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer."
-        confirmText="Eliminar"
-        cancelText="Cancelar"
+        confirmLabel="Eliminar"
+        cancelLabel="Cancelar"
         onConfirm={handleDelete}
         onCancel={() => setIsConfirmDialogOpen(false)}
       />

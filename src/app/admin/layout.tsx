@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { hasPermission } from '@/lib/roleUtils';
 import { AdminUser } from '@/types/admin';
+import AdminProviders from './providers';
 
 // Función para obtener el título del encabezado según la ruta
 const getHeaderTitle = (path: string): string => {
@@ -69,9 +70,9 @@ export default function AdminLayout({
   };  // Skip layout for login page
   if (pathname === '/admin/login') {
     return <>{children}</>;
-  }
-  return (
-    <div className="min-h-screen bg-gray-100">
+  }  return (
+    <AdminProviders>
+      <div className="min-h-screen bg-gray-100">
       {/* Top Navigation Bar - always visible */}
       <div className="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg">
         <div className="container mx-auto px-4 flex justify-between items-center h-14">
@@ -248,7 +249,7 @@ export default function AdminLayout({
         <footer className="py-4 px-6 text-center text-sm text-gray-500 border-t border-gray-200">
           <p>© 2025 Zafira Admin - Todos los derechos reservados</p>
         </footer>
-      </div>
-    </div>
+      </div>    </div>
+    </AdminProviders>
   );
 }

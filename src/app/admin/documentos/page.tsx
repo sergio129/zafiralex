@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import AlertDialog from '@/components/ui/AlertDialog';
+import { useToast } from '@/components/ui/Toast';
 
 // Definición del tipo Document
 type Document = {
@@ -24,12 +26,14 @@ type Document = {
 };
 
 export default function DocumentosPage() {
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [documents, setDocuments] = useState<Document[]>([]);
   const [filteredDocuments, setFilteredDocuments] = useState<Document[]>([]);
   const [user, setUser] = useState<{id: string, name: string, email: string, role: string} | null>(null);  const [viewDocument, setViewDocument] = useState<Document | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [hoverPreview, setHoverPreview] = useState<{doc: Document, x: number, y: number} | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{show: boolean, docId: string, title: string} | null>(null);
   
   // Estados para filtros
   const [dateFrom, setDateFrom] = useState("");
@@ -318,24 +322,13 @@ export default function DocumentosPage() {
                         className="text-green-600 hover:text-green-900 mr-2"
                       >
                         Descargar
-                      </a>
-                      <button 
-                        onClick={async () => {
-                          if (confirm('¿Está seguro de que desea eliminar este documento?')) {
-                            try {
-                              const res = await fetch(`/api/admin/documents/${doc.id}`, {
-                                method: 'DELETE'
-                              });
-                              if (res.ok) {
-                                setDocuments(documents.filter((d: any) => d.id !== doc.id));
-                              } else {
-                                alert('Error al eliminar el documento');
-                              }
-                            } catch (error) {
-                              console.error('Error:', error);
-                              alert('Error al eliminar el documento');
-                            }
-                          }
+                      </a>                      <button 
+                        onClick={() => {
+                          setConfirmDelete({
+                            show: true,
+                            docId: doc.id,
+                            title: doc.title
+                          });
                         }}
                         className="text-red-600 hover:text-red-900"
                       >
@@ -496,7 +489,7 @@ export default function DocumentosPage() {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: '700px',
-            maxHeight: '500px',
+            maxHeight: '900px',
             overflow: 'hidden'
           }}
         >
@@ -597,8 +590,39 @@ export default function DocumentosPage() {
             <div>
               <span className="font-medium">Fecha:</span> {new Date(hoverPreview.doc.createdAt).toLocaleDateString()}
             </div>
-          </div>
-        </div>
+          </div>        </div>
+      )}
+        {/* Diálogo de confirmación para eliminar documento */}
+      {confirmDelete && (
+        <AlertDialog
+          isOpen={confirmDelete.show}
+          title="Eliminar documento"
+          message={`¿Está seguro de que desea eliminar el documento "${confirmDelete.title}"? Esta acción no se puede deshacer.`}
+          confirmLabel="Eliminar"
+          cancelLabel="Cancelar"
+          type="error"
+          onConfirm={async () => {
+            try {
+              const res = await fetch(`/api/admin/documents/${confirmDelete.docId}`, {
+                method: 'DELETE'
+              });              if (res.ok) {
+                setDocuments(documents.filter(d => d.id !== confirmDelete.docId));
+                setFilteredDocuments(filteredDocuments.filter(d => d.id !== confirmDelete.docId));
+                showToast('Documento eliminado correctamente', 'success');
+              } else {
+                const errorData = await res.json();
+                console.error('Error al eliminar:', errorData);
+                showToast('Error al eliminar el documento', 'error');
+              }
+            } catch (error) {
+              console.error('Error:', error);
+              showToast('Error al eliminar el documento', 'error');
+            } finally {
+              setConfirmDelete(null);
+            }
+          }}
+          onCancel={() => setConfirmDelete(null)}
+        />
       )}
     </div>
   );

@@ -296,8 +296,7 @@ export default function UserManagementPage() {
                 
                 <div>                  <label htmlFor="role" className="block text-sm font-medium text-gray-800 mb-1">
                     Rol
-                  </label>
-                  <select
+                  </label>                  <select
                     id="role"
                     name="role"
                     value={formData.role}
@@ -306,6 +305,8 @@ export default function UserManagementPage() {
                   >
                     <option value="admin">Administrador</option>
                     <option value="editor">Editor</option>
+                    <option value="secretaria">Secretaria</option>
+                    <option value="abogado">Abogado</option>
                   </select>
                 </div>
               </div>
@@ -368,12 +369,17 @@ export default function UserManagementPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-500">{user.email}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      </td>                      <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                          user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 
+                          user.role === 'editor' ? 'bg-blue-100 text-blue-800' :
+                          user.role === 'secretaria' ? 'bg-green-100 text-green-800' :
+                          'bg-amber-100 text-amber-800'
                         }`}>
-                          {user.role === 'admin' ? 'Administrador' : 'Editor'}
+                          {user.role === 'admin' ? 'Administrador' : 
+                           user.role === 'editor' ? 'Editor' :
+                           user.role === 'secretaria' ? 'Secretaria' :
+                           user.role === 'abogado' ? 'Abogado' : user.role}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

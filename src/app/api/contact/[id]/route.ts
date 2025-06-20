@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 // API para actualizar un mensaje específico (solo admin)
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest) {
   try {
-    const { id } = params;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     const data = await request.json();
     
     // Validación
@@ -36,9 +37,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // API para obtener un mensaje específico (solo admin)
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest) {
   try {
-    const { id } = params;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     
     // Validación
     if (!id) {
@@ -70,9 +72,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // API para eliminar un mensaje (solo admin)
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest) {
   try {
-    const { id } = params;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     
     // Validación
     if (!id) {

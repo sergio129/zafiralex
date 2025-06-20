@@ -1,12 +1,30 @@
 import { NextResponse } from 'next/server';
 import { slugify } from '@/lib/fileUtils';
 import { prisma } from '@/lib/prisma';
+import { validateToken, checkUserPermission } from '@/lib/authServerUtils';
 
 // Utilizamos una definición de tipos más simple para evitar problemas de compilación
 // y usamos la misma implementación que funciona en testimonios
 
 // GET: Obtener una noticia por ID
 export async function GET(request: Request) {
+  // Verificar autenticación
+  const user = await validateToken();
+  if (!user) {
+    return NextResponse.json(
+      { error: 'No autorizado' },
+      { status: 401 }
+    );
+  }
+  
+  // Verificar permisos
+  const hasPermission = await checkUserPermission('news', 'view');
+  if (!hasPermission) {
+    return NextResponse.json(
+      { error: 'No tienes permisos para ver noticias' },
+      { status: 403 }
+    );
+  }
   try {
     // Extraer el ID de la URL en lugar de los parámetros
     const id = request.url.split('/').pop() as string;
@@ -40,6 +58,23 @@ export async function GET(request: Request) {
 
 export async function PUT(request: Request) {
   try {
+    // Verificar autenticación
+    const user = await validateToken();
+    if (!user) {
+      return NextResponse.json(
+        { error: 'No autorizado' },
+        { status: 401 }
+      );
+    }
+    
+    // Verificar permisos
+    const hasPermission = await checkUserPermission('news', 'edit');
+    if (!hasPermission) {
+      return NextResponse.json(
+        { error: 'No tienes permisos para editar noticias' },
+        { status: 403 }
+      );
+    }
     // Extraer el ID de la URL en lugar de los parámetros
     const id = request.url.split('/').pop() as string;
     const formData = await request.formData();
@@ -99,6 +134,23 @@ export async function PUT(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    // Verificar autenticación
+    const user = await validateToken();
+    if (!user) {
+      return NextResponse.json(
+        { error: 'No autorizado' },
+        { status: 401 }
+      );
+    }
+    
+    // Verificar permisos
+    const hasPermission = await checkUserPermission('news', 'delete');
+    if (!hasPermission) {
+      return NextResponse.json(
+        { error: 'No tienes permisos para eliminar noticias' },
+        { status: 403 }
+      );
+    }
     // Extraer el ID de la URL en lugar de los parámetros
     const id = request.url.split('/').pop() as string;
     

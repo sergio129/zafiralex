@@ -49,21 +49,23 @@ export const POST = withAuth(async (req: NextRequest) => {
 
     // En un caso real aquí procesaríamos el archivo subido a través de formData
     // y lo guardaríamos en algún servicio de almacenamiento como AWS S3
-    
-    // Por ahora, solo simulamos la creación de un registro
+      // Por ahora, solo simulamos la creación de un registro
     const data = await req.json();
-      const document = await prisma.document.create({
-      data: {
-        title: data.title,
-        description: data.description || '',
-        fileName: data.fileName,
-        fileUrl: data.fileUrl,
-        fileSize: data.fileSize,
-        mimeType: data.mimeType,
-        uploadedBy: user?.id || '',
-        category: data.category || '',
-        tags: data.tags || ''
-      }
+    
+    // Importar la función createDocument que maneja automáticamente documentRef
+    const { createDocument } = await import('@/lib/documentUtils');
+    
+    // Crear el documento usando la función que genera documentRef automáticamente
+    const document = await createDocument({
+      title: data.title,
+      description: data.description || '',
+      fileName: data.fileName,
+      fileUrl: data.fileUrl,
+      fileSize: data.fileSize,
+      mimeType: data.mimeType,
+      uploadedBy: user?.id || '',
+      category: data.category || '',
+      tags: data.tags || ''
     });
 
     return NextResponse.json(document, { status: 201 });

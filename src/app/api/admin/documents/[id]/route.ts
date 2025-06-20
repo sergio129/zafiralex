@@ -2,16 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validateToken, checkUserPermission } from '@/lib/authServerUtils';
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
-
 // Obtener un documento por ID
-export async function GET(request: NextRequest, { params }: Params) {
+export async function GET(request: NextRequest) {
   try {
-    const { id } = params;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     
     const document = await prisma.document.findUnique({
       where: { id }
@@ -35,9 +30,10 @@ export async function GET(request: NextRequest, { params }: Params) {
 }
 
 // Actualizar un documento
-export async function PUT(request: NextRequest, { params }: Params) {
+export async function PUT(request: NextRequest) {
   try {
-    const { id } = params;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     
     // Verificar autenticación y permisos
     const user = await validateToken();
@@ -82,9 +78,10 @@ export async function PUT(request: NextRequest, { params }: Params) {
 }
 
 // Eliminar un documento
-export async function DELETE(request: NextRequest, { params }: Params) {
+export async function DELETE(request: NextRequest) {
   try {
-    const { id } = params;
+    // Extraer el ID de la URL en lugar de los parámetros
+    const id = request.url.split('/').pop() as string;
     
     // Verificar autenticación y permisos
     const user = await validateToken();

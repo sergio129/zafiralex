@@ -3,8 +3,26 @@ import { slugify } from '@/lib/fileUtils';
 import { prisma } from '@/lib/prisma';
 import { sanitizeHTML, sanitizeText } from '@/lib/sanitizeUtils';
 import { validateImage } from '@/lib/fileValidation';
+import { validateToken, checkUserPermission } from '@/lib/authServerUtils';
 
 export async function POST(request: Request) {
+  // Verificar autenticación
+  const user = await validateToken();
+  if (!user) {
+    return NextResponse.json(
+      { error: 'No autorizado' },
+      { status: 401 }
+    );
+  }
+  
+  // Verificar permisos
+  const hasPermission = await checkUserPermission('news', 'create');
+  if (!hasPermission) {
+    return NextResponse.json(
+      { error: 'No tienes permisos para crear noticias' },
+      { status: 403 }
+    );
+  }
   try {
     const formData = await request.formData();
     

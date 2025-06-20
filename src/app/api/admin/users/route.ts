@@ -1,10 +1,21 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { withAuth } from '@/lib/authMiddleware';
+import { checkUserPermission } from '@/lib/authServerUtils';
 
 // GET: Obtener todos los usuarios
 async function handler(req: NextRequest) {
   try {
+    // Verificar permisos del usuario
+    const hasPermission = await checkUserPermission('users', 'view');
+    
+    if (!hasPermission) {
+      return NextResponse.json(
+        { message: 'No tienes permisos para ver usuarios' },
+        { status: 403 }
+      );
+    }
+    
     const users = await prisma.user.findMany({
       select: {
         id: true,
@@ -29,4 +40,4 @@ async function handler(req: NextRequest) {
 }
 
 // Solo administradores pueden gestionar usuarios
-export const GET = withAuth(handler, ['admin']);
+export const GET = withAuth(handler);

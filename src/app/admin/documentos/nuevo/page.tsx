@@ -27,7 +27,6 @@ export default function NuevoDocumentoPage() {
       setFile(e.target.files[0]);
     }
   };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
@@ -44,29 +43,56 @@ export default function NuevoDocumentoPage() {
     setIsUploading(true);
     
     try {
-      // Aquí iría la lógica de subida del archivo
-      // const formDataToSend = new FormData();
-      // formDataToSend.append('file', file);
-      // formDataToSend.append('title', formData.title);
-      // formDataToSend.append('description', formData.description);
-      // formDataToSend.append('category', formData.category);
-      // formDataToSend.append('tags', formData.tags);
+      // Primero, subir el archivo a un directorio de uploads
+      // (En un entorno real, esto debería ser a un bucket S3 u otro almacenamiento)
+      const fileToUpload = new FormData();
+      fileToUpload.append('file', file);
       
-      // const res = await fetch('/api/admin/documentos', {
-      //   method: 'POST',
-      //   body: formDataToSend
-      // });
+      // Subir el archivo primero
+      const uploadRes = await fetch('/api/upload', {
+        method: 'POST',
+        body: fileToUpload
+      });
       
-      // if (!res.ok) throw new Error('Error al subir el documento');
+      if (!uploadRes.ok) {
+        throw new Error('Error al subir el archivo');
+      }
+      
+      const uploadData = await uploadRes.json();
+      const fileUrl = uploadData.fileUrl; // URL del archivo subido
+      
+      // Luego crear el documento con la URL del archivo
+      const documentData = {
+        title: formData.title,
+        description: formData.description,
+        fileName: file.name,
+        fileUrl: fileUrl,
+        fileSize: file.size,
+        mimeType: file.type,
+        category: formData.category || null,
+        tags: formData.tags || null
+      };
+      
+      // Enviar los datos del documento a la API
+      const docRes = await fetch('/api/admin/documents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(documentData)
+      });
+      
+      if (!docRes.ok) {
+        const error = await docRes.json();
+        throw new Error(error.error || 'Error al crear el documento');
+      }
 
-      // Simulamos un retraso
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      // Redirigir a la página de documentos
       router.push('/admin/documentos');
       router.refresh();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error:', error);
-      setError('Ocurrió un error al subir el documento');
+      setError(error.message || 'Ocurrió un error al subir el documento');
     } finally {
       setIsUploading(false);
     }

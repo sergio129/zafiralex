@@ -24,11 +24,26 @@ export default function DocumentosPage() {
     
     getUser();
   }, []);
-
-  // Esto sería para cargar documentos reales cuando tengamos la API
+  // Cargar documentos desde la API
   useEffect(() => {
-    // Simulación de carga
-    setIsLoading(false);
+    const fetchDocuments = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch('/api/admin/documents');
+        if (res.ok) {
+          const data = await res.json();
+          setDocuments(data);
+        } else {
+          console.error('Error al obtener documentos');
+        }
+      } catch (error) {
+        console.error('Error al cargar documentos:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchDocuments();
   }, []);
 
   return (
@@ -70,9 +85,52 @@ export default function DocumentosPage() {
                     Acciones
                   </th>
                 </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {/* Aquí irían los documentos */}
+              </thead>              <tbody className="bg-white divide-y divide-gray-200">
+                {documents.map((doc: any) => (
+                  <tr key={doc.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-gray-100 rounded-md">
+                          <svg className="h-6 w-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            {doc.title}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            Ref: {doc.documentRef}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        {doc.category || 'Sin categoría'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {doc.uploadedBy}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(doc.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <a 
+                        href={doc.fileUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-900 mr-4"
+                      >
+                        Ver
+                      </a>
+                      <a href="#" className="text-red-600 hover:text-red-900">
+                        Eliminar
+                      </a>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

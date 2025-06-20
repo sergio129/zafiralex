@@ -1,6 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { hasPermission } from '@/lib/roleUtils';
+import { AdminUser } from '@/types/admin';
 
 interface DashboardStats {
   newsCount: number;
@@ -13,16 +15,25 @@ export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [user, setUser] = useState<AdminUser | null>(null);
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchUserAndStats = async () => {
       try {
-        const response = await fetch('/api/admin/stats');
-        if (!response.ok) {
+        // Obtener información del usuario
+        const userResponse = await fetch('/api/admin/auth/me');
+        if (!userResponse.ok) {
+          throw new Error('Error al cargar información del usuario');
+        }
+        const userData = await userResponse.json();
+        setUser(userData);
+        
+        // Obtener estadísticas
+        const statsResponse = await fetch('/api/admin/stats');
+        if (!statsResponse.ok) {
           throw new Error('Error al cargar las estadísticas');
         }
-        const data = await response.json();
-        setStats(data);
+        const statsData = await statsResponse.json();
+        setStats(statsData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error desconocido');
       } finally {
@@ -30,7 +41,7 @@ export default function Dashboard() {
       }
     };
 
-    fetchStats();
+    fetchUserAndStats();
   }, []);
 
   if (loading) {

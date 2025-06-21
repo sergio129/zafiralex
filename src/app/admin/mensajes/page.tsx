@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import AlertDialog from '@/components/ui/AlertDialog';
+import { useToast } from '@/components/ui/Toast';
 
 // Define el tipo para los mensajes de contacto
 type ContactMessage = {

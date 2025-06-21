@@ -12,6 +12,7 @@ interface User {
 }
 
 export default function UserManagementPage() {
+  const { showToast } = useToast();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -161,7 +162,6 @@ export default function UserManagementPage() {
     setDeleteUserId(id);
     setIsConfirmDialogOpen(true);
   };
-
   const handleDelete = async () => {
     if (!deleteUserId) return;
     
@@ -177,9 +177,9 @@ export default function UserManagementPage() {
 
       // Actualizar lista de usuarios
       setUsers(users.filter(user => user.id !== deleteUserId));
-      setSuccessMessage('Usuario eliminado correctamente');
-      setTimeout(() => setSuccessMessage(null), 3000);
+      showToast('Usuario eliminado correctamente', 'success');
     } catch (err) {
+      showToast('Error al eliminar usuario', 'error');
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
       setIsConfirmDialogOpen(false);
@@ -414,9 +414,8 @@ export default function UserManagementPage() {
           </div>
         )}
       </div>
-      
-      {/* Diálogo de confirmación */}
-      <ConfirmDialog
+        {/* Diálogo de confirmación */}
+      <AlertDialog
         isOpen={isConfirmDialogOpen}
         title="Confirmar eliminación"
         message="¿Está seguro de que desea eliminar este usuario? Esta acción no se puede deshacer."
@@ -427,6 +426,7 @@ export default function UserManagementPage() {
           setIsConfirmDialogOpen(false);
           setDeleteUserId(null);
         }}
+        type="error"
       />
     </div>
   );

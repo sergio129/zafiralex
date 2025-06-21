@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
-import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import AlertDialog from '@/components/ui/AlertDialog';
+import { useToast } from '@/components/ui/Toast';
 
 interface User {
   id: string;

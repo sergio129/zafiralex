@@ -6,6 +6,7 @@ import AlertDialog from '@/components/ui/AlertDialog';
 import { useToast } from '@/components/ui/Toast';
 
 export default function AdminNewsPage() {
+  const { showToast } = useToast();
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +36,6 @@ export default function AdminNewsPage() {
     setDeleteNewsId(id.toString());
     setIsConfirmDialogOpen(true);
   };
-
   const handleDelete = async () => {
     if (!deleteNewsId) return;
     
@@ -52,7 +52,9 @@ export default function AdminNewsPage() {
       setNews(news.filter(item => item.id !== deleteNewsId));
       setIsConfirmDialogOpen(false);
       setDeleteNewsId(null);
+      showToast('Noticia eliminada correctamente', 'success');
     } catch (err) {
+      showToast('Error al eliminar la noticia', 'error');
       setError(err instanceof Error ? err.message : 'Error al eliminar la noticia');
     }
   };
@@ -146,9 +148,7 @@ export default function AdminNewsPage() {
             </tbody>
           </table>
         </div>
-      )}
-
-      <ConfirmDialog
+      )}      <AlertDialog
         isOpen={isConfirmDialogOpen}
         title="Confirmar eliminación"
         message="¿Está seguro de que desea eliminar esta noticia?"
@@ -156,6 +156,7 @@ export default function AdminNewsPage() {
         cancelLabel="Cancelar"
         onConfirm={handleDelete}
         onCancel={handleCancelDelete}
+        type="error"
       />
     </div>
   );

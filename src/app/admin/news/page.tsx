@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { NewsItem } from '@/components/ui/NewsCard';
-import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import AlertDialog from '@/components/ui/AlertDialog';
+import { useToast } from '@/components/ui/Toast';
 
 export default function AdminNewsPage() {
   const [news, setNews] = useState<NewsItem[]>([]);

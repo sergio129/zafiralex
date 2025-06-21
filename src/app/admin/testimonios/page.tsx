@@ -2,9 +2,11 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Testimonial } from '@/types/testimonial';
-import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import AlertDialog from '@/components/ui/AlertDialog';
+import { useToast } from '@/components/ui/Toast';
 
 export default function TestimoniosAdmin() {
+  const { showToast } = useToast();
   const [testimonios, setTestimonios] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -165,7 +167,6 @@ export default function TestimoniosAdmin() {
       setIsSubmitting(false);
     }
   };
-
   // Eliminar un testimonio
   const handleDeleteTestimonio = async (id: string) => {
     try {
@@ -184,9 +185,9 @@ export default function TestimoniosAdmin() {
         cancelEditing();
       }
       
-      setSuccessMessage('Testimonio eliminado correctamente');
-      setTimeout(() => setSuccessMessage(null), 3000);
+      showToast('Testimonio eliminado correctamente', 'success');
     } catch (err) {
+      showToast('Error al eliminar el testimonio', 'error');
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
       setIsSubmitting(false);
@@ -478,8 +479,8 @@ export default function TestimoniosAdmin() {
             <li>Todos los cambios se guardan automáticamente en el sistema de archivos</li>
             <li>Asegúrate de que todos los campos obligatorios estén completos</li>
           </ul>
-        </div>        {/* Confirm Dialog */}
-        <ConfirmDialog
+        </div>        {/* Alert Dialog */}
+        <AlertDialog
           isOpen={isConfirmDialogOpen}
           onCancel={closeConfirmDialog}
           onConfirm={handleConfirmDelete}
@@ -487,6 +488,7 @@ export default function TestimoniosAdmin() {
           message="¿Estás seguro de que deseas eliminar este testimonio? Esta acción no se puede deshacer."
           confirmLabel="Eliminar"
           cancelLabel="Cancelar"
+          type="error"
         />
       </div>
     </main>

@@ -128,12 +128,9 @@ export default function UserManagementPage() {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Error al actualizar usuario');
-      }
-
-      // Recargar usuarios y mostrar mensaje de éxito
+      }      // Recargar usuarios y mostrar mensaje de éxito
       await fetchUsers();
-      setSuccessMessage('Usuario actualizado correctamente');
-      setTimeout(() => setSuccessMessage(null), 3000);
+      showToast('Usuario actualizado correctamente', 'success');
       
       // Resetear y ocultar formulario
       resetForm();

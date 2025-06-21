@@ -107,10 +107,8 @@ export default function TestimoniosAdmin() {
         rating: 5,
         videoUrl: "",
         type: 'text'
-      });
-      
-      setSuccessMessage('Testimonio agregado correctamente');
-      setTimeout(() => setSuccessMessage(null), 3000);
+      });      
+      showToast('Testimonio agregado correctamente', 'success');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
@@ -156,10 +154,8 @@ export default function TestimoniosAdmin() {
       
       if (!response.ok) {
         throw new Error('Error al actualizar el testimonio');
-      }
-      
-      setSuccessMessage('Testimonio actualizado correctamente');
-      setTimeout(() => setSuccessMessage(null), 3000);
+      }      
+      showToast('Testimonio actualizado correctamente', 'success');
       setEditingId(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');

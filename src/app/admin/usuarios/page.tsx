@@ -427,6 +427,7 @@ export default function UserManagementPage() {
           setDeleteUserId(null);
         }}
         type="error"
+      
       />
     </div>
   );

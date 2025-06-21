@@ -21,6 +21,7 @@ type ContactMessage = {
 };
 
 export default function AdminContactMessages() {
+  const { showToast } = useToast();
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -62,7 +63,6 @@ export default function AdminContactMessages() {
     setDeleteMessageId(id);
     setIsConfirmDialogOpen(true);
   };
-
   const handleDelete = async () => {
     if (!deleteMessageId) return;
 
@@ -80,9 +80,11 @@ export default function AdminContactMessages() {
 
       // Actualizar lista de mensajes
       setMessages(messages.filter((message) => message.id !== deleteMessageId));
+      showToast('Mensaje eliminado correctamente', 'success');
       setIsConfirmDialogOpen(false);
       setDeleteMessageId(null);
     } catch (err) {
+      showToast('Error al eliminar el mensaje', 'error');
       setError(err instanceof Error ? err.message : 'Error al eliminar el mensaje');
     }
   };
@@ -297,7 +299,7 @@ export default function AdminContactMessages() {
             </tbody>
           </table>
         </div>
-      )}      <ConfirmDialog
+      )}      <AlertDialog
         isOpen={isConfirmDialogOpen}
         title="Confirmar eliminación"
         message="¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer."
@@ -305,6 +307,7 @@ export default function AdminContactMessages() {
         cancelLabel="Cancelar"
         onConfirm={handleDelete}
         onCancel={() => setIsConfirmDialogOpen(false)}
+        type="error"
       />
     </div>
   );

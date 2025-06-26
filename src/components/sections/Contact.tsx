@@ -232,11 +232,11 @@ export default function Contact() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="">Selecciona un asunto</option>
-                    <option value="consulta">Consulta General</option>
-                    <option value="servicios">Información sobre Servicios</option>
-                    <option value="cotizacion">Solicitar Cotización</option>
-                    <option value="soporte">Soporte Técnico</option>
-                    <option value="otro">Otro</option>
+                    <option value="Asesoría general">Asesoría general</option>
+                    <option value="Consultoría general">Consultoría general</option>
+                    <option value="Recuperación de cartera">Recuperación de cartera</option>
+                    <option value="Asuntos relacionados con el magisterio">Asuntos relacionados con el magisterio</option>
+                    <option value="Otro">Otro</option>
                   </select>
                 </div>
               </div>

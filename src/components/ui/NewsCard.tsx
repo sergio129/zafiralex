@@ -72,7 +72,7 @@ export default function NewsCard({ news, index = 0, featured = false }: NewsCard
       }`}
     >
       {/* Imagen */}
-      <div className={`relative ${featured ? 'h-64 lg:h-full' : 'h-56'} overflow-hidden`}>
+      <div className={`relative ${featured ? 'h-64 lg:h-full' : 'h-56'} overflow-hidden w-full`}>
         <div className={`absolute inset-0 bg-gray-200 flex items-center justify-center ${imageLoaded ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
           {!imageLoaded && (
             <svg className="animate-spin h-8 w-8 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -86,7 +86,8 @@ export default function NewsCard({ news, index = 0, featured = false }: NewsCard
           alt={news.imageAlt ?? news.title}
           fill
           sizes={featured ? "(max-width: 1024px) 100vw, 50vw" : "100vw"}
-          className={`object-cover transition-all duration-500 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`object-contain w-full h-full transition-all duration-500 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          priority={true}
           onLoad={() => setImageLoaded(true)}
           onError={(e) => {
             // Si la imagen falla, usar un placeholder

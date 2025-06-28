@@ -101,13 +101,14 @@ export default function News() {
                 className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
               >                {/* Image */}
                 {hasImage(article) ? (
-                  <div className="h-48 relative">
+                  <div className="h-48 relative w-full overflow-hidden">
                     <Image
                       src={getImageUrl(article)}
                       alt={article.title}
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover"
+                      className="object-contain w-full h-full"
+                      priority={true}
                       onError={(e) => {
                         // Mostrar un placeholder si la imagen falla
                         e.currentTarget.src = '/placeholder-image.jpg';

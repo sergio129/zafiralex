@@ -137,7 +137,7 @@ export default function NoticiaDetailPage() {
               alt={noticia.title}
               fill
               sizes="(max-width: 1024px) 100vw, 1024px"
-              className="object-cover rounded-lg shadow"
+              className="object-contain rounded-lg shadow"
               onError={(e) => {
                 // Si la imagen falla, usar un placeholder
                 const target = e.target as HTMLImageElement;

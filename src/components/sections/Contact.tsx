@@ -133,9 +133,11 @@ export default function Contact() {
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900">Horarios de Atención</h4>
                     <p className="text-gray-600">
-                      Lunes - Viernes: 8:00 AM - 6:00 PM<br />
-                      Sábados: 9:00 AM - 11:30 PM<br />
-                      Domingos: Cerrado
+                      <strong>Lunes - Viernes:</strong><br />
+                      Mañana: 8:00 AM - 11:40 AM<br />
+                      Tarde: 1:00 PM - 5:00 PM<br />
+                      <strong>Sábados:</strong> 9:00 AM - 11:30 AM<br />
+                      <strong>Domingos:</strong> Cerrado
                     </p>
                   </div>
                 </div>

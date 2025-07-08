@@ -88,7 +88,7 @@ export default function Contact() {
                   </svg>
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900">Dirección</h4>
-                    <p className="text-gray-600">Calle 25 Nro 5-14 Oficina 206 <br />Edificio Galenos - Barrio Centro<br />Monteria, Cordoba<br />Colombia</p>
+                    <p className="text-gray-600">Calle 31 #4-47 oficina 309 <br />Edificio Centro de los ejecutivos<br />Monteria, Cordoba<br />Colombia</p>
                   </div>
                 </div>
 
@@ -98,7 +98,7 @@ export default function Contact() {
                   </svg>
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900">Teléfono</h4>
-                    <p className="text-gray-600">301 5208548<br />322 6798057</p>
+                    <p className="text-gray-600">301 5208548<br />321 4341412<br />322 6798057</p>
                   </div>
                 </div>
 
@@ -108,7 +108,7 @@ export default function Contact() {
                   </svg>
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900">Email</h4>
-                    <p className="text-gray-600">faecob.sas@hotmail.com</p>
+                    <p className="text-gray-600">servicioalcliente@zafiralexsa.onmicrosoft.com</p>
                   </div>
                 </div>
                   {/* Información legal y NIT */}

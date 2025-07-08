@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="500" height="500">
+  <!-- Shield outline -->
+  <path d="M300,50 
+           C450,50 550,100 550,100
+           C550,250 550,400 300,650
+           C50,400 50,250 50,100
+           C50,100 150,50 300,50 Z" 
+        fill="white" stroke="#0c2b5a" stroke-width="30"/>
+  
+  <!-- Large Z with balance -->
+  <path d="M290,150 
+           L450,150 
+           L290,450
+           C290,450 200,450 150,500
+           L150,500
+           L330,500
+           L330,150" 
+        fill="#0c2b5a" stroke="none"/>
+  
+  <!-- Balance scales -->
+  <path d="M290,150 
+           L250,200 
+           L330,200" 
+        fill="none" stroke="#0c2b5a" stroke-width="15"/>
+  
+  <!-- Left scale pan -->
+  <circle cx="250" cy="230" r="30" fill="#0c2b5a" stroke="none"/>
+  
+  <!-- Bottom flowing lines -->
+  <path d="M290,450 
+           C350,400 400,450 450,400
+           C450,400 500,350 500,300" 
+        fill="none" stroke="#0c2b5a" stroke-width="20"/>
+  
+  <path d="M280,500 
+           C340,450 400,480 450,430
+           C450,430 500,380 520,330" 
+        fill="none" stroke="#0c2b5a" stroke-width="20"/>
+</svg>

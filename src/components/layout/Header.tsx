@@ -35,7 +35,7 @@ export default function Header() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center gap-3">
-              <img src="/logo-icon.svg" alt="Zafira Lex Logo" className="h-10 w-10" />
+              <img src="/logo-shield.svg" alt="Zafira Lex Logo" className="h-14 w-12" />
               <span className="text-2xl font-bold transition-colors text-amber-400" style={{ color: '#f59e0b' }}>
                 Zafira Lex Compañia Juridica
               </span>

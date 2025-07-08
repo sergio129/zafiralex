@@ -111,7 +111,7 @@ export default function Footer() {
           </div>
         </div>          <div className="border-t border-blue-800 mt-8 pt-8 text-center">
           <div className="mb-4">
-            <p className="text-2xl font-bold text-amber-400">Inclusión, respaldo y tecnología.</p>
+            <p className="text-2xl font-bold text-amber-400">Excelencia Financiera y Jurídica al Alcance de un Click</p>
           </div>
           <p className="text-gray-300">&copy; 2025 Compañia Juridica Zafira Lex. Todos los derechos reservados.</p>
         </div>

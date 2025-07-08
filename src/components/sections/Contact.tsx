@@ -134,7 +134,7 @@ export default function Contact() {
                     <h4 className="text-lg font-semibold text-gray-900">Horarios de Atención</h4>
                     <p className="text-gray-600">
                       Lunes - Viernes: 8:00 AM - 6:00 PM<br />
-                      Sábados: 9:00 AM - 2:00 PM<br />
+                      Sábados: 9:00 AM - 11:30 PM<br />
                       Domingos: Cerrado
                     </p>
                   </div>
@@ -145,7 +145,7 @@ export default function Contact() {
             {/* Google Maps Embed */}
             <div className="rounded-lg overflow-hidden h-64 shadow-md">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!4v1750427227642!6m8!1m7!1s7vtmCVc4UbinOZMOwa8T6w!2m2!1d8.753474274467434!2d-75.88661968823664!3f198.74085278305944!4f3.3060047461240885!5f0.7820865974627469"
+                src="https://www.google.com/maps/embed?pb=!4v1752011780539!6m8!1m7!1snQlTRhXZLDRYvEU3NBJ-2w!2m2!1d8.756811147382106!2d-75.88419177171738!3f37.541009017160505!4f6.4233267990578895!5f0.7820865974627469"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

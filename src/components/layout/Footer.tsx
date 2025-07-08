@@ -74,7 +74,7 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Contacto</h4>
+            <h4 className="text-lg font-semibold mb-4 text-amber-400">Contacto</h4>
             <div className="space-y-2 text-gray-300">
               <p className="flex items-center">
                 <svg className="h-5 w-5 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -109,9 +109,9 @@ export default function Footer() {
               </p>
             </div>
           </div>
-        </div>        <div className="border-t border-gray-700 mt-8 pt-8 text-center">
+        </div>          <div className="border-t border-blue-800 mt-8 pt-8 text-center">
           <div className="mb-4">
-            <p className="text-2xl font-bold text-blue-300">Inclusión, respaldo y tecnología.</p>
+            <p className="text-2xl font-bold text-amber-400">Inclusión, respaldo y tecnología.</p>
           </div>
           <p className="text-gray-300">&copy; 2025 Compañia Juridica Zafira Lex. Todos los derechos reservados.</p>
         </div>

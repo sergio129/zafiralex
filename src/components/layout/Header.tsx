@@ -28,17 +28,17 @@ export default function Header() {
     };
   }, []);return (
     <header className={`fixed w-full top-0 z-50 transition-all duration-300 ${
-      scrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'
+      scrolled ? 'bg-blue-950 shadow-md py-2' : 'bg-transparent py-4'
     }`} style={{ 
-      background: scrolled ? 'white' : 'linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)'
+      background: scrolled ? 'linear-gradient(to right, #0c2b5a, #0a3069)' : 'linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)'
     }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className={`text-2xl font-bold transition-colors ${
-              scrolled ? 'text-blue-600' : 'text-white'
-            }`} style={{ color: scrolled ? '#1a4b8b' : 'white' }}>
+              scrolled ? 'text-amber-400' : 'text-white'
+            }`} style={{ color: scrolled ? '#f59e0b' : 'white' }}>
               Compañia Juridica Zafira Lex
             </Link>
           </div>          {/* Desktop Menu */}
@@ -47,10 +47,10 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`transition-colors duration-200 font-medium hover:text-blue-400 ${
-                  scrolled ? 'text-gray-700' : 'text-white'
+                className={`transition-colors duration-200 font-medium hover:text-amber-400 ${
+                  scrolled ? 'text-gray-100' : 'text-white'
                 }`}
-                style={{ color: scrolled ? '#333' : 'white' }}
+                style={{ color: scrolled ? '#f3f4f6' : 'white' }}
               >
                 {item.label}
               </Link>
@@ -60,9 +60,9 @@ export default function Header() {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={`focus:outline-none transition-colors ${
-                scrolled ? 'text-gray-700' : 'text-white'
+                scrolled ? 'text-gray-100' : 'text-white'
               }`}
-              style={{ color: scrolled ? '#333' : 'white' }}
+              style={{ color: scrolled ? '#f3f4f6' : 'white' }}
             >
               <svg
                 className="h-6 w-6"
@@ -86,12 +86,12 @@ export default function Header() {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden pb-4 mt-4">
-            <nav className="flex flex-col space-y-2 bg-white p-4 rounded-lg shadow-lg">
+            <nav className="flex flex-col space-y-2 bg-blue-900 p-4 rounded-lg shadow-lg">
               {menuItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium py-2"
+                  className="text-gray-100 hover:text-amber-400 transition-colors duration-200 font-medium py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}

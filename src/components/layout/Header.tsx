@@ -34,8 +34,11 @@ export default function Header() {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="text-2xl font-bold transition-colors text-amber-400" style={{ color: '#f59e0b' }}>
-               Zafira Lex Compañia Juridica
+            <Link href="/" className="flex items-center gap-3">
+              <img src="/logo-icon.svg" alt="Zafira Lex Logo" className="h-10 w-10" />
+              <span className="text-2xl font-bold transition-colors text-amber-400" style={{ color: '#f59e0b' }}>
+                Zafira Lex Compañia Juridica
+              </span>
             </Link>
           </div>          {/* Desktop Menu */}
           <nav className="hidden md:flex space-x-8">

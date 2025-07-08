@@ -27,19 +27,15 @@ export default function Header() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);return (
-    <header className={`fixed w-full top-0 z-50 transition-all duration-300 ${
-      scrolled ? 'bg-blue-950 shadow-md py-2' : 'bg-transparent py-4'
-    }`} style={{ 
-      background: scrolled ? 'linear-gradient(to right, #0c2b5a, #0a3069)' : 'linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)'
+    <header className="fixed w-full top-0 z-50 transition-all duration-300 bg-blue-950 shadow-md py-3" style={{ 
+      background: 'linear-gradient(to right, #0c2b5a, #0a3069)'
     }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className={`text-2xl font-bold transition-colors ${
-              scrolled ? 'text-amber-400' : 'text-white'
-            }`} style={{ color: scrolled ? '#f59e0b' : 'white' }}>
-              Compañia Juridica Zafira Lex
+            <Link href="/" className="text-2xl font-bold transition-colors text-amber-400" style={{ color: '#f59e0b' }}>
+               Zafira Lex Compañia Juridica
             </Link>
           </div>          {/* Desktop Menu */}
           <nav className="hidden md:flex space-x-8">
@@ -47,10 +43,8 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`transition-colors duration-200 font-medium hover:text-amber-400 ${
-                  scrolled ? 'text-gray-100' : 'text-white'
-                }`}
-                style={{ color: scrolled ? '#f3f4f6' : 'white' }}
+                className="transition-colors duration-200 font-medium text-white hover:text-amber-400"
+                style={{ color: 'white' }}
               >
                 {item.label}
               </Link>
@@ -59,10 +53,8 @@ export default function Header() {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`focus:outline-none transition-colors ${
-                scrolled ? 'text-gray-100' : 'text-white'
-              }`}
-              style={{ color: scrolled ? '#f3f4f6' : 'white' }}
+              className="focus:outline-none transition-colors text-white"
+              style={{ color: 'white' }}
             >
               <svg
                 className="h-6 w-6"

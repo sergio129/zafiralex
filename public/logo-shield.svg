@@ -1,40 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="500" height="500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 600" width="500" height="500">
   <!-- Shield outline -->
-  <path d="M300,50 
-           C450,50 550,100 550,100
-           C550,250 550,400 300,650
-           C50,400 50,250 50,100
-           C50,100 150,50 300,50 Z" 
-        fill="white" stroke="#0c2b5a" stroke-width="30"/>
+  <path d="M250,30
+           C400,30 470,80 470,80
+           C470,200 470,350 250,570
+           C30,350 30,200 30,80
+           C30,80 100,30 250,30 Z"
+        fill="white" stroke="#0c2b5a" stroke-width="25" />
   
-  <!-- Large Z with balance -->
-  <path d="M290,150 
-           L450,150 
-           L290,450
-           C290,450 200,450 150,500
-           L150,500
-           L330,500
-           L330,150" 
-        fill="#0c2b5a" stroke="none"/>
+  <!-- Large Z -->
+  <path d="M280,120
+           L400,120
+           L220,450
+           L340,450"
+        fill="none" stroke="#0c2b5a" stroke-width="32" stroke-linecap="round" />
   
-  <!-- Balance scales -->
-  <path d="M290,150 
-           L250,200 
-           L330,200" 
-        fill="none" stroke="#0c2b5a" stroke-width="15"/>
+  <!-- Balance scale -->
+  <path d="M280,120
+           L240,170
+           L320,170"
+        fill="none" stroke="#0c2b5a" stroke-width="14" />
   
-  <!-- Left scale pan -->
-  <circle cx="250" cy="230" r="30" fill="#0c2b5a" stroke="none"/>
+  <!-- Scale pan -->
+  <path d="M240,195 C240,215 220,235 195,235 C170,235 150,215 150,195 Z"
+        fill="#0c2b5a" stroke="none" />
   
-  <!-- Bottom flowing lines -->
-  <path d="M290,450 
-           C350,400 400,450 450,400
-           C450,400 500,350 500,300" 
-        fill="none" stroke="#0c2b5a" stroke-width="20"/>
+  <!-- Flowing lines -->
+  <path d="M250,400
+           C300,360 340,400 380,360
+           C420,320 440,270 440,230"
+        fill="none" stroke="#0c2b5a" stroke-width="25" stroke-linejoin="round" />
   
-  <path d="M280,500 
-           C340,450 400,480 450,430
-           C450,430 500,380 520,330" 
-        fill="none" stroke="#0c2b5a" stroke-width="20"/>
+  <path d="M240,450
+           C290,410 330,440 370,400
+           C410,360 430,310 440,270"
+        fill="none" stroke="#0c2b5a" stroke-width="25" stroke-linejoin="round" />
 </svg>

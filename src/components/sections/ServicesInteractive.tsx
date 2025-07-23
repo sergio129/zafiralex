@@ -60,7 +60,10 @@ export default function ServicesInteractive() {
         "Liquidación de Fallos Judiciales",
         "Sanción por Mora – Intereses Legales",
         "Salud y Seguridad Laboral",
-        "Fuero Laboral y Protección Especial"
+        "Fuero Laboral y Protección Especial",
+        "Gestión en la toma de decisiones de créditos de libranza, consumo y libre inversión",
+        "Saneamientos financieros",
+        " ⁠Asesorías financieras y jurídicas"
       ]
     },
     {

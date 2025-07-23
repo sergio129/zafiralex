@@ -81,7 +81,7 @@ export default function Footer() {
                   <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                   <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
-              Calle 31 #4-47 oficina 309
+              Calle 31 #4-47 Oficina 309
               </p>
               <p className="flex items-center">
                 <svg className="h-5 w-5 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -113,7 +113,7 @@ export default function Footer() {
           <div className="mb-4">
             <p className="text-2xl font-bold text-amber-400">Excelencia Financiera y Jurídica al Alcance de un Click</p>
           </div>
-          <p className="text-gray-300">&copy; 2025 Compañia Juridica Zafira Lex. Todos los derechos reservados.</p>
+          <p className="text-gray-300">&copy; 2025 Zafira Lex Compañia Juridica. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>

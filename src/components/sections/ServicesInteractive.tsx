@@ -230,7 +230,7 @@ export default function ServicesInteractive() {
                             </svg>
                             Procedimientos
                           </h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                             {servicio.procedimientos.map((procedimiento, index) => (
                               <motion.div 
                                 key={`proc-${servicio.id}-${index}`} 
@@ -264,7 +264,7 @@ export default function ServicesInteractive() {
                             </svg>
                             Consultorías Jurídicas Especializadas
                           </h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                             {servicio.consultorias.map((consultoria, index) => (
                               <motion.div 
                                 key={`cons-${servicio.id}-${index}`} 
@@ -314,7 +314,7 @@ export default function ServicesInteractive() {
                           <div className="pt-6">
                             {servicio.categorias.map((categoria) => (
                               <div key={categoria.nombre} className={activeTab === categoria.nombre ? 'block' : 'hidden'}>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                                   {categoria.items.map((item, itemIndex) => (
                                     <motion.div 
                                       key={`item-${servicio.id}-${itemIndex}`} 
